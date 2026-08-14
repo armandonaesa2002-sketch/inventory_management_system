@@ -1,0 +1,982 @@
+/* GENERAL */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body.inventory-body {
+    margin: 0;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+/* HEADER / TOP BAR */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.top-bar h1 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+/* CARDS */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.card h2 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* SECTION HEADER */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+/* TABLES */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table thead {
+    background: #111827;
+    color: #f9fafb;
+}
+
+.table th,
+.table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.table tbody tr:hover {
+    background: #eef2ff;
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.05s ease;
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #d1d5db;
+}
+.btn-outline:hover {
+    background: #f3f4f6;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+}
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.btn-secondary {
+    background: #6b7280;
+    color: #ffffff;
+}
+.btn-secondary:hover {
+    background: #4b5563;
+}
+
+/* ALERTS */
+.alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    font-size: 14px;
+}
+.alert-success {
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+/* STATUS BADGES */
+.status-badge {
+    display: inline-flex;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+}
+
+.status-inuse {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-returned {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+.status-returned2 {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-other {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* MISC */
+.text-muted {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* MULTI-STEP FORM LAYOUT */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.form-title {
+    margin: 0;
+    font-size: 22px;
+}
+
+.form-subtitle {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* STEP INDICATOR */
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.step-indicator-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.step-indicator-item .circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 2px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    background: #ffffff;
+}
+
+.step-indicator-item .label {
+    white-space: nowrap;
+}
+
+.step-indicator-item.active .circle {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.step-indicator-item.active .label {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* MULTI STEP */
+.multi-step {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+.step-title {
+    margin: 0 0 12px;
+    font-size: 18px;
+}
+
+/* FORM ELEMENTS */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #374151;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    outline: none;
+    transition:
+        border-color 0.12s ease,
+        box-shadow 0.12s ease;
+    box-sizing: border-box;
+    background-color: #fff;
+    resize: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+}
+
+.error {
+    color: #b91c1c;
+    font-size: 11px;
+    margin-top: 2px;
+    display: none;
+}
+
+.invalid {
+    border-color: #b91c1c;
+}
+
+/* STEP ACTION BUTTONS */
+.step-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+/* PROGRESS BAR */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #2563eb;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .step-indicator {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* EDIT ASSET LAYOUT */
+.asset-tag-label {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+.asset-tag-label .label {
+    color: #6b7280;
+    margin-right: 4px;
+}
+.asset-tag-label .value {
+    font-weight: 600;
+}
+
+/* TABS STYLE */
+.tabs {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #f3f4f6;
+    padding: 3px;
+    margin: 10px 0 18px;
+    gap: 2px;
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #4b5563;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.tab-btn:hover {
+    background: #e5e7eb;
+}
+
+.tab-btn.active {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+}
+
+/* TAB CONTENT */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Reuse form layout */
+.tab-content .form-group {
+    margin-bottom: 14px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+    .tabs {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .tab-btn {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+.alert-danger {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.card-danger {
+    border-top: 3px solid #dc2626;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(1px);
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 22px 22px 20px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.4);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #6b7280;
+    float: right;
+    padding: 0;
+}
+.modal-close:hover {
+    color: #111827;
+}
+
+.modal-title {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.modal-text {
+    margin: 0 0 14px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* Radio labels sa modal */
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.radio-label input[type="radio"] {
+    accent-color: #2563eb;
+}
+
+/* DASHBOARD STATS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    font-weight: bold;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* accent borders / background per status */
+.stat-total {
+    border-left: 3px solid #0ea5e9;
+}
+
+.stat-available {
+    border-left: 3px solid #22c55e;
+    background: linear-gradient(to right, #ecfdf3, #ffffff);
+}
+
+.stat-assigned {
+    border-left: 3px solid #2563eb;
+    background: linear-gradient(to right, #eff6ff, #ffffff);
+}
+
+.stat-repair {
+    border-left: 3px solid #f97316;
+    background: linear-gradient(to right, #fff7ed, #ffffff);
+}
+
+.stat-decom {
+    border-left: 3px solid #6b7280;
+    background: linear-gradient(to right, #f3f4f6, #ffffff);
+}
+
+.stat-lost {
+    border-left: 3px solid #dc2626;
+    background: linear-gradient(to right, #fef2f2, #ffffff);
+}
+
+@media (max-width: 640px) {
+    .stat-value {
+        font-size: 18px;
+    }
+}
+
+/* PAGINATION – for default Laravel Tailwind view */
+.pagination-wrapper {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 13px;
+}
+
+/* Main nav */
+.pagination-wrapper nav {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+/* Hide mobile (yung flex justify-between sm:hidden) kung ayaw mo yun */
+.pagination-wrapper nav > div:first-child {
+    display: none;
+}
+
+/* Desktop container (hidden sm:flex-1 sm:flex ...) */
+.pagination-wrapper nav > div:last-child {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* LEFT SIDE: "Showing 1 to 5 of 6 results" */
+.pagination-wrapper nav > div:last-child > div:first-child p,
+.pagination-wrapper nav > div:last-child > div:first-child span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* RIGHT SIDE: page buttons container */
+.pagination-wrapper nav > div:last-child > div:last-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Real pagination items (Prev/Next/1/2/...) */
+.pagination-wrapper nav > div:last-child > div:last-child a,
+.pagination-wrapper nav > div:last-child > div:last-child span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #4b5563;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* CURRENT PAGE */
+.pagination-wrapper nav span[aria-current="page"] {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* DISABLED (Prev/Next na di clickable) */
+.pagination-wrapper nav span[aria-disabled="true"] {
+    color: #9ca3af;
+    background: #f9fafb;
+    cursor: default;
+}
+
+/* HOVER (links lang) */
+.pagination-wrapper nav > div:last-child > div:last-child a:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+/* Optional: center on small screens */
+@media (max-width: 640px) {
+    .pagination-wrapper {
+        justify-content: center;
+    }
+
+    .pagination-wrapper nav > div:last-child {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .pagination-wrapper nav > div:last-child > div:first-child {
+        display: none; /* itago 'Showing 1 to 5 of 6 results' sa maliit na screen */
+    }
+}
+
+/* Gawin lang pill yung mismong page items (direct children lang) */
+.pagination-wrapper nav > div:last-child > div:last-child > a,
+.pagination-wrapper nav > div:last-child > div:last-child > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #4b5563;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* I-reset yung mga nested span/svg sa loob ng buttons para di sila maging bilog */
+.pagination-wrapper nav > div:last-child > div:last-child > a span,
+.pagination-wrapper nav > div:last-child > div:last-child > a svg,
+.pagination-wrapper nav > div:last-child > div:last-child > span span,
+.pagination-wrapper nav > div:last-child > div:last-child > span svg {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+    min-width: 0;
+    height: auto;
+}
+
+/* BULK CREATE GRID */
+.bulk-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr);
+    gap: 20px;
+    margin-top: 8px;
+}
+
+.bulk-column {
+    min-width: 0;
+}
+
+.serial-count {
+    font-size: 15px;
+    color: #6b7280;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .bulk-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.text-danger {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    padding: 5px;
+    border-radius: 4px;
+}
+#submitBtn:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+.hidden {
+    display: none;
+}
+
+/* history tables sa right column */
+.history-card {
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    padding: 8px 10px;
+}
+
+.history-table {
+    max-height: 260px; /* adjust kung gusto mo mas mataas/mababa */
+    overflow-y: auto;
+}
+/* scroll container (meron ka na, dagdag lang property kung kailangan) */
+.history-table {
+    max-height: 235px;
+    overflow-y: auto;
+}
+
+/* sticky thead */
+.history-table .table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #6f7788; /* same as existing thead bg */
+    color: #f9fafb;
+}
+
+/* optional: border sa ilalim ng header para di mawala */
+.history-table .table thead {
+    box-shadow: 0 1px 0 #e5e7eb;
+}
+.caps {
+    text-transform: uppercase;
+}
+
+/* SEARCH FORM (top of list) */
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.search-form .input {
+    flex: 1;
+    min-width: 220px;
+}
+
+/* gawin mas compact nang konti yung buttons sa search */
+.search-form .btn {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.section-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* search form inside header */
+.section-header .search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0; /* override kung meron */
+    flex-wrap: nowrap;
+}
+
+.section-header .search-form .input {
+    flex: 1;
+    min-width: 220px;
+    height: 36px;
+}
+
+.section-header .search-form .btn {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* buttons sa kanan */
+.section-header-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.section-header-buttons .btn {
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* responsive: stack on small screens */
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .section-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .section-header-buttons {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+/* BADGES sa header */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+}
+
+.badge-type {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.badge-status {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-warranty-active {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+.badge-warranty-soon {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-warranty-expired {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.badge-muted {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+/* DETAIL VIEW */
+.detail-group {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    font-size: 13px;
+}
+
+.detail-row + .detail-row {
+    border-top: 1px solid #e5e7eb;
+}
+
+.detail-label {
+    color: #6b7280;
+    min-width: 120px;
+}
+
+.detail-value {
+    color: #111827;
+    text-align: right;
+    flex: 1;
+    word-break: break-all;
+}
+
+.detail-subtitle {
+    margin: 6px 0 4px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+/* caps utility (meron ka na, kung wala:) */
+.caps {
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+}
