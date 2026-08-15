@@ -24,68 +24,74 @@ class InventoryController extends Controller
 
     public function add_stock(Request $request){
         //main asset
-        $existing = Asset::where('serial_number', $request->serial_number)->exists();
-        if($existing){
-            return back()
-            ->withInput()
-            ->with(
-                'serial_number', 'This serial number already exist: '. $request->serial_number
-            );
-        }
-        $asset = Asset::create([
-            'asset_tag' => $request->asset_tag,
-            'device_type' => $request->device_type,
-            'brand' => $request->brand,
-            'model' => $request->model,
-            'serial_number' => $request->serial_number,
-            'purchase_date' => $request->purchase_date,
-            'warranty_expiry' => $request->warranty_expiry,
-            'vendor' => $request->vendor,
-            'remarks' => $request->remarks
-        ]);
+        DB::transaction(function () use ($request) {
+            $existing = Asset::where('serial_number', $request->serial_number)->exists();
+            if($existing){
+                return back()
+                ->withInput()
+                ->with(
+                    'serial_number', 'This serial number already exist: '. $request->serial_number
+                );
+            }
+            $asset = Asset::create([
+                'asset_tag' => $request->asset_tag,
+                'device_type' => $request->device_type,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'serial_number' => $request->serial_number,
+                'purchase_date' => $request->purchase_date,
+                'warranty_expiry' => $request->warranty_expiry,
+                'vendor' => $request->vendor,
+                'remarks' => $request->remarks
+            ]);
 
-        $audit = Audit::create([
-            'asset_id' => $asset->id,
-            'audit_date' => $request->audit_date
-        ]);
+            $audit = Audit::create([
+                'asset_id' => $asset->id,
+                'audit_date' => $request->audit_date
+            ]);
 
-        $hardware_specs = HardwareSpec::create([
-            'asset_id' => $asset->id,
-            'processor' => $request->processor,
-            'ram_gb' => $request->ram_gb,
-            'storage' => $request->storage,
-            'monitor' => $request->monitor,
-            'gpu' => $request->gpu,
-            'power_supply' => $request->power_supply,
-            'peripherals' => $request->peripherals
-        ]);
+            $hardware_specs = HardwareSpec::create([
+                'asset_id' => $asset->id,
+                'processor' => $request->processor,
+                'ram_gb' => $request->ram_gb,
+                'storage' => $request->storage,
+                'monitor' => $request->monitor,
+                'gpu' => $request->gpu,
+                'power_supply' => $request->power_supply,
+                'peripherals' => $request->peripherals
+            ]);
 
-        $software = Software::create([
-            'asset_id' => $asset->id,
-            'operating_system' => $request->operating_system,
-            'product_key_os' => $request->product_key_os,
-            'product_key_other'=> $request->product_key_other
-        ]);
+            $software = Software::create([
+                'asset_id' => $asset->id,
+                'operating_system' => $request->operating_system,
+                'product_key_os' => $request->product_key_os,
+                'product_key_other'=> $request->product_key_other
+            ]);
+
+        });
 
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Added');
     }
 
-    public function update_stock(Inventory $inventory, Request $request){//pag submit ng form sa update page
-        $data = $request->validate([
-            'item_type' => 'required',
-            'item_name' => 'required',
-            'quantity' => 'required|numeric',
-            'item_description' => 'required'
-        ]);
+    // public function update_stock(Inventory $inventory, Request $request){//pag submit ng form sa update page
 
-        $inventory->fill($data);
-        if(!$inventory->isDirty()){
-            return back()->with('info', 'No Changed made');
-        }
-        $inventory->save();
+    //     DB::transaction(function () use ($request, $inventory) {
+    //         $data = $request->validate([
+    //             'item_type' => 'required',
+    //             'item_name' => 'required',
+    //             'quantity' => 'required|numeric',
+    //             'item_description' => 'required'
+    //         ]);
 
-        return redirect(route('inventory.index'))->with('success', 'Asset Successfully Updated');
-    }
+    //         $inventory->fill($data);
+    //         if(!$inventory->isDirty()){
+    //             return back()->with('info', 'No Changed made');
+    //         }
+    //         $inventory->save();
+    //     });
+
+    //     return redirect(route('inventory.index'))->with('success', 'Asset Successfully Updated');
+    // }
 
    public function generate_tag($type){
         $prefix = match ($type) {
@@ -222,6 +228,7 @@ class InventoryController extends Controller
             }
             
         }
+        DB::transaction(function () use ($asset, $hardware, $software) {
             if($asset->isDirty() || $hardware?->isDirty()|| $software?->isDirty()){
                 $asset->save();
                 $hardware?->save();
@@ -229,6 +236,7 @@ class InventoryController extends Controller
             } else {
                 return back()->with('info', 'No change Made');
             }
+        });
         
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Updated');
 
