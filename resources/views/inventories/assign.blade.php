@@ -26,9 +26,15 @@
                 <select name="asset_id" id="asset_id" class="select" required>
                     <option value="" selected>Select Device</option>
                     @foreach($assets as $asset)
+                        @if($asset->device_type === 'desktop')
+                        <option value="{{$asset->id}}">
+                            {{$asset->asset_tag}} - {{$asset->brand}} - {{$asset->software->product_key_os}}
+                        </option>
+                        @else
                         <option value="{{$asset->id}}">
                             {{$asset->asset_tag}} - {{$asset->brand}} - {{$asset->model}} - {{$asset->serial_number}}
                         </option>
+                        @endif
                     @endforeach
                 </select>
             </div>
