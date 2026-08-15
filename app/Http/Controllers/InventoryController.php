@@ -11,6 +11,8 @@ use App\Models\Audit;
 use App\Models\HardwareSpec;
 use App\Models\RepairHistory;
 use App\Models\Software;
+use App\Exports\AssetsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryController extends Controller
 {
@@ -346,5 +348,13 @@ class InventoryController extends Controller
     ]);
 
         return view('inventories.asset_view', ['asset' => $asset]);
+    }
+
+    public function export()
+    {
+        return Excel::download(
+            new AssetsExport,
+            'assets_' . now()->format('Y-m-d_His') . '.xlsx'
+        );
     }
 }

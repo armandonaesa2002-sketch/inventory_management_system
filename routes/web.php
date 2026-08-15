@@ -42,6 +42,8 @@ Route::post('/inventory/confirm_multipleCreate', [InventoryController::class, 'c
 Route::get('/inventory/{asset}/view_asset', [InventoryController::class, 'view_asset'])->name('inventory.view_asset');
 //Liability Form
 Route::get('/inventory/{assignment}/liability_form', [AssignmentController::class, 'print_liabilityform'])->name('inventory.liability_form');
+//Export Excel
+Route::get('/inventory/export',[InventoryController::class, 'export'])->name('inventory.export');
 
 
 

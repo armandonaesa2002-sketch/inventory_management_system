@@ -111,6 +111,7 @@
                     </form>
 
                     <div class="section-header-buttons">
+                        <a href="{{ route('inventory.export') }}" class="btn btn-primary">Export Excel</a>
                         <a class="btn btn-primary" href="{{route('inventory.create')}}">+ Add Item</a>
                         <a class="btn btn-primary" href="{{route('inventory.create_multiple')}}">+ Add Multiple Item</a>
                     </div>
