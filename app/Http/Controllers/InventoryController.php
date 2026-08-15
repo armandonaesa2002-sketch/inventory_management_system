@@ -24,15 +24,15 @@ class InventoryController extends Controller
 
     public function add_stock(Request $request){
         //main asset
+        $existing = Asset::where('serial_number', $request->serial_number)->exists();
+        if($existing){ 
+            return back()
+            ->withInput()
+            ->with(
+                'serial_number', 'This serial number already exist: '. $request->serial_number
+            );
+        }
         DB::transaction(function () use ($request) {
-            $existing = Asset::where('serial_number', $request->serial_number)->exists();
-            if($existing){
-                return back()
-                ->withInput()
-                ->with(
-                    'serial_number', 'This serial number already exist: '. $request->serial_number
-                );
-            }
             $asset = Asset::create([
                 'asset_tag' => $request->asset_tag,
                 'device_type' => $request->device_type,
@@ -73,27 +73,8 @@ class InventoryController extends Controller
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Added');
     }
 
-    // public function update_stock(Inventory $inventory, Request $request){//pag submit ng form sa update page
-
-    //     DB::transaction(function () use ($request, $inventory) {
-    //         $data = $request->validate([
-    //             'item_type' => 'required',
-    //             'item_name' => 'required',
-    //             'quantity' => 'required|numeric',
-    //             'item_description' => 'required'
-    //         ]);
-
-    //         $inventory->fill($data);
-    //         if(!$inventory->isDirty()){
-    //             return back()->with('info', 'No Changed made');
-    //         }
-    //         $inventory->save();
-    //     });
-
-    //     return redirect(route('inventory.index'))->with('success', 'Asset Successfully Updated');
-    // }
-
-   public function generate_tag($type){
+    //Generating Tag to Json
+    public function generate_tag($type){
         $prefix = match ($type) {
             'laptop' => 'LT',
             'desktop' => 'PC',
@@ -228,14 +209,15 @@ class InventoryController extends Controller
             }
             
         }
+        if(!$asset->isDirty() && !$hardware?->isDirty() && !$software?->isDirty()) {
+            return back()->with('info', 'No change Made');
+        }
+
         DB::transaction(function () use ($asset, $hardware, $software) {
-            if($asset->isDirty() || $hardware?->isDirty()|| $software?->isDirty()){
-                $asset->save();
-                $hardware?->save();
-                $software?->save();
-            } else {
-                return back()->with('info', 'No change Made');
-            }
+            $asset->save();
+            $hardware?->save();
+            $software?->save();
+            
         });
         
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Updated');
@@ -285,7 +267,7 @@ class InventoryController extends Controller
             ]);
         }
 
-        $data = [];
+        // $data = [];
 
         $prefix = Asset::getAssetPrefix($request->device_type);
         $lastAsset = Asset::where('asset_tag', 'like', $prefix.'-%')
