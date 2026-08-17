@@ -54,6 +54,7 @@ Route::get('/inventory/export',[InventoryController::class, 'export'])->name('in
 
 
 
+
 // Route::resource('inventory', 'InventoryController');
 // 	Route::prefix('inventory')->as('inventory.')->group(function() {
 // 		Route::prefix('/delete')->group(function() {

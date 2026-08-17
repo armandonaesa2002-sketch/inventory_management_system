@@ -350,11 +350,15 @@ class InventoryController extends Controller
         return view('inventories.asset_view', ['asset' => $asset]);
     }
 
-    public function export()
+    public function export(Request $request)
     {
         return Excel::download(
-            new AssetsExport,
-            'assets_' . now()->format('Y-m-d_His') . '.xlsx'
+            new AssetsExport(
+                $request->search,
+                $request->device_type,
+                $request->status
+            ),
+            'assets_'. now()->format('Y-m-d_His') . '.xlsx'
         );
     }
 }
