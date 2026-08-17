@@ -8,6 +8,54 @@
     <title>Inventory System</title>
 </head>
 <body class="inventory-body">
+    <div class="app-layout">
+
+        <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <div class="sidebar-logo">
+            INVENTORY
+        </div>
+
+        <button
+            type="button"
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Toggle sidebar">
+            ☰
+        </button>
+
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="#dashboard" class="sidebar-link active">
+            <span class="sidebar-icon">⌂</span>
+            <span class="sidebar-text">Dashboard</span>
+        </a>
+
+        <a href="#assets" class="sidebar-link">
+            <span class="sidebar-icon">▣</span>
+            <span class="sidebar-text">Assets</span>
+        </a>
+
+        <a href="#assignment" class="sidebar-link">
+            <span class="sidebar-icon">♙</span>
+            <span class="sidebar-text">User Assignment</span>
+        </a>
+
+        <a href="#repair_history" class="sidebar-link">
+            <span class="sidebar-icon">⚒</span>
+            <span class="sidebar-text">Repair History</span>
+        </a>
+
+    </nav>
+
+</aside>
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
     <div class="container">
         <header class="top-bar">
             <h1>INVENTORY MANAGEMENT SYSTEM</h1>
@@ -499,7 +547,18 @@
 
         </section>
     </div>
+        </main>
+    </div>
 
     <script src="{{ asset('js/modal.js') }}"></script>
+
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const appLayout = document.querySelector('.app-layout');
+
+        sidebarToggle.addEventListener('click', function () {
+            appLayout.classList.toggle('sidebar-collapsed');
+        });
+    </script>
 </body>
 </html>
