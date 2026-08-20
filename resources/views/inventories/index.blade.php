@@ -9,7 +9,14 @@
 </head>
 <body class="inventory-body">
     <div class="app-layout">
-
+<div class="mobile-sidebar-toggle">
+    <button
+        type="button"
+        id="mobileSidebarToggle"
+        aria-label="Open sidebar">
+        ☰
+    </button>
+</div>
         <aside class="sidebar" id="sidebar">
 
     <div class="sidebar-header">
@@ -553,12 +560,49 @@
     <script src="{{ asset('js/modal.js') }}"></script>
 
     <script>
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const appLayout = document.querySelector('.app-layout');
+    const appLayout = document.querySelector('.app-layout');
 
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+
+    /* =========================
+       DESKTOP SIDEBAR
+    ========================= */
+
+    if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function () {
+
             appLayout.classList.toggle('sidebar-collapsed');
+
+            const isCollapsed =
+                appLayout.classList.contains('sidebar-collapsed');
+
+            localStorage.setItem(
+                'sidebarCollapsed',
+                isCollapsed
+            );
         });
-    </script>
+    }
+
+
+    /* =========================
+       MOBILE SIDEBAR
+    ========================= */
+
+    if (mobileSidebarToggle) {
+        mobileSidebarToggle.addEventListener('click', function () {
+
+            appLayout.classList.toggle('mobile-sidebar-open');
+
+            const isOpen =
+                appLayout.classList.contains('mobile-sidebar-open');
+
+            mobileSidebarToggle.setAttribute(
+                'aria-label',
+                isOpen ? 'Close sidebar' : 'Open sidebar'
+            );
+        });
+    }
+</script>
 </body>
 </html>
