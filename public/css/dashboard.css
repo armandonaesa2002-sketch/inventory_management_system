@@ -1092,7 +1092,7 @@ a {
     border: none;
     border-radius: 7px;
 
-    background: #111827;
+    background: #374151;
     color: #ffffff;
 
     font-size: 20px;
@@ -1123,7 +1123,7 @@ a {
     .mobile-sidebar-toggle {
         display: block;
         position: fixed;
-        top: 16px;
+        top: 20px;
         left: 16px;
         z-index: 1200;
     }
@@ -1133,13 +1133,19 @@ a {
         align-items: center;
         justify-content: center;
 
-        width: 42px;
-        height: 42px;
+        width: 34px;
+        height: 34px;
 
-        border: none;
+        border: 2px solid #374151;
         border-radius: 6px;
 
         cursor: pointer;
+    }
+    .mobile-sidebar-toggle button:hover {
+        background: #ffffff;
+        color: #111827;
+        transition: 0.2s;
+        border: 2px solid #374151;
     }
 
     /* =========================
@@ -1162,8 +1168,6 @@ a {
          */
         transform: translateX(-100%);
 
-        transition: transform 0.25s ease;
-
         z-index: 1100;
 
         /*
@@ -1180,6 +1184,7 @@ a {
 
     .app-layout.mobile-sidebar-open .sidebar {
         transform: translateX(0);
+        transition: transform 0.25s ease;
     }
 
     /* =========================
@@ -1220,6 +1225,16 @@ a {
         padding: 40px 16px 20px;
         max-width: 100%;
         box-sizing: border-box;
+    }
+    .sidebar-header .sidebar-toggle {
+        display: none;
+    }
+    .sidebar-logo {
+        margin-left: 35px;
+    }
+
+    .top-bar {
+        margin-top: 15px;
     }
 }
 
