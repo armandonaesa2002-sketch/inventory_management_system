@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm page</title>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
+
 <body class="inventory-body">
     <div class="container">
         <section class="card">
@@ -20,16 +22,17 @@
             </header>
             <form action="#">
                 <label>
-  <input type="radio" name="assignmentOption" value="keep" checked>
-  Keep Assigned to Current User
-</label>
+                    <input type="radio" name="assignmentOption" value="keep" checked>
+                    Keep Assigned to Current User
+                </label>
 
-<label>
-  <input type="radio" name="assignmentOption" value="spare">
-  Return to Spare Inventory
-</label>
+                <label>
+                    <input type="radio" name="assignmentOption" value="spare">
+                    Return to Spare Inventory
+                </label>
             </form>
         </section>
-    </div>    
+    </div>
 </body>
+
 </html>
