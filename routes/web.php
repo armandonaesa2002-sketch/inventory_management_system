@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\InkStockController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,7 +23,7 @@ Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_ass
 
 //Assignment Route
 Route::get('/inventory/assign', [AssignmentController::class, 'assign'])->name('inventory.assign');
-Route::put('/inventory/assign-user',[AssignmentController::class, 'assign_user'])->name('inventory.assign_user');
+Route::put('/inventory/assign-user', [AssignmentController::class, 'assign_user'])->name('inventory.assign_user');
 //edit Assignment
 Route::get('/inventory/{assignment}/edit_assignment', [AssignmentController::class, 'edit_assignment'])->name('inventory.edit_assignment');
 Route::put('/inventory/{assignment}/update_assignment', [AssignmentController::class, 'update_assignment'])->name('inventory.update_assignment');
@@ -43,7 +44,9 @@ Route::get('/inventory/{asset}/view_asset', [InventoryController::class, 'view_a
 //Liability Form
 Route::get('/inventory/{assignment}/liability_form', [AssignmentController::class, 'print_liabilityform'])->name('inventory.liability_form');
 //Export Excel
-Route::get('/inventory/export',[InventoryController::class, 'export'])->name('inventory.export');
+Route::get('/inventory/export', [InventoryController::class, 'export'])->name('inventory.export');
+//Ink Stock
+Route::get('/inventory/ink_stock', [InkStockController::class, 'ink_stock'])->name('inventory.ink_stock');
 
 
 
