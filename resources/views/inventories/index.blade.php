@@ -44,9 +44,9 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
 
-                <a href="#assets" class="sidebar-link">
+                <a href="{{ route('inventory.ink_stock') }}" class="sidebar-link">
                     <span class="sidebar-icon">▣</span>
-                    <span class="sidebar-text">Assets</span>
+                    <span class="sidebar-text">Ink Stock</span>
                 </a>
 
                 <a href="#assignment" class="sidebar-link">
@@ -556,136 +556,101 @@
                     </div>
 
                 </section>
+
+                <!-- INK STOCK -->
+                <section class="card" id="ink_stock">
+                    <div class="section-header">
+                        <h2>Ink Stock</h2>
+
+                        <div class="section-header-actions">
+                            <form method="GET" action="{{ route('inventory.display_index') }}#repair_history" class="search-form">
+                                <input
+                                    type="text"
+                                    name="repair_search"
+                                    value="{{ request('repair_search') }}"
+                                    class="input"
+                                    placeholder="Search tag, User...">
+
+                                <select name="repair_status" class="select">
+                                    <option value="">All Status</option>
+                                    <option value="In progress" {{ request('device_type') == 'In progress' ? 'selected' : '' }}>
+                                        In progress
+                                    </option>
+                                    <option value="Completed" {{ request('device_type') == 'Completed' ? 'selected' : '' }}>
+                                        Completed
+                                    </option>
+                                    <option value="Cancelled" {{ request('device_type') == 'Cancelled' ? 'selected' : '' }}>
+                                        Cancelled
+                                    </option>
+                                </select>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Search
+                                </button>
+
+                                @if(request('repair_search') || request('repair_status'))
+                                <a href="{{ route('inventory.display_index') }}" class="btn btn-outline">
+                                    Clear
+                                </a>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>INK TAG</th>
+                                    <th></th>
+                                    <th>DATE</th>
+                                    <th>TYPE</th>
+                                    <th>STATUS</th>
+                                    <th>DESCRIPTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data['repair_history'] as $repair)
+                                <tr>
+                                    <td>{{$repair->asset_tag}}</td>
+                                    <td>{{$repair->user_name}}</td>
+                                    <td>{{$repair->created_at}}</td>
+                                    <td>
+                                        <span class="status-badge status-other">
+                                            {{$repair->type}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge {{$repair->repair_status === 'In progress' ? 'status-inuse' : ($repair->repair_status === 'Completed' ? 'status-returned' : 'btn-danger')}}">
+                                            {{$repair->repair_status}}
+                                    </td>
+                                    </span>
+                                    <td>{{$repair->description}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6">No record found</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </section>
+
+
+
             </div>
         </main>
     </div>
 
     <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/sidebar.js') }}"></script>
 
 
-    <script>
-        const appLayout = document.querySelector('.app-layout');
 
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
-
-        const mobileBreakpoint = 768;
-
-        /* =========================
-           HANDLE RESPONSIVE STATE
-        ========================= */
-
-        function handleSidebarResize() {
-
-            const isMobile = window.innerWidth <= mobileBreakpoint;
-
-            if (isMobile) {
-
-                /*
-                 * Desktop collapsed state should NOT
-                 * exist while on mobile.
-                 */
-                appLayout.classList.remove('sidebar-collapsed');
-
-                /*
-                 * Mobile starts closed.
-                 * We don't automatically open it.
-                 */
-
-            } else {
-
-                /*
-                 * Remove mobile state when returning
-                 * to desktop.
-                 */
-                appLayout.classList.remove('mobile-sidebar-open');
-
-                /*
-                 * Restore desktop collapsed state
-                 * from localStorage.
-                 */
-                const isCollapsed =
-                    localStorage.getItem('sidebarCollapsed') === 'true';
-
-                appLayout.classList.toggle(
-                    'sidebar-collapsed',
-                    isCollapsed
-                );
-            }
-        }
-
-
-        /* =========================
-           DESKTOP SIDEBAR
-        ========================= */
-
-        if (sidebarToggle) {
-
-            sidebarToggle.addEventListener('click', function() {
-
-                /*
-                 * Don't allow desktop toggle behavior
-                 * while on mobile.
-                 */
-                if (window.innerWidth <= mobileBreakpoint) {
-                    return;
-                }
-
-                appLayout.classList.toggle('sidebar-collapsed');
-
-                const isCollapsed =
-                    appLayout.classList.contains('sidebar-collapsed');
-
-                localStorage.setItem(
-                    'sidebarCollapsed',
-                    isCollapsed
-                );
-            });
-        }
-
-
-        /* =========================
-           MOBILE SIDEBAR
-        ========================= */
-
-        if (mobileSidebarToggle) {
-
-            mobileSidebarToggle.addEventListener('click', function() {
-
-                /*
-                 * Don't allow mobile behavior
-                 * while on desktop.
-                 */
-                if (window.innerWidth > mobileBreakpoint) {
-                    return;
-                }
-
-                appLayout.classList.toggle('mobile-sidebar-open');
-
-                const isOpen =
-                    appLayout.classList.contains('mobile-sidebar-open');
-
-                mobileSidebarToggle.setAttribute(
-                    'aria-label',
-                    isOpen ? 'Close sidebar' : 'Open sidebar'
-                );
-            });
-        }
-
-
-        /* =========================
-           INITIAL STATE
-        ========================= */
-
-        handleSidebarResize();
-
-
-        /* =========================
-           WINDOW RESIZE
-        ========================= */
-
-        window.addEventListener('resize', handleSidebarResize);
-    </script>
 </body>
 
 </html>
