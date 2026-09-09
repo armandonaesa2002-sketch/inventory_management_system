@@ -14,6 +14,8 @@ class InkStock extends Model
         'color',
         'stock',
         'reorder_level',
-        'status'
+        'status',
+        'in',
+        'out'
     ];
 }

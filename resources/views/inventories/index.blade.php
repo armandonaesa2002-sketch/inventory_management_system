@@ -541,91 +541,8 @@
                                     <td>
                                         <span class="status-badge {{$repair->repair_status === 'In progress' ? 'status-inuse' : ($repair->repair_status === 'Completed' ? 'status-returned' : 'btn-danger')}}">
                                             {{$repair->repair_status}}
-                                    </td>
-                                    </span>
-                                    <td>{{$repair->description}}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6">No record found</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                </section>
-
-                <!-- INK STOCK -->
-                <section class="card" id="ink_stock">
-                    <div class="section-header">
-                        <h2>Ink Stock</h2>
-
-                        <div class="section-header-actions">
-                            <form method="GET" action="{{ route('inventory.display_index') }}#repair_history" class="search-form">
-                                <input
-                                    type="text"
-                                    name="repair_search"
-                                    value="{{ request('repair_search') }}"
-                                    class="input"
-                                    placeholder="Search tag, User...">
-
-                                <select name="repair_status" class="select">
-                                    <option value="">All Status</option>
-                                    <option value="In progress" {{ request('device_type') == 'In progress' ? 'selected' : '' }}>
-                                        In progress
-                                    </option>
-                                    <option value="Completed" {{ request('device_type') == 'Completed' ? 'selected' : '' }}>
-                                        Completed
-                                    </option>
-                                    <option value="Cancelled" {{ request('device_type') == 'Cancelled' ? 'selected' : '' }}>
-                                        Cancelled
-                                    </option>
-                                </select>
-
-                                <button type="submit" class="btn btn-primary">
-                                    Search
-                                </button>
-
-                                @if(request('repair_search') || request('repair_status'))
-                                <a href="{{ route('inventory.display_index') }}" class="btn btn-outline">
-                                    Clear
-                                </a>
-                                @endif
-                            </form>
-                        </div>
-                    </div>
-
-
-                    <div class="table-wrapper">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>INK TAG</th>
-                                    <th></th>
-                                    <th>DATE</th>
-                                    <th>TYPE</th>
-                                    <th>STATUS</th>
-                                    <th>DESCRIPTION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data['repair_history'] as $repair)
-                                <tr>
-                                    <td>{{$repair->asset_tag}}</td>
-                                    <td>{{$repair->user_name}}</td>
-                                    <td>{{$repair->created_at}}</td>
-                                    <td>
-                                        <span class="status-badge status-other">
-                                            {{$repair->type}}
                                         </span>
                                     </td>
-                                    <td>
-                                        <span class="status-badge {{$repair->repair_status === 'In progress' ? 'status-inuse' : ($repair->repair_status === 'Completed' ? 'status-returned' : 'btn-danger')}}">
-                                            {{$repair->repair_status}}
-                                    </td>
-                                    </span>
                                     <td>{{$repair->description}}</td>
                                 </tr>
                                 @empty
@@ -639,9 +556,6 @@
                     </div>
 
                 </section>
-
-
-
             </div>
         </main>
     </div>

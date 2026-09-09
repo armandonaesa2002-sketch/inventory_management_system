@@ -47,6 +47,8 @@ Route::get('/inventory/{assignment}/liability_form', [AssignmentController::clas
 Route::get('/inventory/export', [InventoryController::class, 'export'])->name('inventory.export');
 //Ink Stock
 Route::get('/inventory/ink_stock', [InkStockController::class, 'ink_stock'])->name('inventory.ink_stock');
+Route::get('/inventory/add_ink_page', [InkStockController::class, 'add_ink_page'])->name('inventory.add_ink_page');
+Route::post('/inventory/create_ink', [InkStockController::class, 'create_ink'])->name('inventory.create_ink');
 
 
 
