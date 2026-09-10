@@ -69,6 +69,29 @@
                 <header class="top-bar">
                     <h1>INVENTORY MANAGEMENT SYSTEM</h1>
                 </header>
+                <div class="stats-grid">
+                    <div class="stat-card stat-total">
+                        <span class="stat-label">Total Ink</span>
+                        <span class="stat-value">{{$data['total_ink'] ?? 0}}</span>
+                    </div>
+
+                    <div class="stat-card stat-available">
+                        <span class="stat-label">In Stock</span>
+                        <span class="stat-value">{{$data['total_instock'] ?? 0}}</span>
+                    </div>
+
+                    <div class="stat-card stat-assigned">
+                        <span class="stat-label">Low Stock</span>
+                        <span class="stat-value">{{$data['total_lowstock'] ?? 0}}</span>
+                    </div>
+
+                    <div class="stat-card stat-repair">
+                        <span class="stat-label">Out of Stock</span>
+                        <span class="stat-value">{{$data['total_outofstock'] ?? 0}}</span>
+                    </div>
+                </div>
+
+
                 <!-- INK STOCK -->
                 <section class="card" id="ink_stock">
                     <div class="section-header">
@@ -101,7 +124,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($ink_stock as $ink)
+                                @foreach($data['ink_stock'] as $ink)
                                 <tr>
                                     <td>{{$ink->brand}}</td>
                                     <td>{{$ink->type}}</td>
