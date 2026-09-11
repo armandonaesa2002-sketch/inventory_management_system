@@ -387,6 +387,12 @@ a {
     gap: 12px;
     margin-bottom: 4px;
 }
+.form-row2 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 4px;
+}
 
 .form-group label {
     display: block;
@@ -1344,4 +1350,81 @@ a {
 
 .app-layout.sidebar-collapsed .sidebar-toggle {
     transform: rotate(180deg);
+}
+
+/* Multiple INK css */
+.ink-group {
+    padding: 20px;
+    margin-bottom: 20px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+.group-title {
+    margin: 0 0 20px;
+}
+
+.color-row {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 10px;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.color-name label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-color-row {
+    display: grid;
+    grid-template-columns: 1fr 150px 35px;
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+.remove-color {
+    height: 38px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #f1f1f1;
+    color: #dc3545;
+
+    cursor: pointer;
+}
+
+.add-color {
+    margin-top: 5px;
+}
+
+#add-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+    .color-row,
+    .custom-color-row {
+        grid-template-columns: 1fr;
+    }
+}
+.inkheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.addcolor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

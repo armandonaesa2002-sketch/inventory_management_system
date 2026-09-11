@@ -54,4 +54,13 @@ class InkStockController extends Controller
         ]);
         return redirect(route('inventory.ink_stock'))->with('success', 'Ink Successfully Added');
     }
+
+    public function add_multipleink()
+    {
+        return view('inventories.add_multipleink');
+    }
+    public function create_multipleink(Request $request)
+    {
+        dd($request);
+    }
 }

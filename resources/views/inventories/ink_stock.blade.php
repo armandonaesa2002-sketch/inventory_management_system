@@ -98,7 +98,7 @@
                         <h2>Ink Stock</h2>
                         <div class="section-header-buttons">
                             <a class="btn btn-primary" href="{{route('inventory.add_ink_page')}}">+ Add Ink</a>
-                            <a class="btn btn-primary" href="">+ Add Multiple Ink</a>
+                            <a class="btn btn-primary" href="{{route('inventory.add_multipleink')}}">+ Add Multiple Ink</a>
                         </div>
                     </div>
                     @if(session('success'))

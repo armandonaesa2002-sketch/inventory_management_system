@@ -49,6 +49,8 @@ Route::get('/inventory/export', [InventoryController::class, 'export'])->name('i
 Route::get('/inventory/ink_stock', [InkStockController::class, 'ink_stock'])->name('inventory.ink_stock');
 Route::get('/inventory/add_ink_page', [InkStockController::class, 'add_ink_page'])->name('inventory.add_ink_page');
 Route::post('/inventory/create_ink', [InkStockController::class, 'create_ink'])->name('inventory.create_ink');
+Route::get('/inventory/add_multipleink', [InkStockController::class, 'add_multipleink'])->name('inventory.add_multipleink');
+Route::post('/inventory/create_multipleink', [InkStockController::class, 'create_multipleink'])->name('inventory.create_multipleink');
 
 
 
