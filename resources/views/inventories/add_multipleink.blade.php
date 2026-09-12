@@ -29,13 +29,19 @@
                     {{ session('duplicate_ink') }}
                 </div>
                 @endif
+                @if ($errors->has('color_error'))
+                <div class="alert alert-danger">
+                    {{ $errors->first('color_error') }}
+                </div>
+                @endif
+
 
 
                 <div id="ink-groups">
 
                     <!-- =========================
-             INK GROUP
-        ========================== -->
+                        INK GROUP
+                    ========================== -->
 
                     <div class="ink-group">
 
@@ -164,8 +170,8 @@
 
 
                         <!-- =========================
-                 COLORS
-            ========================== -->
+                            COLORS
+                        ========================== -->
 
                         <div class="form-group">
 
@@ -390,10 +396,10 @@
 
 
         /*
-|--------------------------------------------------------------------------
-| COLOR CHECKBOX / STOCK
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | COLOR CHECKBOX / STOCK
+        |--------------------------------------------------------------------------
+        */
 
         document.addEventListener('change', function(e) {
 
@@ -576,12 +582,14 @@
                     .querySelectorAll('input')
                     .forEach(input => {
 
-                        input.value = '';
+                        if (input.type === 'checkbox') {
 
-                        if (
-                            input.type === 'checkbox'
-                        ) {
                             input.checked = false;
+
+                        } else {
+
+                            input.value = '';
+
                         }
 
                     });
@@ -592,6 +600,23 @@
                     .forEach(select => {
 
                         select.selectedIndex = 0;
+
+                    });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Reset color stock inputs
+                |--------------------------------------------------------------------------
+                */
+
+                newGroup
+                    .querySelectorAll('.color-stock')
+                    .forEach(input => {
+
+                        input.disabled = true;
+                        input.required = false;
+                        input.value = '';
 
                     });
 

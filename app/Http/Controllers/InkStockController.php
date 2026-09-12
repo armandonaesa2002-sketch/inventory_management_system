@@ -61,6 +61,38 @@ class InkStockController extends Controller
     }
     public function create_multipleink(Request $request)
     {
-        dd($request);
+        // dd($request->all());
+        $validated = $request->validate(
+            [
+                'groups' => ['required', 'array', 'min:1'],
+
+                'groups.*.brand' => ['required'],
+                'groups.*.type' => ['required'],
+                'groups.*.reorder_level' => ['required', 'integer', 'min:1'],
+
+                'groups.*.colors' => ['nullable', 'array', 'min:1'],
+                'groups.*.colors.*.selected' => ['required'],
+                'groups.*.colors.*.stock' => ['required', 'integer', 'min:0'],
+
+                'groups.*.custom_colors' => ['nullable', 'array'],
+                'groups.*.custom_colors.*.name' => ['required'],
+                'groups.*.custom_colors.*.stock' => ['required', 'integer', 'min:0'],
+            ]
+
+        );
+        foreach ($validated['groups'] as $index => $group) {
+
+            $hasDefaultColors = !empty($group['colors']);
+            $hasCustomColors = !empty($group['custom_colors']);
+
+            if (!$hasDefaultColors && !$hasCustomColors) {
+                return back()
+                    ->withErrors([
+                        'color_error' => 'Please select at least one color or add a custom color.'
+                    ])
+                    ->withInput();
+            }
+        }
+        dd($validated);
     }
 }
