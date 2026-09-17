@@ -24,14 +24,21 @@
                 @csrf
                 @method('post')
 
-                @if(session('duplicate_ink'))
-                <div class="alert alert-danger">
-                    {{ session('duplicate_ink') }}
-                </div>
-                @endif
+
                 @if ($errors->has('color_error'))
                 <div class="alert alert-danger">
                     {{ $errors->first('color_error') }}
+                </div>
+                @endif
+                @if ($errors->has('duplicate_color'))
+                <div class="alert alert-danger">
+                    <strong>Duplicate found:</strong>
+
+                    <ul>
+                        @foreach ($errors->get('duplicate_color') as $duplicate)
+                        <li>{{ $duplicate }}</li>
+                        @endforeach
+                    </ul>
                 </div>
                 @endif
 
