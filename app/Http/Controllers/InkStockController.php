@@ -68,7 +68,9 @@ class InkStockController extends Controller
                 'groups' => ['required', 'array', 'min:1'],
 
                 'groups.*.brand' => ['required'],
+                'groups.*.other_brand' => ['nullable'],
                 'groups.*.type' => ['required'],
+                'groups.*.other_type' => ['nullable'],
                 'groups.*.reorder_level' => ['required', 'integer', 'min:1'],
 
                 'groups.*.colors' => ['nullable', 'array', 'min:1'],
@@ -246,7 +248,7 @@ class InkStockController extends Controller
                 ->withInput();
         }
 
-        // dd("walang error.");
+        // dd($validated);
 
 
 
