@@ -333,4 +333,38 @@ class InkStockController extends Controller
         return redirect(route('inventory.ink_stock'))
             ->with('success', 'Ink Successfully Added');
     }
+    public function edit_ink(InkStock $ink)
+    {
+        return view('inventories.add_ink', ['edit_ink' => $ink]);
+    }
+    public function update_ink(Request $request, InkStock $ink)
+    {
+        $brand = $request->ink_brand === "other" ? $request->other_brand : $request->ink_brand;
+        $type = $request->ink_type === "other" ? $request->ink_type_other : $request->ink_type;
+        $color = $request->color === "other" ? $request->color_other : $request->color;
+        $ink_check = InkStock::where('brand', $brand)->where('type', $type)->where('color', $color)->where('id', '!=', $ink->id)->exists();
+        if ($ink_check) {
+            return back()->withInput()->with('duplicate_ink', 'Duplicate Ink Entry');
+        }
+        if ($ink->stock == 0) {
+            $status = "Out of Stock";
+        } elseif ($ink->stock > $request->reorder_level) {
+            $status = "In Stock";
+        } else {
+            $status = "Low Stock";
+        }
+        $ink->fill([
+            'brand' => $brand,
+            'type' => $type,
+            'color' => $color,
+            'reorder_level' => $request->reorder_level,
+            'status' => $status
+        ]);
+        if ($ink->isDirty()) {
+            $ink->save();
+        } else {
+            return back()->with('info', 'No Change Made');
+        }
+        return redirect()->route('inventory.ink_stock')->with('success', 'Ink Updated Successfully!');
+    }
 }

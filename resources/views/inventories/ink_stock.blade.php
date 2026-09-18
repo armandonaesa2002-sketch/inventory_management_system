@@ -139,7 +139,11 @@
                                         </span>
                                     </td>
                                     <td>{{$ink->created_at}}</td>
-                                    <td><button>Edit</button><button>delete</button></td>
+                                    <td colspan="2">
+                                        <a class="btn btn-sm btn-outline" href="{{route('inventory.edit_ink', $ink->id)}}">Edit</a>
+
+                                        <a class="btn btn-sm btn-danger" href="">Delete</a>
+                                    </td>
                                 </tr>
                                 @endforeach
 
