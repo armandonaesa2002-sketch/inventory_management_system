@@ -2,20 +2,26 @@
 
 namespace App\Models;
 
+use App\Models\InkStock;
+
 use Illuminate\Database\Eloquent\Model;
 
-class InkStock extends Model
+class InkTransaction extends Model
 {
     protected $table = 'ink_transactions';
 
     protected $fillable = [
-        'brand',
+        'ink_stock_id',
         'type',
-        'color',
-        'stock',
-        'reorder_level',
-        'status',
-        'in',
-        'out'
+        'quantity',
+        'transaction_date',
+        'received_by',
+        'released_to',
+        'remarks'
     ];
+
+    public function inkstock()
+    {
+        return $this->belongsTo(InkStock::class);
+    }
 }

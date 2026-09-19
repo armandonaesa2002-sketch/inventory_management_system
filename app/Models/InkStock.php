@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\InkTransaction;
+
 use Illuminate\Database\Eloquent\Model;
 
 class InkStock extends Model
@@ -18,4 +20,8 @@ class InkStock extends Model
         'in',
         'out'
     ];
+    public function transactions()
+    {
+        return $this->hasMany(InkTransaction::class);
+    }
 }
