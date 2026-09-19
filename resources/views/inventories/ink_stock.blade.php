@@ -163,7 +163,7 @@
                     <div class="section-header">
                         <h2>Ink Transaction</h2>
                         <div class="section-header-buttons">
-                            <a class="btn btn-primary" href="">+ Add Transaction</a>
+                            <a class="btn btn-primary" href="{{route('inventory.transaction_form')}}">+ Add Transaction</a>
                         </div>
                     </div>
                     @if(session('success-transaction'))

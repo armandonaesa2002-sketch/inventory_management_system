@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InkStock;
+use App\Models\InkTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -375,5 +376,11 @@ class InkStockController extends Controller
     {
         $ink->delete();
         return redirect(route('inventory.ink_stock'))->with('success', 'Ink Successfully Deleted!');
+    }
+
+    public function transaction_form()
+    {
+        $ink_stock = InkStock::whereIn('status', ['Low Stock', 'In Stock'])->get();
+        return view('inventories.ink_transaction', compact('ink_stock'));
     }
 }
