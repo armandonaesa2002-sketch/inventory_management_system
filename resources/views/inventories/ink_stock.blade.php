@@ -124,7 +124,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($data['ink_stock'] as $ink)
+                                @forelse($data['ink_stock'] as $ink)
                                 <tr>
                                     <td>{{$ink->brand}}</td>
                                     <td>{{$ink->type}}</td>
@@ -142,10 +142,14 @@
                                     <td colspan="2">
                                         <a class="btn btn-sm btn-outline" href="{{route('inventory.edit_ink', $ink->id)}}">Edit</a>
 
-                                        <a class="btn btn-sm btn-danger" href="">Delete</a>
+                                        <a class="btn btn-sm btn-danger" href="{{route('inventory.delete_ink', $ink->id)}}">Delete</a>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="10">No record found</td>
+                                </tr>
+                                @endforelse
 
                             </tbody>
 
@@ -154,6 +158,15 @@
 
                 </section>
 
+                <!-- INK MOVEMENT -->
+                <section class="card" id="ink_transaction">
+                    <div class="section-header">
+                        <h2>Ink Transaction</h2>
+                        <div class="section-header-buttons">
+                            <a class="btn btn-primary" href="">+ Add Transaction</a>
+                        </div>
+                    </div>
+                </section>
 
 
             </div>

@@ -367,4 +367,13 @@ class InkStockController extends Controller
         }
         return redirect()->route('inventory.ink_stock')->with('success', 'Ink Updated Successfully!');
     }
+    public function delete_ink(InkStock $ink)
+    {
+        return view('inventories.add_ink', ['delete_ink' => $ink]);
+    }
+    public function remove_ink(InkStock $ink)
+    {
+        $ink->delete();
+        return redirect(route('inventory.ink_stock'))->with('success', 'Ink Successfully Deleted!');
+    }
 }
