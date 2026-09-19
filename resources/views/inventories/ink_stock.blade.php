@@ -166,6 +166,32 @@
                             <a class="btn btn-primary" href="">+ Add Transaction</a>
                         </div>
                     </div>
+                    @if(session('success-transaction'))
+                    <div class="alert alert-success">
+                        {{session('success-transaction')}}
+                    </div>
+                    @endif
+
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ink Type</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Received By</th>
+                                    <th>Release To</th>
+                                    <th>Remarks</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
                 </section>
 
 

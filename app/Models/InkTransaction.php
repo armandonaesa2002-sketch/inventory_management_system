@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InkStock extends Model
 {
-    protected $table = 'ink_stocks';
+    protected $table = 'ink_transactions';
 
     protected $fillable = [
         'brand',
