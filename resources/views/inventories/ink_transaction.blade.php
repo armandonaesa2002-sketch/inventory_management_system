@@ -1,142 +1,547 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Ink Stock</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <title>Document</title>
 </head>
 
 <body class="inventory-body">
     <div class="container">
+
+
         <section class="card">
+
             <header class="form-header">
-
                 <div>
-                    <h1 class="form-title">
-                        Ink Transaction
-                    </h1>
+                    <h1 class="form-title">Ink Inventory Movement</h1>
                     <p class="form-subtitle">
-
+                        Release, Receive and Adjustment in one submission.
                     </p>
                 </div>
-                <a href="{{route('inventory.ink_stock')}}" class="btn btn-outline btn-sm">
+
+                <a href="{{ route('inventory.ink_stock') }}"
+                    class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>
 
-            <form action="" method="POST">
+
+            <form action="#" method="POST">
+
                 @csrf
                 @method('post')
+
+
+                <!-- MOVEMENT TYPE -->
+
                 <div class="form-group">
-                    <label for="transaction_type">Transaction Type</label>
-                    <select name="transaction_type" id="transaction_type" class="select">
-                        <option value="" selected>Select type</option>
-                        <option value="release">Release</option>
-                        <option value="receive">Receive</option>
-                        <option value="adjustment">Adjustment</option>
+
+                    <label for="movement_type">
+                        Movement Type
+                    </label>
+
+                    <select
+                        name="movement_type"
+                        id="movement_type"
+                        class="select"
+                        required>
+
+                        <option value="" selected>
+                            Select movement type
+                        </option>
+
+                        <option value="IN">
+                            Receive
+                        </option>
+
+                        <option value="OUT">
+                            Release
+                        </option>
+
+                        <option value="ADJUSTMENT">
+                            Adjustment
+                        </option>
+
                     </select>
 
                 </div>
-                <div class="form-group">
-                    <label for="ink_brand">Ink Type</label>
-                    <select name="ink_brand" id="ink_brand" class="select" data-other-target="ink_other_wrapper">
-                        <option value="" selected>Select Ink</option>
-                        @foreach($ink_stock as $inks)
-                        <option>{{$inks->brand}} {{$inks->type}}: {{$inks->color}}</option>
-                        @endforeach
-                    </select>
-
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ink_type">Type</label>
-                        <select name="ink_type" id="ink_type" class="select" data-other-target="ink_type_other">
 
 
-                            <option value="" selected>Select type</option>
+                <!-- TRANSACTIONS -->
 
-                            <option>003</option>
-                            <option>664</option>
-                            <option>057</option>
-                            <option>790</option>
-                            <option>71</option>
-                            <option>5000</option>
-                            <option>BT D60</option>
-                            <option>269XL</option>
-                            <option>GT52</option>
-                            <option>TF11F</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <div id="ink_type_other" style="display: none; margin-top:5px;">
-                            <input type="text" id="ink_type_other" name="ink_type_other" class="input" placeholder="Input Other type">
+                <div id="transactions">
+
+
+                    <!-- =========================
+                        TRANSACTION
+                    ========================== -->
+
+                    <div class="transaction-group ink-group">
+
+                        <div class="inkheader">
+
+                            <h4 class="group-title">
+                                Transaction 1
+                            </h4>
+
+                            <button
+                                type="button"
+                                class="btn btn-danger remove-transaction"
+                                style="display:none;">
+
+                                Remove
+
+                            </button>
+
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="form-group">
-                            <label for="color">Color</label>
-                            <select name="color" id="color" class="select" data-other-target="color_other">
 
-                                <option value="" selected>Select color</option>
+                        <div class="form-row3">
 
-                                <option>Black</option>
-                                <option>Cyan</option>
-                                <option>Light Cyan</option>
-                                <option>Yellow</option>
-                                <option>Magenta</option>
-                                <option>Light Magenta</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <div id="color_other" style="display: none; margin-top:5px;">
-                                <input type="text" id="color_other" name="color_other" class="input" placeholder="Input Other color">
+                            <!-- INK -->
+
+                            <div class="form-group">
+
+                                <label>
+                                    Ink
+                                </label>
+
+                                <select
+                                    name="transactions[0][ink_id]"
+                                    class="select"
+                                    required>
+
+                                    <option value="" selected>
+                                        Select ink
+                                    </option>
+
+                                    @foreach($ink_stock as $inks)
+                                    <option>{{$inks->brand}} {{$inks->type}}: {{$inks->color}}</option>
+                                    @endforeach
+
+                                </select>
+
                             </div>
+
+
+                            <!-- QUANTITY -->
+
+                            <div class="form-group">
+
+                                <label>
+                                    Quantity
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="transactions[0][quantity]"
+                                    class="input"
+                                    placeholder="Quantity"
+                                    min="1"
+                                    required>
+
+                            </div>
+                            <div class="form-group"
+                                style="display:none;">
+
+                                <label>
+                                    Receive by
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="transactions[0][receive_by]"
+                                    class="input"
+                                    placeholder="receive by"
+                                    required>
+
+                            </div>
+                            <div class="form-group"
+                                style="display:none;">
+
+                                <label>
+                                    Release to
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="transactions[0][release_to]"
+                                    class="input"
+                                    placeholder="Release to"
+                                    required>
+
+                            </div>
+
                         </div>
+
+                        <!-- ADJUSTMENT OPTIONS -->
+
+                        <div
+                            id="adjustment-fields"
+                            style="display:none; margin-top:20px;">
+
+                            <div class="form-row3">
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Adjustment Type
+                                    </label>
+
+                                    <select
+                                        name="adjustment_type"
+                                        id="adjustment_type"
+                                        class="select">
+
+                                        <option value="increase">
+                                            Increase
+                                        </option>
+
+                                        <option value="decrease">
+                                            Decrease
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Reason
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="reason"
+                                        id="reason"
+                                        class="input"
+                                        placeholder="Reason for adjustment">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Stock</label>
-                        <input type="number" class="input"
-                            placeholder="Ink Stock" min="0"
-                            name="ink_stock"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label>Reorder level</label>
-                        <input type="number" name="reorder_level" class="input" placeholder="Reoder Level" min="1">
-                    </div>
 
-                </div>
+
+
+
+
+
+                <!-- ADD TRANSACTION -->
+
+                <button
+                    type="button"
+                    id="add-group"
+                    class="btn btn-outline">
+
+                    + Add Another Transaction
+
+                </button>
+
+
+                <!-- ACTIONS -->
 
                 <div class="step-actions">
-                    <button type="submit" class="btn btn-primary">
-                        Add Transaction
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Save Transactions
+
                     </button>
-                    <a href="{{route('inventory.ink_stock')}}" class="btn btn-outline">Cancel</a>
+
+                    <a
+                        href="{{ route('inventory.ink_stock') }}"
+                        class="btn btn-outline">
+
+                        Cancel
+
+                    </a>
+
                 </div>
+
             </form>
+
         </section>
     </div>
     <script>
-        document.querySelectorAll('[data-other-target]').forEach(select => {
-            const targetId = select.dataset.otherTarget;
-            const target = document.getElementById(targetId);
+        let transactionIndex = 1;
 
-            select.addEventListener('change', function() {
-                const input = target.querySelector('input');
 
-                if (this.value === 'other') {
-                    target.style.display = 'block';
-                    input.required = true;
+        /*
+        |--------------------------------------------------------------------------
+        | MOVEMENT TYPE
+        |--------------------------------------------------------------------------
+        */
+
+        document
+            .getElementById('movement_type')
+            .addEventListener('change', function() {
+
+                const adjustmentFields =
+                    document.getElementById('adjustment-fields');
+
+                // Get all receive_by and release_to form groups
+                const receiveByFields =
+                    document.querySelectorAll('[name*="receive_by"]');
+
+                const releaseToFields =
+                    document.querySelectorAll('[name*="release_to"]');
+
+
+                // Handle adjustment fields
+                if (this.value === 'ADJUSTMENT') {
+
+                    adjustmentFields.style.display = 'block';
+
+                    // Hide both receive_by and release_to for adjustments
+                    receiveByFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
+                    releaseToFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
+                } else if (this.value === 'IN') {
+
+                    adjustmentFields.style.display = 'none';
+
+                    // Show receive_by, hide release_to
+                    receiveByFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'block';
+                        field.setAttribute('required', 'required');
+                    });
+
+                    releaseToFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
+                } else if (this.value === 'OUT') {
+
+                    adjustmentFields.style.display = 'none';
+
+                    // Show release_to, hide receive_by
+                    receiveByFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
+                    releaseToFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'block';
+                        field.setAttribute('required', 'required');
+                    });
+
                 } else {
-                    target.style.display = 'none';
-                    input.required = false;
-                    input.value = '';
+
+                    // Default: hide all conditional fields
+                    adjustmentFields.style.display = 'none';
+
+                    receiveByFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
+                    releaseToFields.forEach(field => {
+                        field.closest('.form-group').style.display = 'none';
+                        field.removeAttribute('required');
+                        field.value = "";
+                    });
+
                 }
+
             });
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | REMOVE TRANSACTION
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener('click', function(e) {
+
+            if (!e.target.classList.contains('remove-transaction')) {
+                return;
+            }
+
+            const transactions =
+                document.querySelectorAll('.transaction-group');
+
+            if (transactions.length === 1) {
+                return;
+            }
+
+            e.target
+                .closest('.transaction-group')
+                .remove();
+
+            updateTransactionNumbers();
+
         });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADD TRANSACTION
+        |--------------------------------------------------------------------------
+        */
+
+        document
+            .getElementById('add-group')
+            .addEventListener('click', function() {
+
+                const container =
+                    document.getElementById('transactions');
+
+                const index =
+                    document.querySelectorAll('.transaction-group').length;
+
+                const firstTransaction =
+                    document.querySelector('.transaction-group');
+
+                const newTransaction =
+                    firstTransaction.cloneNode(true);
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | SHOW REMOVE BUTTON
+                |--------------------------------------------------------------------------
+                */
+
+                newTransaction
+                    .querySelector('.remove-transaction')
+                    .style.display = 'block';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | RESET INPUTS
+                |--------------------------------------------------------------------------
+                */
+
+                newTransaction
+                    .querySelectorAll('input')
+                    .forEach(input => {
+
+                        input.value = '';
+
+                    });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | RESET SELECTS
+                |--------------------------------------------------------------------------
+                */
+
+                newTransaction
+                    .querySelectorAll('select')
+                    .forEach(select => {
+
+                        select.selectedIndex = 0;
+
+                    });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | UPDATE TITLE
+                |--------------------------------------------------------------------------
+                */
+
+                newTransaction
+                    .querySelector('.group-title')
+                    .textContent =
+                    `Transaction ${index + 1}`;
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | UPDATE NAMES
+                |--------------------------------------------------------------------------
+                */
+
+                newTransaction
+                    .querySelectorAll('[name]')
+                    .forEach(input => {
+
+                        input.name =
+                            input.name.replace(
+                                /transactions\[\d+\]/,
+                                `transactions[${index}]`
+                            );
+
+                    });
+
+
+                container.appendChild(newTransaction);
+
+                transactionIndex++;
+
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE TRANSACTION NUMBERS
+        |--------------------------------------------------------------------------
+        */
+
+        function updateTransactionNumbers() {
+
+            const transactions =
+                document.querySelectorAll('.transaction-group');
+
+
+            transactions.forEach((transaction, index) => {
+
+                transaction
+                    .querySelector('.group-title')
+                    .textContent =
+                    `Transaction ${index + 1}`;
+
+
+                transaction
+                    .querySelectorAll('[name]')
+                    .forEach(input => {
+
+                        input.name =
+                            input.name.replace(
+                                /transactions\[\d+\]/,
+                                `transactions[${index}]`
+                            );
+
+                    });
+
+            });
+
+
+            transactionIndex = transactions.length;
+
+        }
     </script>
 </body>
 
