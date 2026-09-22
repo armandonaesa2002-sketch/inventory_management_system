@@ -179,53 +179,21 @@
 
                         <!-- ADJUSTMENT OPTIONS -->
 
-                        <div
-                            id="adjustment-fields"
-                            style="display:none; margin-top:20px;">
-
+                        <div class="adjustment-fields" style="display:none; margin-top:20px;">
                             <div class="form-row3">
-
                                 <div class="form-group">
-
-                                    <label>
-                                        Adjustment Type
-                                    </label>
-
-                                    <select
-                                        name="adjustment_type"
-                                        id="adjustment_type"
-                                        class="select">
-
-                                        <option value="increase">
-                                            Increase
-                                        </option>
-
-                                        <option value="decrease">
-                                            Decrease
-                                        </option>
-
+                                    <label>Adjustment Type</label>
+                                    <select name="transactions[0][adjustment_type]" class="select adjustment-type-select">
+                                        <option value="increase">Increase</option>
+                                        <option value="decrease">Decrease</option>
                                     </select>
-
                                 </div>
-
 
                                 <div class="form-group">
-
-                                    <label>
-                                        Reason
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="reason"
-                                        id="reason"
-                                        class="input"
-                                        placeholder="Reason for adjustment">
-
+                                    <label>Reason</label>
+                                    <input type="text" name="transactions[0][reason]" class="input adjustment-reason-input" placeholder="Reason for adjustment">
                                 </div>
-
                             </div>
-
                         </div>
 
                     </div>
@@ -286,261 +254,131 @@
         |--------------------------------------------------------------------------
         */
 
-        document
-            .getElementById('movement_type')
-            .addEventListener('change', function() {
+        document.getElementById('movement_type').addEventListener('change', function() {
+            const movementVal = this.value;
 
-                const adjustmentFields =
-                    document.getElementById('adjustment-fields');
+            const receiveByGroups = document.querySelectorAll('[name*="receive_by"]');
+            const releaseToGroups = document.querySelectorAll('[name*="release_to"]');
+            const adjustmentSections = document.querySelectorAll('.adjustment-fields');
 
-                // Get all receive_by and release_to form groups
-                const receiveByFields =
-                    document.querySelectorAll('[name*="receive_by"]');
+            if (movementVal === 'ADJUSTMENT') {
+                // Ipakita ang adjustment fields, itago ang receive/release
+                adjustmentSections.forEach(el => el.style.display = 'block');
 
-                const releaseToFields =
-                    document.querySelectorAll('[name*="release_to"]');
+                receiveByGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
+                releaseToGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
 
+            } else if (movementVal === 'IN') {
+                // Ipakita ang receive_by, itago ang iba
+                adjustmentSections.forEach(el => el.style.display = 'none');
 
-                // Handle adjustment fields
-                if (this.value === 'ADJUSTMENT') {
+                receiveByGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'block';
+                    field.setAttribute('required', 'required');
+                });
+                releaseToGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
 
-                    adjustmentFields.style.display = 'block';
+            } else if (movementVal === 'OUT') {
+                // Ipakita ang release_to, itago ang iba
+                adjustmentSections.forEach(el => el.style.display = 'none');
 
-                    // Hide both receive_by and release_to for adjustments
-                    receiveByFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
+                receiveByGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
+                releaseToGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'block';
+                    field.setAttribute('required', 'required');
+                });
 
-                    releaseToFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
-
-                } else if (this.value === 'IN') {
-
-                    adjustmentFields.style.display = 'none';
-
-                    // Show receive_by, hide release_to
-                    receiveByFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'block';
-                        field.setAttribute('required', 'required');
-                    });
-
-                    releaseToFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
-
-                } else if (this.value === 'OUT') {
-
-                    adjustmentFields.style.display = 'none';
-
-                    // Show release_to, hide receive_by
-                    receiveByFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
-
-                    releaseToFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'block';
-                        field.setAttribute('required', 'required');
-                    });
-
-                } else {
-
-                    // Default: hide all conditional fields
-                    adjustmentFields.style.display = 'none';
-
-                    receiveByFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
-
-                    releaseToFields.forEach(field => {
-                        field.closest('.form-group').style.display = 'none';
-                        field.removeAttribute('required');
-                        field.value = "";
-                    });
-
-                }
-
-            });
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | REMOVE TRANSACTION
-        |--------------------------------------------------------------------------
-        */
-
-        document.addEventListener('click', function(e) {
-
-            if (!e.target.classList.contains('remove-transaction')) {
-                return;
+            } else {
+                // Default: Itago lahat kung walang pinili
+                adjustmentSections.forEach(el => el.style.display = 'none');
+                receiveByGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
+                releaseToGroups.forEach(field => {
+                    field.closest('.form-group').style.display = 'none';
+                    field.removeAttribute('required');
+                    field.value = "";
+                });
             }
-
-            const transactions =
-                document.querySelectorAll('.transaction-group');
-
-            if (transactions.length === 1) {
-                return;
-            }
-
-            e.target
-                .closest('.transaction-group')
-                .remove();
-
-            updateTransactionNumbers();
-
         });
 
+        // ADD TRANSACTION CLONING LOGIC
+        document.getElementById('add-group').addEventListener('click', function() {
+            const container = document.getElementById('transactions');
+            const index = document.querySelectorAll('.transaction-group').length;
+            const firstTransaction = document.querySelector('.transaction-group');
+            const newTransaction = firstTransaction.cloneNode(true);
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADD TRANSACTION
-        |--------------------------------------------------------------------------
-        */
+            // Ipakita ang remove button para sa mga bagong clone
+            newTransaction.querySelector('.remove-transaction').style.display = 'block';
 
-        document
-            .getElementById('add-group')
-            .addEventListener('click', function() {
-
-                const container =
-                    document.getElementById('transactions');
-
-                const index =
-                    document.querySelectorAll('.transaction-group').length;
-
-                const firstTransaction =
-                    document.querySelector('.transaction-group');
-
-                const newTransaction =
-                    firstTransaction.cloneNode(true);
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | SHOW REMOVE BUTTON
-                |--------------------------------------------------------------------------
-                */
-
-                newTransaction
-                    .querySelector('.remove-transaction')
-                    .style.display = 'block';
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | RESET INPUTS
-                |--------------------------------------------------------------------------
-                */
-
-                newTransaction
-                    .querySelectorAll('input')
-                    .forEach(input => {
-
-                        input.value = '';
-
-                    });
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | RESET SELECTS
-                |--------------------------------------------------------------------------
-                */
-
-                newTransaction
-                    .querySelectorAll('select')
-                    .forEach(select => {
-
-                        select.selectedIndex = 0;
-
-                    });
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | UPDATE TITLE
-                |--------------------------------------------------------------------------
-                */
-
-                newTransaction
-                    .querySelector('.group-title')
-                    .textContent =
-                    `Transaction ${index + 1}`;
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | UPDATE NAMES
-                |--------------------------------------------------------------------------
-                */
-
-                newTransaction
-                    .querySelectorAll('[name]')
-                    .forEach(input => {
-
-                        input.name =
-                            input.name.replace(
-                                /transactions\[\d+\]/,
-                                `transactions[${index}]`
-                            );
-
-                    });
-
-
-                container.appendChild(newTransaction);
-
-                transactionIndex++;
-
+            // I-reset ang inputs
+            newTransaction.querySelectorAll('input').forEach(input => {
+                input.value = '';
             });
 
+            // I-reset ang selects
+            newTransaction.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE TRANSACTION NUMBERS
-        |--------------------------------------------------------------------------
-        */
+            // Palitan ang title ng Transaction Number
+            newTransaction.querySelector('.group-title').textContent = `Transaction ${index + 1}`;
 
+            // Awtomatikong i-update ang lahat ng name attributes para sundin ang tamang index (transactions[index][...])
+            newTransaction.querySelectorAll('[name]').forEach(input => {
+                input.name = input.name.replace(/transactions\[\d+\]/, `transactions[${index}]`);
+            });
+
+            container.appendChild(newTransaction);
+
+            // Kopyahin din ang kasalukuyang estado ng movement type para sa bagong clone
+            const currentMovement = document.getElementById('movement_type').value;
+            if (currentMovement === 'ADJUSTMENT') {
+                newTransaction.querySelector('.adjustment-fields').style.display = 'block';
+            }
+        });
+
+        // REMOVE TRANSACTION LOGIC
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('remove-transaction')) return;
+
+            const transactions = document.querySelectorAll('.transaction-group');
+            if (transactions.length === 1) return;
+
+            e.target.closest('.transaction-group').remove();
+            updateTransactionNumbers();
+        });
+
+        // UPDATE TRANSACTION NUMBERS AFTER REMOVAL
         function updateTransactionNumbers() {
-
-            const transactions =
-                document.querySelectorAll('.transaction-group');
-
+            const transactions = document.querySelectorAll('.transaction-group');
 
             transactions.forEach((transaction, index) => {
+                transaction.querySelector('.group-title').textContent = `Transaction ${index + 1}`;
 
-                transaction
-                    .querySelector('.group-title')
-                    .textContent =
-                    `Transaction ${index + 1}`;
-
-
-                transaction
-                    .querySelectorAll('[name]')
-                    .forEach(input => {
-
-                        input.name =
-                            input.name.replace(
-                                /transactions\[\d+\]/,
-                                `transactions[${index}]`
-                            );
-
-                    });
-
+                transaction.querySelectorAll('[name]').forEach(input => {
+                    input.name = input.name.replace(/transactions\[\d+\]/, `transactions[${index}]`);
+                });
             });
-
-
-            transactionIndex = transactions.length;
-
         }
     </script>
 </body>

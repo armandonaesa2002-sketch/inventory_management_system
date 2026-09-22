@@ -380,7 +380,7 @@ class InkStockController extends Controller
 
     public function transaction_form()
     {
-        $ink_stock = InkStock::whereIn('status', ['Low Stock', 'In Stock'])->get();
+        $ink_stock = InkStock::all();
         return view('inventories.ink_transaction', compact('ink_stock'));
     }
 }
