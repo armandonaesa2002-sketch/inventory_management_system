@@ -111,7 +111,7 @@
 
                                 <select
                                     name="transactions[0][ink_id]"
-                                    class="select"
+                                    class="select ink-select"
                                     required>
 
                                     <option value="" selected>
@@ -119,7 +119,11 @@
                                     </option>
 
                                     @foreach($ink_stock as $inks)
-                                    <option>{{$inks->brand}} {{$inks->type}}: {{$inks->color}}</option>
+                                    <option
+                                        value="{{ $inks->id }}"
+                                        data-status="{{ $inks->status }}">
+                                        {{ $inks->brand }} {{ $inks->type }}: {{ $inks->color }}
+                                    </option>
                                     @endforeach
 
                                 </select>
@@ -247,6 +251,55 @@
     <script>
         let transactionIndex = 1;
 
+        /*
+        |--------------------------------------------------------------------------
+        | FILTER INK BASED ON MOVEMENT TYPE
+        |--------------------------------------------------------------------------
+        */
+
+        function filterInkOptions() {
+            const movementVal = document.getElementById('movement_type').value;
+            const inkSelects = document.querySelectorAll('.ink-select');
+
+            inkSelects.forEach(select => {
+
+                // Reset selected ink
+                select.value = '';
+
+                Array.from(select.options).forEach(option => {
+
+                    // Always show placeholder
+                    if (!option.value) {
+                        option.hidden = false;
+                        return;
+                    }
+
+                    const status = option.dataset.status;
+
+                    if (movementVal === 'IN') {
+
+                        // Receive → Out of Stock only
+                        option.hidden = false;
+
+                    } else if (movementVal === 'OUT') {
+
+                        // Release → Low Stock + In Stock
+                        option.hidden = !['Low Stock', 'In Stock'].includes(status);
+
+                    } else if (movementVal === 'ADJUSTMENT') {
+
+                        // Adjustment → All
+                        option.hidden = false;
+
+                    } else {
+
+                        // No movement selected
+                        option.hidden = true;
+                    }
+                });
+            });
+        }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -318,6 +371,8 @@
                     field.value = "";
                 });
             }
+            // FILTER INK OPTIONS
+            filterInkOptions();
         });
 
         // ADD TRANSACTION CLONING LOGIC
@@ -350,11 +405,15 @@
 
             container.appendChild(newTransaction);
 
-            // Kopyahin din ang kasalukuyang estado ng movement type para sa bagong clone
+            // Kopyahin ang current movement state
             const currentMovement = document.getElementById('movement_type').value;
+
             if (currentMovement === 'ADJUSTMENT') {
                 newTransaction.querySelector('.adjustment-fields').style.display = 'block';
             }
+
+            // I-apply ang ink filtering sa bagong transaction
+            filterInkOptions();
         });
 
         // REMOVE TRANSACTION LOGIC
