@@ -263,9 +263,6 @@
 
             inkSelects.forEach(select => {
 
-                // Reset selected ink
-                select.value = '';
-
                 Array.from(select.options).forEach(option => {
 
                     // Always show placeholder
