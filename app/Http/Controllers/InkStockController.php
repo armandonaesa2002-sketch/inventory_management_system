@@ -6,6 +6,7 @@ use App\Models\InkStock;
 use App\Models\InkTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class InkStockController extends Controller
 {
@@ -385,6 +386,94 @@ class InkStockController extends Controller
     }
     public function transact_form(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        $data = $request->validate([
+            'movement_type' => [
+                'required',
+                'in:IN,OUT,ADJUSTMENT',
+            ],
+
+            'transactions' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+
+            'transactions.*.ink_id' => [
+                'required',
+                'integer',
+                'exists:ink_stocks,id',
+            ],
+
+            'transactions.*.quantity' => [
+                'required',
+                'numeric',
+                'gt:0',
+            ],
+
+            'transactions.*.receive_by' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'transactions.*.release_to' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'transactions.*.adjustment_type' => [
+                'nullable',
+                'in:increase,decrease',
+            ],
+
+            'transactions.*.reason' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+        ]);
+        // dd('walang error');
+        $movementType = $data['movement_type'];
+
+        // 2. Validate fields based on movement type
+        foreach ($data['transactions'] as $index => $transaction) {
+
+            if ($movementType === 'IN') {
+
+                if (empty($transaction['receive_by'])) {
+                    throw ValidationException::withMessages([
+                        "transactions.$index.receive_by" =>
+                        'Receive by is required.',
+                    ]);
+                }
+            } elseif ($movementType === 'OUT') {
+
+                if (empty($transaction['release_to'])) {
+                    throw ValidationException::withMessages([
+                        "transactions.$index.release_to" =>
+                        'Release to is required.',
+                    ]);
+                }
+            } elseif ($movementType === 'ADJUSTMENT') {
+
+                if (empty($transaction['adjustment_type'])) {
+                    throw ValidationException::withMessages([
+                        "transactions.$index.adjustment_type" =>
+                        'Adjustment type is required.',
+                    ]);
+                }
+
+                if (empty($transaction['reason'])) {
+                    throw ValidationException::withMessages([
+                        "transactions.$index.reason" =>
+                        'Reason is required.',
+                    ]);
+                }
+            }
+        }
+
+        dd($data);
     }
 }
