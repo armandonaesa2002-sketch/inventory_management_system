@@ -57,6 +57,8 @@ Route::get('/inventory/{ink}/delete_ink', [InkStockController::class, 'delete_in
 Route::post('/inventory/{ink}/remove_ink', [InkStockController::class, 'remove_ink'])->name('inventory.remove_ink');
 //Ink Transaction
 Route::get('/inventory/transaction_form', [InkStockController::class, 'transaction_form'])->name('inventory.transaction_form');
+Route::post('/inventory/transact_form', [InkStockController::class, 'transact_form'])->name('inventory.transact_form');
+
 
 
 

@@ -29,7 +29,7 @@
             </header>
 
 
-            <form action="#" method="POST">
+            <form action="{{route('inventory.transact_form')}}" method="POST">
 
                 @csrf
                 @method('post')
@@ -188,6 +188,7 @@
                                 <div class="form-group">
                                     <label>Adjustment Type</label>
                                     <select name="transactions[0][adjustment_type]" class="select adjustment-type-select">
+                                        <option value="" selected>Adjustment Type</option>
                                         <option value="increase">Increase</option>
                                         <option value="decrease">Decrease</option>
                                     </select>
@@ -313,7 +314,14 @@
 
             if (movementVal === 'ADJUSTMENT') {
                 // Ipakita ang adjustment fields, itago ang receive/release
-                adjustmentSections.forEach(el => el.style.display = 'block');
+                adjustmentSections.forEach(el => {
+                    el.style.display = 'block';
+                    const adjustmentType = el.querySelector('.adjustment-type-select');
+                    const adjustmentReason = el.querySelector('.adjustment-reason-input');
+                    adjustmentType.setAttribute('required', 'required');
+                    adjustmentReason.setAttribute('required', 'required');
+
+                });
 
                 receiveByGroups.forEach(field => {
                     field.closest('.form-group').style.display = 'none';
@@ -328,7 +336,14 @@
 
             } else if (movementVal === 'IN') {
                 // Ipakita ang receive_by, itago ang iba
-                adjustmentSections.forEach(el => el.style.display = 'none');
+                adjustmentSections.forEach(el => {
+                    el.style.display = 'none';
+                    const adjustmentType = el.querySelector('.adjustment-type-select');
+                    const adjustmentReason = el.querySelector('.adjustment-reason-input');
+                    adjustmentType.removeAttribute('required');
+                    adjustmentReason.removeAttribute('required');
+
+                });
 
                 receiveByGroups.forEach(field => {
                     field.closest('.form-group').style.display = 'block';
@@ -342,7 +357,14 @@
 
             } else if (movementVal === 'OUT') {
                 // Ipakita ang release_to, itago ang iba
-                adjustmentSections.forEach(el => el.style.display = 'none');
+                adjustmentSections.forEach(el => {
+                    el.style.display = 'none';
+                    const adjustmentType = el.querySelector('.adjustment-type-select');
+                    const adjustmentReason = el.querySelector('.adjustment-reason-input');
+                    adjustmentType.removeAttribute('required');
+                    adjustmentReason.removeAttribute('required');
+
+                });
 
                 receiveByGroups.forEach(field => {
                     field.closest('.form-group').style.display = 'none';
@@ -356,7 +378,14 @@
 
             } else {
                 // Default: Itago lahat kung walang pinili
-                adjustmentSections.forEach(el => el.style.display = 'none');
+                adjustmentSections.forEach(el => {
+                    el.style.display = 'none';
+                    const adjustmentType = el.querySelector('.adjustment-type-select');
+                    const adjustmentReason = el.querySelector('.adjustment-reason-input');
+                    adjustmentType.removeAttribute('required');
+                    adjustmentReason.removeAttribute('required');
+
+                });
                 receiveByGroups.forEach(field => {
                     field.closest('.form-group').style.display = 'none';
                     field.removeAttribute('required');

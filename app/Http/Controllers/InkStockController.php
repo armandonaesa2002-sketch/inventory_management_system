@@ -383,4 +383,8 @@ class InkStockController extends Controller
         $ink_stock = InkStock::all();
         return view('inventories.ink_transaction', compact('ink_stock'));
     }
+    public function transact_form(Request $request)
+    {
+        dd($request->all());
+    }
 }
