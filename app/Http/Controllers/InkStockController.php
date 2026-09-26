@@ -388,54 +388,50 @@ class InkStockController extends Controller
     {
         // dd($request->all());
         $data = $request->validate([
-            'movement_type' => [
-                'required',
-                'in:IN,OUT,ADJUSTMENT',
-            ],
+            'movement_type' => ['required', 'in:IN,OUT,ADJUSTMENT',],
+            'transactions' => ['required', 'array', 'min:1',],
 
-            'transactions' => [
-                'required',
-                'array',
-                'min:1',
-            ],
+            'transactions.*.ink_id' => ['required', 'integer', 'exists:ink_stocks,id',],
+            'transactions.*.quantity' => ['required', 'numeric', 'gt:0',],
+            'transactions.*.receive_by' => ['nullable', 'string', 'max:255',],
+            'transactions.*.release_to' => ['nullable', 'string', 'max:255',],
 
-            'transactions.*.ink_id' => [
-                'required',
-                'integer',
-                'exists:ink_stocks,id',
-            ],
-
-            'transactions.*.quantity' => [
-                'required',
-                'numeric',
-                'gt:0',
-            ],
-
-            'transactions.*.receive_by' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'transactions.*.release_to' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'transactions.*.adjustment_type' => [
-                'nullable',
-                'in:increase,decrease',
-            ],
-
-            'transactions.*.reason' => [
-                'nullable',
-                'string',
-                'max:500',
-            ],
+            'transactions.*.adjustment_type' => ['nullable', 'in:increase,decrease',],
+            'transactions.*.reason' => ['nullable', 'string', 'max:500',],
         ]);
         // dd('walang error');
         $movementType = $data['movement_type'];
+
+        if ($movementType === 'IN' || $movementType === 'ADJUSTMENT') {
+
+            $inkIds = collect($data['transactions'])
+                ->pluck('ink_id');
+
+            if ($inkIds->duplicates()->isNotEmpty()) {
+                throw ValidationException::withMessages([
+                    'transactions' =>
+                    'The same ink cannot be added more than once.',
+                ]);
+            }
+        }
+
+        if ($movementType === 'OUT') {
+
+            $duplicates = collect($data['transactions'])
+                ->groupBy(function ($transaction) {
+                    return $transaction['ink_id']
+                        . '|' .
+                        strtolower(trim($transaction['release_to']));
+                })
+                ->filter(fn($group) => $group->count() > 1);
+
+            if ($duplicates->isNotEmpty()) {
+                throw ValidationException::withMessages([
+                    'transactions' =>
+                    'The same ink cannot be released to the same person more than once.',
+                ]);
+            }
+        }
 
         // 2. Validate fields based on movement type
         foreach ($data['transactions'] as $index => $transaction) {
@@ -474,6 +470,35 @@ class InkStockController extends Controller
             }
         }
 
-        dd($data);
+        foreach ($data['transactions'] as $index => $transaction) {
+
+            $ink = InkStock::findOrFail($transaction['ink_id']);
+
+            $quantity = $transaction['quantity'];
+
+            // OUT
+            if (
+                $movementType === 'OUT' &&
+                $ink->quantity < $quantity
+            ) {
+                throw ValidationException::withMessages([
+                    'transactions' =>
+                    "Insufficient stock for {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
+                ]);
+            }
+
+            // ADJUSTMENT - decrease
+            if (
+                $movementType === 'ADJUSTMENT' &&
+                $transaction['adjustment_type'] === 'decrease' &&
+                $ink->quantity < $quantity
+            ) {
+                throw ValidationException::withMessages([
+                    'transactions' =>
+                    "Cannot decrease {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
+                ]);
+            }
+        }
+        // dd($data);
     }
 }
