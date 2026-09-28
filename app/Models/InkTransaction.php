@@ -23,6 +23,6 @@ class InkTransaction extends Model
 
     public function inkstock()
     {
-        return $this->belongsTo(InkStock::class);
+        return $this->belongsTo(InkStock::class, 'ink_stock_id', 'id');
     }
 }

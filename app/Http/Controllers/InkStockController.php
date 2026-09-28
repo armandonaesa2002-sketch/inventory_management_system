@@ -13,12 +13,13 @@ class InkStockController extends Controller
     public function ink_stock()
     {
         $ink_stock = InkStock::all();
+        $ink_transaction = InkTransaction::with('inkstock')->get();
         $total_ink = InkStock::count();
         $total_instock = InkStock::where('status', 'In Stock')->count();
         $total_lowstock = InkStock::where('status', 'Low Stock')->count();
         $total_outofstock = InkStock::where('status', 'Out of Stock')->count();
 
-        $data = array_merge(compact('ink_stock', 'total_ink', 'total_instock', 'total_lowstock', 'total_outofstock'));
+        $data = array_merge(compact('ink_stock', 'total_ink', 'total_instock', 'total_lowstock', 'total_outofstock', 'ink_transaction'));
 
         return view('inventories.ink_stock', compact('data'));
     }

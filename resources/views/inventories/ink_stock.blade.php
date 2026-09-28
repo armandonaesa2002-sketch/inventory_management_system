@@ -178,15 +178,31 @@
                                 <tr>
                                     <th>Ink Type</th>
                                     <th>Type</th>
+                                    <th>Adjustment Type</th>
                                     <th>Quantity</th>
                                     <th>Received By</th>
                                     <th>Release To</th>
                                     <th>Remarks</th>
-                                    <th>Created At</th>
+                                    <th>Transaction Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @forelse ($data['ink_transaction'] as $ink_transaction)
+                                <tr>
+                                    <td>{{$ink_transaction->inkstock->brand}} {{$ink_transaction->inkstock->type}}: {{$ink_transaction->inkstock->color}}</td>
+                                    <td>{{$ink_transaction->type}}</td>
+                                    <td>{{$ink_transaction->adjustment_type ?? '-'}}</td>
+                                    <td>{{$ink_transaction->quantity}}</td>
+                                    <td>{{$ink_transaction->received_by ?? '-'}}</td>
+                                    <td>{{$ink_transaction->released_to ?? '-'}}</td>
+                                    <td>{{$ink_transaction->remarks ?? '-'}}</td>
+                                    <td>{{$ink_transaction->created_at}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="8">No record found</td>
+                                </tr>
+                                @endforelse
 
                             </tbody>
 

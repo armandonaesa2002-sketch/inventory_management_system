@@ -22,6 +22,6 @@ class InkStock extends Model
     ];
     public function transactions()
     {
-        return $this->hasMany(InkTransaction::class);
+        return $this->hasMany(InkTransaction::class, 'ink_stock_id', 'id');
     }
 }
