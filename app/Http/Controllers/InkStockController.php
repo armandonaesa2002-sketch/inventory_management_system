@@ -470,7 +470,9 @@ class InkStockController extends Controller
             }
         }
 
-        foreach ($data['transactions'] as $index => $transaction) {
+        $stockErrors = [];
+
+        foreach ($data['transactions'] as $transaction) {
 
             $ink = InkStock::findOrFail($transaction['ink_id']);
 
@@ -479,26 +481,66 @@ class InkStockController extends Controller
             // OUT
             if (
                 $movementType === 'OUT' &&
-                $ink->quantity < $quantity
+                $ink->stock < $quantity
             ) {
-                throw ValidationException::withMessages([
-                    'transactions' =>
-                    "Insufficient stock for {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
-                ]);
+                $stockErrors[] =
+                    "Insufficient stock for {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.";
             }
 
             // ADJUSTMENT - decrease
             if (
                 $movementType === 'ADJUSTMENT' &&
                 $transaction['adjustment_type'] === 'decrease' &&
-                $ink->quantity < $quantity
+                $ink->stock < $quantity
             ) {
-                throw ValidationException::withMessages([
-                    'transactions' =>
-                    "Cannot decrease {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
-                ]);
+                $stockErrors[] =
+                    "Cannot decrease {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.";
             }
         }
+
+        if (!empty($stockErrors)) {
+            throw ValidationException::withMessages([
+                'transactions' => $stockErrors,
+            ]);
+        }
         // dd($data);
+
+        //DB TRANSACTION
+        DB::transaction(function () use ($data, $movementType) {
+            foreach ($data['transactions'] as $transaction) {
+                $ink = InkStock::lockForUpdate()->findOrFail($transaction['ink_id']);
+                $quantity = $transaction['quantity'];
+
+                $willDecrease = $movementType === 'OUT' || ($movementType === 'ADJUSTMENT' && $transaction['adjustment_type'] === 'decrease');
+
+                // Final stock check
+                if ($willDecrease && $ink->stock < $quantity) {
+                    throw ValidationException::withMessages([
+                        'transactions' =>
+                        "Insufficient stock for {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
+                    ]);
+                }
+                // Update stock
+                if ($movementType === 'IN' || ($movementType === 'ADJUSTMENT' && $transaction['adjustment_type'] === 'increase')) {
+                    $ink->stock += $quantity;
+                } else {
+                    // OUT or ADJUSTMENT decrease
+                    $ink->stock -= $quantity;
+                }
+
+                $ink->save();
+
+                InkTransaction::create([
+                    'ink_stock_id' => $ink->id,
+                    'type' => $movementType,
+                    'quantity' => $quantity,
+                    'transaction_date' => today(),
+                    'received_by' => $transaction['receive_by'] ?? null,
+                    'released_to' => $transaction['release_to'] ?? null,
+                    'remarks' => null
+                ]);
+            }
+        });
+        return redirect(route('inventory.ink_stock'))->with('success', 'Ink Transaction(s) saved successfully');
     }
 }
