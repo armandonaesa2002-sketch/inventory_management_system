@@ -17,7 +17,8 @@ class InkTransaction extends Model
         'transaction_date',
         'received_by',
         'released_to',
-        'remarks'
+        'remarks',
+        'adjustment_type'
     ];
 
     public function inkstock()

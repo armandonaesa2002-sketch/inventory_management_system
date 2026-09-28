@@ -520,12 +520,24 @@ class InkStockController extends Controller
                         "Insufficient stock for {$ink->brand} {$ink->type}: {$ink->color}. Available stock: {$ink->stock}.",
                     ]);
                 }
-                // Update stock
+
+
                 if ($movementType === 'IN' || ($movementType === 'ADJUSTMENT' && $transaction['adjustment_type'] === 'increase')) {
-                    $ink->stock += $quantity;
+                    $ink->in += $quantity;
                 } else {
                     // OUT or ADJUSTMENT decrease
-                    $ink->stock -= $quantity;
+                    $ink->out += $quantity;
+                }
+
+                $new_stock = $ink->in - $ink->out;
+                $ink->stock = $new_stock;
+
+                if ($ink->stock == 0) {
+                    $ink->status = "Out of Stock";
+                } elseif ($ink->stock > $ink->reorder_level) {
+                    $ink->status = "In Stock";
+                } else {
+                    $ink->status = "Low Stock";
                 }
 
                 $ink->save();
@@ -537,10 +549,11 @@ class InkStockController extends Controller
                     'transaction_date' => today(),
                     'received_by' => $transaction['receive_by'] ?? null,
                     'released_to' => $transaction['release_to'] ?? null,
-                    'remarks' => null
+                    'remarks' => $transaction['reason'] ?? null,
+                    'adjustment_type' => $transaction['adjustment_type'] ?? null
                 ]);
             }
         });
-        return redirect(route('inventory.ink_stock'))->with('success', 'Ink Transaction(s) saved successfully');
+        return redirect(route('inventory.ink_stock'))->with('success-transaction', 'Ink Transaction(s) saved successfully');
     }
 }
