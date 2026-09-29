@@ -128,7 +128,7 @@
                                     <option
                                         value="{{ $inks->id }}"
                                         data-status="{{ $inks->status }}">
-                                        {{ $inks->brand }} {{ $inks->type }}: {{ $inks->color }}
+                                        {{ $inks->brand }} {{ $inks->type }}: {{ $inks->color }} ({{ $inks->stock }})
                                     </option>
                                     @endforeach
 

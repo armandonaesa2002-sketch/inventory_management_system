@@ -187,7 +187,7 @@
                         </table>
                     </div>
                     <div class="pagination-wrapper">
-                        {{ $data['ink_stock']->links() }}
+                        {{ $data['ink_stock']->fragment('ink_stock')->links() }}
                     </div>
 
                 </section>
@@ -234,7 +234,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4">No record found</td>
+                                    <td colspan="5">No record found</td>
                                 </tr>
                                 @endforelse
 
