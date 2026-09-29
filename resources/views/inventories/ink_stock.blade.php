@@ -178,12 +178,9 @@
                                 <tr>
                                     <th>Ink Type</th>
                                     <th>Type</th>
-                                    <th>Adjustment Type</th>
                                     <th>Quantity</th>
-                                    <th>Received By</th>
-                                    <th>Release To</th>
-                                    <th>Remarks</th>
-                                    <th>Transaction Date</th>
+                                    <th>Details</th>
+                                    <th>Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,16 +188,19 @@
                                 <tr>
                                     <td>{{$ink_transaction->inkstock->brand}} {{$ink_transaction->inkstock->type}}: {{$ink_transaction->inkstock->color}}</td>
                                     <td>{{$ink_transaction->type}}</td>
-                                    <td>{{$ink_transaction->adjustment_type ?? '-'}}</td>
                                     <td>{{$ink_transaction->quantity}}</td>
-                                    <td>{{$ink_transaction->received_by ?? '-'}}</td>
-                                    <td>{{$ink_transaction->released_to ?? '-'}}</td>
-                                    <td>{{$ink_transaction->remarks ?? '-'}}</td>
+                                    @if($ink_transaction->type == 'IN')
+                                    <td>Received By: {{$ink_transaction->received_by}}</td>
+                                    @elseif($ink_transaction->type == 'OUT')
+                                    <td>Release To: {{$ink_transaction->released_to}}</td>
+                                    @else
+                                    <td>{{$ink_transaction->adjustment_type}} ({{$ink_transaction->remarks}})</td>
+                                    @endif
                                     <td>{{$ink_transaction->created_at}}</td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="8">No record found</td>
+                                    <td colspan="4">No record found</td>
                                 </tr>
                                 @endforelse
 
