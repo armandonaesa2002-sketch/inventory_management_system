@@ -10,9 +10,25 @@ use Illuminate\Validation\ValidationException;
 
 class InkStockController extends Controller
 {
-    public function ink_stock()
+    public function ink_stock(Request $request)
     {
-        $ink_stock = InkStock::all();
+        $ink_stock_query = InkStock::query();
+
+        if ($request->filled('inkstock_search')) {
+            $search = $request->inkstock_search;
+            $ink_stock_query->where(function ($query) use ($search) {
+
+                $query->where('brand', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('color', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('ink_status')) {
+            $ink_stock_query->where('status', $request->ink_status);
+        }
+        $ink_stock = $ink_stock_query->paginate(10, ['*'], 'ink_stock_page')->withQueryString();
+
         $ink_transaction = InkTransaction::with('inkstock')->get();
         $total_ink = InkStock::count();
         $total_instock = InkStock::where('status', 'In Stock')->count();

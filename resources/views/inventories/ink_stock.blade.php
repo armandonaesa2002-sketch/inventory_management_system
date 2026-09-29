@@ -97,6 +97,37 @@
                     <div class="section-header">
                         <h2>Ink Stock</h2>
                         <div class="section-header-buttons">
+                            <form method="GET" action="{{ route('inventory.ink_stock') }}#ink_stock" class="search-form">
+                                <input
+                                    type="text"
+                                    name="inkstock_search"
+                                    value="{{ request('inkstock_search') }}"
+                                    class="input"
+                                    placeholder="Search brand, type or color...">
+
+                                <select name="ink_status" class="select">
+                                    <option value="">All Status</option>
+                                    <option value="In Stock" {{ request('ink_status') == 'In Stock' ? 'selected' : '' }}>
+                                        In Stock
+                                    </option>
+                                    <option value="Low Stock" {{ request('ink_status') == 'Low Stock' ? 'selected' : '' }}>
+                                        Low Stock
+                                    </option>
+                                    <option value="Out of Stock" {{ request('ink_status') == 'Out of Stock' ? 'selected' : '' }}>
+                                        Out of Stock
+                                    </option>
+                                </select>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Search
+                                </button>
+
+                                @if(request('inkstock_search') || request('ink_status'))
+                                <a href="{{ route('inventory.ink_stock') }}" class="btn btn-outline">
+                                    Clear
+                                </a>
+                                @endif
+                            </form>
                             <a class="btn btn-primary" href="{{route('inventory.add_ink_page')}}">+ Add Ink</a>
                             <a class="btn btn-primary" href="{{route('inventory.add_multipleink')}}">+ Add Multiple Ink</a>
                         </div>
@@ -154,6 +185,9 @@
                             </tbody>
 
                         </table>
+                    </div>
+                    <div class="pagination-wrapper">
+                        {{ $data['ink_stock']->links() }}
                     </div>
 
                 </section>
