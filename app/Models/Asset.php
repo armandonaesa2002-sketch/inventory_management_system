@@ -51,30 +51,9 @@ class Asset extends Model
         return $this->hasMany(RepairHistory::class);
     }
 
-    //pag mag add ng option adjust this para ma cover lahat ng type
-    public function getDeviceTypeLabelAttribute() 
+    public function deviceType()
     {
-        return [
-            'laptop' => 'Laptop',
-            'desktop' => 'Desktop',
-            'minipc' => 'Mini PC',
-            'aio' => 'All in One',
-            'mac' => 'Mac',
-            'printer' => 'Printer',
-        ][$this->device_type] ?? $this->device_type;
-    }
-    
-    //asset tag
-    public static function getAssetPrefix($deviceType)
-    {
-        return [
-            'laptop' => 'LT',
-            'desktop' => 'PC',
-            'minipc' => 'PC',
-            'aio' => 'PC',
-            'mac' => 'MAC',
-            'printer' => 'PRNTR',
-        ][$deviceType] ?? 'IT';
+        return $this->belongsTo(DeviceType::class, 'device_type', 'code');
     }
 
     public function getItemDescriptionAttribute()
@@ -125,5 +104,4 @@ class Asset extends Model
 
         return $description;
     }
-
 }
