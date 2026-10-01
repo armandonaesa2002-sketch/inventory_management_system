@@ -29,7 +29,27 @@ class InkStockController extends Controller
         }
         $ink_stock = $ink_stock_query->paginate(10, ['*'], 'ink_stock_page')->withQueryString();
 
-        $ink_transaction = InkTransaction::with('inkstock')->get();
+        // $ink_transaction = InkTransaction::with('inkstock')->get();
+        $ink_transaction_query = InkTransaction::with('inkstock');
+
+
+        if ($request->filled('inktransaction_search')) {
+            $inktransaction_search = $request->inktransaction_search;
+            $ink_transaction_query->where(function ($ink_transaction_query) use ($inktransaction_search) {
+
+                $ink_transaction_query->whereHas('inkstock', function ($q) use ($inktransaction_search) {
+                    $q->where('brand', 'like', "%{$inktransaction_search}%")
+                        ->orWhere('type', 'like', "%{$inktransaction_search}%")
+                        ->orWhere('color', 'like', "%{$inktransaction_search}%");
+                });
+            });
+        }
+        if ($request->filled('type')) {
+            $ink_transaction_query->where('type', $request->type);
+        }
+
+        $ink_transaction = $ink_transaction_query->paginate(10, ['*'], 'transaction_page')->withQueryString();
+
         $total_ink = InkStock::count();
         $total_instock = InkStock::where('status', 'In Stock')->count();
         $total_lowstock = InkStock::where('status', 'Low Stock')->count();

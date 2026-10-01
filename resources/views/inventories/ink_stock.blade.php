@@ -197,6 +197,37 @@
                     <div class="section-header">
                         <h2>Ink Transaction</h2>
                         <div class="section-header-buttons">
+                            <form method="GET" action="{{ route('inventory.ink_stock') }}#ink_transaction" class="search-form">
+                                <input
+                                    type="text"
+                                    name="inktransaction_search"
+                                    value="{{ request('inktransaction_search') }}"
+                                    class="input"
+                                    placeholder="Search Ink type or type...">
+
+                                <select name="type" class="select">
+                                    <option value="">All type</option>
+                                    <option value="IN" {{ request('type') == 'IN' ? 'selected' : '' }}>
+                                        IN
+                                    </option>
+                                    <option value="OUT" {{ request('type') == 'OUT' ? 'selected' : '' }}>
+                                        OUT
+                                    </option>
+                                    <option value="ADJUSTMENT" {{ request('type') == 'ADJUSTMENT' ? 'selected' : '' }}>
+                                        ADJUSTMENT
+                                    </option>
+                                </select>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Search
+                                </button>
+
+                                @if(request('inktransaction_search') || request('type'))
+                                <a href="{{ route('inventory.ink_stock') }}" class="btn btn-outline">
+                                    Clear
+                                </a>
+                                @endif
+                            </form>
                             <a class="btn btn-primary" href="{{route('inventory.transaction_form')}}">+ Add Transaction</a>
                         </div>
                     </div>
@@ -241,6 +272,9 @@
                             </tbody>
 
                         </table>
+                    </div>
+                    <div class="pagination-wrapper">
+                        {{ $data['ink_transaction']->fragment('ink_transaction')->links() }}
                     </div>
                 </section>
 
