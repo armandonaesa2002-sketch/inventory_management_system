@@ -49,14 +49,9 @@
                     <span class="sidebar-text">Ink Stock</span>
                 </a>
 
-                <a href="#assignment" class="sidebar-link">
-                    <span class="sidebar-icon">♙</span>
-                    <span class="sidebar-text">User Assignment</span>
-                </a>
-
                 <a href="#repair_history" class="sidebar-link">
                     <span class="sidebar-icon">⚒</span>
-                    <span class="sidebar-text">Repair History</span>
+                    <span class="sidebar-text">Settings</span>
                 </a>
 
             </nav>

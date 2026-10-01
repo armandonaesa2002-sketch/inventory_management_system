@@ -49,14 +49,9 @@
                     <span class="sidebar-text">Ink Stock</span>
                 </a>
 
-                <a href="#assignment" class="sidebar-link">
-                    <span class="sidebar-icon">♙</span>
-                    <span class="sidebar-text">User Assignment</span>
-                </a>
-
                 <a href="#repair_history" class="sidebar-link">
                     <span class="sidebar-icon">⚒</span>
-                    <span class="sidebar-text">Repair History</span>
+                    <span class="sidebar-text">Settings</span>
                 </a>
 
             </nav>
@@ -351,8 +346,8 @@
                                     <td>{{$assignment->user_name}}</td>
                                     <td>{{$assignment->department}}</td>
                                     <td>{{$assignment->location}}</td>
-                                    <td>{{$assignment->created_at}}</td>
-                                    <td>{{$assignment->updated_at}}</td>
+                                    <td>{{$assignment->created_at->format('M d, Y h:i A')}}</td>
+                                    <td>{{$assignment->updated_at->format('M d, Y h:i A')}}</td>
                                     <td>
                                         <span class="status-badge {{$assignment->status === 'In Use' ? 'status-inuse' : ($assignment->status === 'Returned' ? 'status-returned' : 'status-other')}}">
                                             {{$assignment->status}}
@@ -532,7 +527,7 @@
                                 <tr>
                                     <td>{{$repair->asset_tag}}</td>
                                     <td>{{$repair->user_name}}</td>
-                                    <td>{{$repair->created_at}}</td>
+                                    <td>{{$repair->created_at->format('M d, Y h:i A')}}</td>
                                     <td>
                                         <span class="status-badge status-other">
                                             {{$repair->type}}
