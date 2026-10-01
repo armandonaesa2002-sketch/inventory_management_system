@@ -169,7 +169,7 @@
                                             {{$ink->status}}
                                         </span>
                                     </td>
-                                    <td>{{$ink->created_at}}</td>
+                                    <td>{{$ink->created_at->format('M d, Y h:i A')}}</td>
                                     <td colspan="2">
                                         <a class="btn btn-sm btn-outline" href="{{route('inventory.edit_ink', $ink->id)}}">Edit</a>
 
@@ -251,17 +251,31 @@
                             <tbody>
                                 @forelse ($data['ink_transaction'] as $ink_transaction)
                                 <tr>
+                                    @php
+                                    $label = "";
+                                    $class = "";
+                                    if($ink_transaction->type == 'IN'){
+                                    $label = "Received By: ". $ink_transaction->received_by;
+                                    $class = "status-inuse";
+                                    }
+                                    elseif($ink_transaction->type == 'OUT'){
+                                    $class = "status-other";
+                                    $label = "Released To: ". $ink_transaction->released_to;
+                                    }
+                                    elseif($ink_transaction->type == 'ADJUSTMENT'){
+                                    $label = $ink_transaction->adjustment_type ." (".$ink_transaction->remarks.")";
+                                    $class = "status-returned";
+                                    }
+                                    @endphp
                                     <td>{{$ink_transaction->inkstock->brand}} {{$ink_transaction->inkstock->type}}: {{$ink_transaction->inkstock->color}}</td>
-                                    <td>{{$ink_transaction->type}}</td>
+                                    <td>
+                                        <span class="status-badge {{$class}}">
+                                            {{$ink_transaction->type}}
+                                        </span>
+                                    </td>
                                     <td>{{$ink_transaction->quantity}}</td>
-                                    @if($ink_transaction->type == 'IN')
-                                    <td>Received By: {{$ink_transaction->received_by}}</td>
-                                    @elseif($ink_transaction->type == 'OUT')
-                                    <td>Release To: {{$ink_transaction->released_to}}</td>
-                                    @else
-                                    <td>{{$ink_transaction->adjustment_type}} ({{$ink_transaction->remarks}})</td>
-                                    @endif
-                                    <td>{{$ink_transaction->created_at}}</td>
+                                    <td>{{$label}}</td>
+                                    <td>{{$ink_transaction->created_at->format('M d, Y h:i A')}}</td>
                                 </tr>
                                 @empty
                                 <tr>
