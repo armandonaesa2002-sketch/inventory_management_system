@@ -51,11 +51,6 @@ class Asset extends Model
         return $this->hasMany(RepairHistory::class);
     }
 
-    public function deviceType()
-    {
-        return $this->belongsTo(DeviceType::class, 'device_type', 'code');
-    }
-
     public function getItemDescriptionAttribute()
     {
         $specs = [];

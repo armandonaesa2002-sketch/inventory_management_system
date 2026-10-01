@@ -112,24 +112,9 @@
 
                                 <select name="device_type" class="select">
                                     <option value="">All Device Types</option>
-                                    <option value="laptop" {{ request('device_type') == 'laptop' ? 'selected' : '' }}>
-                                        Laptop
-                                    </option>
-                                    <option value="desktop" {{ request('device_type') == 'desktop' ? 'selected' : '' }}>
-                                        Desktop
-                                    </option>
-                                    <option value="minipc" {{ request('device_type') == 'minipc' ? 'selected' : '' }}>
-                                        Mini PC
-                                    </option>
-                                    <option value="aio" {{ request('device_type') == 'aio' ? 'selected' : '' }}>
-                                        All in One
-                                    </option>
-                                    <option value="mac" {{ request('device_type') == 'mac' ? 'selected' : '' }}>
-                                        Mac
-                                    </option>
-                                    <option value="printer" {{ request('device_type') == 'printer' ? 'selected' : '' }}>
-                                        Printer
-                                    </option>
+                                    @foreach($data['device_type'] as $device_types)
+                                    <option value="{{$device_types->code}}" {{ request('device_type') == $device_types->code ? 'selected' : '' }}>{{$device_types->name}}</option>
+                                    @endforeach
                                 </select>
 
                                 <select name="status" class="select">

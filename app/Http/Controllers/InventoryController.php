@@ -176,8 +176,9 @@ class InventoryController extends Controller
         $total_repair = Asset::where('status', 'For repair')->count();
         $total_decommissioned = Asset::where('status', 'Decommissioned')->count();
         $total_lost = Asset::where('status', 'Lost')->count();
+        $device_type = DeviceType::all();
 
-        $data = array_merge(compact('assets', 'assignments', 'repair_history', 'total_assets', 'total_available', 'total_assigned', 'total_repair', 'total_decommissioned', 'total_lost'));
+        $data = array_merge(compact('assets', 'assignments', 'repair_history', 'total_assets', 'total_available', 'total_assigned', 'total_repair', 'total_decommissioned', 'total_lost', 'device_type'));
 
         return view('inventories.index', compact('data'));
     }
