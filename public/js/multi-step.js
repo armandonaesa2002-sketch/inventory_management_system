@@ -17,38 +17,32 @@ document.addEventListener("DOMContentLoaded", function () {
         .addEventListener("change", function () {
             const currentValue = this.value;
 
-            // NEW: Wizard-only logic (para sa ADD page lang na may .step)
-            // Sa EDIT (tabs), kadalasan walang .step, so steps.length === 0 at hindi papasok dito.
+            const selectedOption = this.options[this.selectedIndex];
+
+            const deviceConfig = {
+                hasBasic: selectedOption.dataset.hasBasic === "1",
+                hasPurchase: selectedOption.dataset.hasPurchase === "1",
+                hasHardware: selectedOption.dataset.hasHardware === "1",
+                hasLicenseNotes: selectedOption.dataset.hasLicenseNotes === "1",
+            };
+
+            // console.log(deviceConfig);
             if (steps.length) {
                 const hardwareStep = steps[1];
                 const licenseStep = steps[3];
                 const nextStep4Btn = document.getElementById("next_step_3");
                 const submitStep4Btn = document.getElementById("submit_step_3");
 
-                if (currentValue === "printer") {
+                if (!deviceConfig.hasHardware) {
                     hardwareStep.style.display = "none";
-                    licenseStep.style.display = "none";
-
-                    if (currentStep === 1) {
-                        window.nextStep();
-                    }
-                    if (currentStep === 3) {
-                        currentStep = 2;
-                        showStep(currentStep);
-                    }
-
-                    if (nextStep4Btn && submitStep4Btn) {
-                        nextStep4Btn.style.display = "none";
-                        submitStep4Btn.style.display = "inline-block";
-                    }
                 } else {
                     hardwareStep.style.display = "";
-                    licenseStep.style.display = "";
+                }
 
-                    if (nextStep4Btn && submitStep4Btn) {
-                        nextStep4Btn.style.display = "inline-block";
-                        submitStep4Btn.style.display = "none";
-                    }
+                if (!deviceConfig.hasLicenseNotes) {
+                    licenseStep.style.display = "none";
+                } else {
+                    licenseStep.style.display = "";
                 }
             }
 
@@ -115,14 +109,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!validateStep()) return;
 
         let next = currentStep + 1;
-        const deviceType = document.getElementById("device_type").value;
 
-        if (deviceType === "printer" && next === 1) {
-            next = 2;
-        }
-
-        if (deviceType === "printer" && next === 3) {
-            return;
+        // Skip hidden steps
+        while (next < steps.length && steps[next].style.display === "none") {
+            next++;
         }
 
         if (next < steps.length) {
@@ -133,10 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.prevStep = function () {
         let prev = currentStep - 1;
-        const deviceType = document.getElementById("device_type").value;
 
-        if (deviceType === "printer" && prev === 1) {
-            prev = 0;
+        // Skip hidden steps
+        while (prev >= 0 && steps[prev].style.display === "none") {
+            prev--;
         }
 
         if (prev >= 0) {

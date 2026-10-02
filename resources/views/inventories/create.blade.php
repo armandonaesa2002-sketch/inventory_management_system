@@ -71,7 +71,13 @@
                             <select name="device_type" id="device_type" class="select" required>
                                 <option value="" selected>Select Type</option>
                                 @foreach($device_type as $device_types)
-                                <option value="{{$device_types->code}}">{{$device_types->name}}</option>
+                                <option value="{{$device_types->code}}"
+                                    data-has-basic="{{ $device_types->has_basic }}"
+                                    data-has-hardware="{{ $device_types->has_hardware }}"
+                                    data-has-purchase="{{ $device_types->has_purchase }}"
+                                    data-has-license-notes="{{ $device_types->has_license_notes }}">
+                                    {{$device_types->name}}
+                                </option>
                                 @endforeach
                             </select>
                             <div class="error">Required field</div>
