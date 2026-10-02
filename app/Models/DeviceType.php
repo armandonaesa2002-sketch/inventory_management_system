@@ -13,5 +13,9 @@ class DeviceType extends Model
         'name',
         'asset_prefix',
         'is_active',
+        'has_basic',
+        'has_hardware',
+        'has_purchase',
+        'has_license_notes',
     ];
 }

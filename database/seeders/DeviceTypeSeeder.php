@@ -21,6 +21,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => true,
+                'has_purchase' => true,
+                'has_license_notes' => true,
             ],
             [
                 'code' => 'desktop',
@@ -29,6 +33,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => true,
+                'has_purchase' => true,
+                'has_license_notes' => true,
             ],
             [
                 'code' => 'minipc',
@@ -37,6 +45,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => true,
+                'has_purchase' => true,
+                'has_license_notes' => true,
             ],
             [
                 'code' => 'aio',
@@ -45,6 +57,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => true,
+                'has_purchase' => true,
+                'has_license_notes' => true,
             ],
             [
                 'code' => 'mac',
@@ -53,6 +69,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => true,
+                'has_purchase' => true,
+                'has_license_notes' => true,
             ],
             [
                 'code' => 'printer',
@@ -61,6 +81,10 @@ class DeviceTypeSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'has_basic' => true,
+                'has_hardware' => false,
+                'has_purchase' => true,
+                'has_license_notes' => false,
             ],
         ]);
     }
