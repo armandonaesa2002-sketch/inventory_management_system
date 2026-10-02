@@ -59,11 +59,9 @@
                     <div class="form-group">
                         <label for="device_type">Device Type</label>
                         <select name="asset[device_type]" id="device_type" class="select">
-                            <option value="laptop" {{old('asset.device_type', $asset->device_type) == 'laptop' ? 'selected' : ''}}>Laptop</option>
-                            <option value="aio" {{old('asset.device_type', $asset->device_type) == 'aio' ? 'selected' : ''}}>All in One</option>
-                            <option value="mac" {{old('asset.device_type', $asset->device_type) == 'mac' ? 'selected' : ''}}>Mac</option>
-                            <option value="desktop" {{old('asset.device_type', $asset->device_type) == 'desktop' ? 'selected' : ''}}>Desktop</option>
-                            <option value="printer" {{old('asset.device_type', $asset->device_type) == 'printer' ? 'selected' : ''}}>Printer</option>
+                            @foreach($device_type as $device_types)
+                            <option value="{{$device_types->code}}" {{old('asset.device_type', $asset->device_type) == $device_types->code ? 'selected' : ''}}>{{$device_types->name}}</option>
+                            @endforeach
                         </select>
                         <div class="error">Required field</div>
                     </div>

@@ -186,7 +186,8 @@ class InventoryController extends Controller
     public function edit_stock(Asset $asset)
     {
         // dd($asset);
-        return view('inventories.edit', ['asset' => $asset]);
+        $device_type = DeviceType::all();
+        return view('inventories.edit', ['asset' => $asset, 'device_type' => $device_type]);
     }
     public function update_asset(Asset $asset, Request $request)
     { //pag submit ng form sa update page
