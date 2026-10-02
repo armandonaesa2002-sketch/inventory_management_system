@@ -20,7 +20,8 @@ class InventoryController extends Controller
 
     public function create()
     {
-        return view('inventories.create');
+        $device_type = DeviceType::all();
+        return view('inventories.create', compact('device_type'));
     }
     public function create_multiple()
     {
