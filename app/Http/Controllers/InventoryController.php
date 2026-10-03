@@ -25,7 +25,8 @@ class InventoryController extends Controller
     }
     public function create_multiple()
     {
-        return view('inventories.multiple');
+        $device_type = DeviceType::all();
+        return view('inventories.multiple', compact('device_type'));
     }
 
     public function add_stock(Request $request)

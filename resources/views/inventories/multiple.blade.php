@@ -33,11 +33,9 @@
                             <label for="device_type">Device Type</label>
                             <select name="device_type" id="device_type" class="select" required>
                                 <option value="" selected>Select Type</option>
-                                <option value="laptop">Laptop</option>
-                                <option value="aio">All in One</option>
-                                <option value="mac">Mac</option>
-                                <option value="desktop">Desktop</option>
-                                <option value="printer">Printer</option>
+                                @foreach($device_type as $device_types)
+                                <option value="{{$device_types->code}}">{{$device_types->name}}</option>
+                                @endforeach
                             </select>
                         </div>
 
