@@ -31,6 +31,7 @@ class InventoryController extends Controller
     public function add_stock(Request $request)
     {
         //main asset
+        // dd($request->all());
         $existing = Asset::where('serial_number', $request->serial_number)->exists();
         if ($existing) {
             return back()
@@ -40,17 +41,22 @@ class InventoryController extends Controller
                     'This serial number already exist: ' . $request->serial_number
                 );
         }
-        DB::transaction(function () use ($request) {
+
+        $deviceType = DeviceType::where('code', $request->device_type)->firstOrFail();
+
+        DB::transaction(function () use ($request, $deviceType) {
             $asset = Asset::create([
                 'asset_tag' => $request->asset_tag,
                 'device_type' => $request->device_type,
                 'brand' => $request->brand,
                 'model' => $request->model,
                 'serial_number' => $request->serial_number,
-                'purchase_date' => $request->purchase_date,
-                'warranty_expiry' => $request->warranty_expiry,
-                'vendor' => $request->vendor,
-                'remarks' => $request->remarks
+
+                'purchase_date' => $deviceType->has_purchase ? $request->purchase_date : null,
+                'warranty_expiry' => $deviceType->has_purchase ? $request->warranty_expiry : null,
+                'vendor' => $deviceType->has_purchase ? $request->vendor : null,
+
+                'remarks' => $deviceType->has_license_notes ? $request->remarks : null
             ]);
 
             $audit = Audit::create([
@@ -58,23 +64,28 @@ class InventoryController extends Controller
                 'audit_date' => $request->audit_date
             ]);
 
-            $hardware_specs = HardwareSpec::create([
-                'asset_id' => $asset->id,
-                'processor' => $request->processor,
-                'ram_gb' => $request->ram_gb,
-                'storage' => $request->storage,
-                'monitor' => $request->monitor,
-                'gpu' => $request->gpu,
-                'power_supply' => $request->power_supply,
-                'peripherals' => $request->peripherals
-            ]);
+            if ($deviceType->has_hardware) {
 
-            $software = Software::create([
-                'asset_id' => $asset->id,
-                'operating_system' => $request->operating_system,
-                'product_key_os' => $request->product_key_os,
-                'product_key_other' => $request->product_key_other
-            ]);
+                $hardware_specs = HardwareSpec::create([
+                    'asset_id' => $asset->id,
+                    'processor' => $request->processor,
+                    'ram_gb' => $request->ram_gb,
+                    'storage' => $request->storage,
+                    'monitor' => $request->monitor,
+                    'gpu' => $request->gpu,
+                    'power_supply' => $request->power_supply,
+                    'peripherals' => $request->peripherals
+                ]);
+            }
+            if ($deviceType->has_license_notes) {
+
+                $software = Software::create([
+                    'asset_id' => $asset->id,
+                    'operating_system' => $request->operating_system,
+                    'product_key_os' => $request->product_key_os,
+                    'product_key_other' => $request->product_key_other
+                ]);
+            }
         });
 
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Added');
