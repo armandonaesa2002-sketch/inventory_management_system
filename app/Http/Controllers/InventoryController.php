@@ -32,14 +32,16 @@ class InventoryController extends Controller
     public function add_stock(Request $request)
     {
         //main asset
-        $existing = Asset::where('serial_number', $request->serial_number)->exists();
-        if ($existing) {
-            return back()
-                ->withInput()
-                ->with(
-                    'serial_number',
-                    'This serial number already exist: ' . $request->serial_number
-                );
+        if (strtoupper(trim($request->serial_number)) !== 'N/A') {
+            $existing = Asset::where('serial_number', $request->serial_number)->exists();
+            if ($existing) {
+                return back()
+                    ->withInput()
+                    ->with(
+                        'serial_number',
+                        'This serial number already exist: ' . $request->serial_number
+                    );
+            }
         }
         DB::transaction(function () use ($request) {
             $asset = Asset::create([
