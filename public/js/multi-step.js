@@ -26,12 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 hasLicenseNotes: selectedOption.dataset.hasLicenseNotes === "1",
             };
 
-            // console.log(deviceConfig);
+            console.log(deviceConfig);
             if (steps.length) {
                 const hardwareStep = steps[1];
+                const purchaseStep = steps[2];
                 const licenseStep = steps[3];
-                const nextStep4Btn = document.getElementById("next_step_3");
-                const submitStep4Btn = document.getElementById("submit_step_3");
 
                 if (!deviceConfig.hasHardware) {
                     hardwareStep.style.display = "none";
@@ -39,11 +38,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     hardwareStep.style.display = "";
                 }
 
+                if (!deviceConfig.hasPurchase) {
+                    purchaseStep.style.display = "none";
+                } else {
+                    purchaseStep.style.display = "";
+                }
+
                 if (!deviceConfig.hasLicenseNotes) {
                     licenseStep.style.display = "none";
                 } else {
                     licenseStep.style.display = "";
                 }
+                updateSubmitButton();
             }
 
             if (isEdit) {
@@ -105,6 +111,29 @@ document.addEventListener("DOMContentLoaded", function () {
         return valid;
     }
 
+    function updateSubmitButton() {
+        const nextButton = document.getElementById("next_step_3");
+        const submitButton = document.getElementById("submit_step_3");
+
+        if (!nextButton || !submitButton) return;
+
+        let next = currentStep + 1;
+
+        // Skip hidden steps
+        while (next < steps.length && steps[next].style.display === "none") {
+            next++;
+        }
+
+        // Wala nang next visible step
+        if (next >= steps.length) {
+            nextButton.style.display = "none";
+            submitButton.style.display = "inline-block";
+        } else {
+            nextButton.style.display = "inline-block";
+            submitButton.style.display = "none";
+        }
+    }
+
     window.nextStep = function () {
         if (!validateStep()) return;
 
@@ -119,6 +148,8 @@ document.addEventListener("DOMContentLoaded", function () {
             currentStep = next;
             showStep(currentStep);
         }
+
+        updateSubmitButton();
     };
 
     window.prevStep = function () {
@@ -133,6 +164,8 @@ document.addEventListener("DOMContentLoaded", function () {
             currentStep = prev;
             showStep(currentStep);
         }
+
+        updateSubmitButton();
     };
 
     const progressBar = document.getElementById("progressBar");
