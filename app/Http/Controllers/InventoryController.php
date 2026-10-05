@@ -203,43 +203,88 @@ class InventoryController extends Controller
         $device_type = DeviceType::all();
         return view('inventories.edit', ['asset' => $asset, 'device_type' => $device_type]);
     }
+
     public function update_asset(Asset $asset, Request $request)
-    { //pag submit ng form sa update page
+    {
+        $deviceType = DeviceType::where(
+            'code',
+            $request->input('asset.device_type')
+        )->firstOrFail();
 
+        // ASSET
         $asset->fill($request->input('asset'));
-        $hardware = $asset->hardware?->fill($request->input('hardware'));
-        $software = $asset->software?->fill($request->input('software'));
 
-        $device_type = $request->input('asset.device_type');
+        if (!$deviceType->has_purchase) {
+            $asset->purchase_date = null;
+            $asset->warranty_expiry = null;
+            $asset->vendor = null;
+        }
 
-        if ($device_type == "printer") {
+        // Check Asset changes
+        $assetChanged = $asset->isDirty();
+
+        // Existing child records
+        $hardware = $asset->hardware;
+        $software = $asset->software;
+
+        // Check Hardware changes
+        $hardwareChanged = false;
+
+        if ($deviceType->has_hardware) {
             if ($hardware) {
-                // i-lista mo dito lahat ng hardware fields na gusto mong i-clear
-                foreach (['processor', 'ram_gb', 'storage', 'monitor'] as $field) {
-                    $hardware->{$field} = null;
-                }
-            }
-
-
-            if ($software) {
-                // i-lista mo dito lahat ng software/license fields na gusto mong i-clear
-                foreach (['product_key_os', 'product_key_other', 'operating_system'] as $field) {
-                    $software->{$field} = null;
-                }
+                $hardware->fill($request->input('hardware', []));
+                $hardwareChanged = $hardware->isDirty();
+            } else {
+                $hardwareChanged = true; // kailangan gumawa ng bagong record
             }
         }
-        if (!$asset->isDirty() && !$hardware?->isDirty() && !$software?->isDirty()) {
+
+        // Check Software changes
+        $softwareChanged = false;
+
+        if ($deviceType->has_license_notes) {
+            if ($software) {
+                $software->fill($request->input('software', []));
+                $softwareChanged = $software->isDirty();
+            } else {
+                $softwareChanged = true; // kailangan gumawa ng bagong record
+            }
+        }
+
+        // NO CHANGE
+        if (!$assetChanged && !$hardwareChanged && !$softwareChanged) {
             return back()->with('info', 'No change Made');
         }
 
-        DB::transaction(function () use ($asset, $hardware, $software) {
+        DB::transaction(function () use (
+            $asset,
+            $hardware,
+            $software,
+            $request,
+            $deviceType
+        ) {
+
             $asset->save();
-            $hardware?->save();
-            $software?->save();
+
+            if ($deviceType->has_hardware) {
+                $asset->hardware()->updateOrCreate(
+                    ['asset_id' => $asset->id],
+                    $request->input('hardware', [])
+                );
+            }
+
+            if ($deviceType->has_license_notes) {
+                $asset->software()->updateOrCreate(
+                    ['asset_id' => $asset->id],
+                    $request->input('software', [])
+                );
+            }
         });
 
-        return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Updated');
+        return redirect(route('inventory.display_index'))
+            ->with('success', 'Asset Successfully Updated');
     }
+
 
     public function delete_stock(Asset $asset)
     {
