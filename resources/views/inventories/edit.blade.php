@@ -60,7 +60,12 @@
                         <label for="device_type">Device Type</label>
                         <select name="asset[device_type]" id="device_type" class="select">
                             @foreach($device_type as $device_types)
-                            <option value="{{$device_types->code}}" {{old('asset.device_type', $asset->device_type) == $device_types->code ? 'selected' : ''}}>{{$device_types->name}}</option>
+                            <option value="{{$device_types->code}}"
+                                data-has-basic="{{ $device_types->has_basic }}"
+                                data-has-hardware="{{ $device_types->has_hardware }}"
+                                data-has-purchase="{{ $device_types->has_purchase }}"
+                                data-has-license-notes="{{ $device_types->has_license_notes }}"
+                                {{old('asset.device_type', $asset->device_type) == $device_types->code ? 'selected' : ''}}>{{$device_types->name}}</option>
                             @endforeach
                         </select>
                         <div class="error">Required field</div>

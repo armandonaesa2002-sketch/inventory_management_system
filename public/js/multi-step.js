@@ -230,7 +230,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const softwareTabBtn = document.querySelector(
         ".tab-btn[onclick*='software']",
     );
-    const hardwareTabPane = document.getElementById("hardware");
+    const purchaseTabBtn = document.querySelector(
+        ".tab-btn[onclick*='purchase']",
+    );
+
     const basicTabBtn = document.querySelector(".tab-btn[onclick*='basic']");
     const basicTabPane = document.getElementById("basic");
 
@@ -259,33 +262,63 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateTabsByDeviceType() {
-        const value = deviceTypeSelect ? deviceTypeSelect.value : "";
+        if (!deviceTypeSelect) return;
 
-        if (!hardwareTabBtn || !hardwareTabPane) return;
+        const selectedOption =
+            deviceTypeSelect.options[deviceTypeSelect.selectedIndex];
 
-        if (value === "printer") {
-            // HIDE hardware tab button
-            hardwareTabBtn.style.display = "none"; // NEW
-            softwareTabBtn.style.display = "none"; // NEW
+        const deviceConfig = {
+            hasHardware: selectedOption.dataset.hasHardware === "1",
+            hasPurchase: selectedOption.dataset.hasPurchase === "1",
+            hasLicenseNotes: selectedOption.dataset.hasLicenseNotes === "1",
+        };
 
-            // Siguraduhin na hindi active ang hardware content
-            if (hardwareTabPane.classList.contains("active")) {
-                // NEW
-                hardwareTabPane.classList.remove("active"); // NEW
-                hardwareTabBtn.classList.remove("active"); // NEW
+        // HARDWARE
+        if (hardwareTabBtn) {
+            hardwareTabBtn.style.display = deviceConfig.hasHardware
+                ? "inline-block"
+                : "none";
+        }
 
-                if (basicTabPane) basicTabPane.classList.add("active"); // NEW
-                if (basicTabBtn) basicTabBtn.classList.add("active"); // NEW
+        // PURCHASE
+        if (purchaseTabBtn) {
+            purchaseTabBtn.style.display = deviceConfig.hasPurchase
+                ? "inline-block"
+                : "none";
+        }
+
+        // SOFTWARE / LICENSE
+        if (softwareTabBtn) {
+            softwareTabBtn.style.display = deviceConfig.hasLicenseNotes
+                ? "inline-block"
+                : "none";
+        }
+
+        // Kung currently active yung tab na tinago,
+        // balik tayo sa Basic Info.
+        const activeTab = document.querySelector(".tab-content.active");
+
+        if (
+            activeTab &&
+            ((activeTab.id === "hardware" && !deviceConfig.hasHardware) ||
+                (activeTab.id === "purchase" && !deviceConfig.hasPurchase) ||
+                (activeTab.id === "software" && !deviceConfig.hasLicenseNotes))
+        ) {
+            document.querySelectorAll(".tab-content").forEach((tab) => {
+                tab.classList.remove("active");
+            });
+
+            document.querySelectorAll(".tab-btn").forEach((btn) => {
+                btn.classList.remove("active");
+            });
+
+            if (basicTabPane) {
+                basicTabPane.classList.add("active");
             }
-            // NOTE: HINDI na ginagalaw ang hardwareTabPane.style.display
-            // CSS (.tab-content / .tab-content.active) na bahala.
-        } else {
-            // SHOW hardware tab button
-            hardwareTabBtn.style.display = "inline-block"; // CHANGED: button lang ang ginagalaw
-            softwareTabBtn.style.display = "inline-block"; // CHANGED: button lang ang ginagalaw
 
-            // HINDI gagalawin ang .active / style.display ng content.
-            // openTab ang magko-control kung alin ang visible.
+            if (basicTabBtn) {
+                basicTabBtn.classList.add("active");
+            }
         }
     }
 
