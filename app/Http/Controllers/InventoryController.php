@@ -142,7 +142,7 @@ class InventoryController extends Controller
         if ($request->filled('status')) {
             $asset_query->where('status', $request->status);
         }
-        $assets = $asset_query->paginate(10, ['*'], 'asset_page');
+        $assets = $asset_query->paginate(10, ['*'], 'asset_page')->withQueryString();
 
 
 
@@ -164,7 +164,7 @@ class InventoryController extends Controller
         if ($request->filled('assignment_status')) {
             $assignment->where('status', $request->assignment_status);
         }
-        $assignments = $assignment->paginate(10, ['*'], 'assignment_page');
+        $assignments = $assignment->paginate(10, ['*'], 'assignment_page')->withQueryString();
 
 
         // $repair_history = RepairHistory::with('asset')->paginate(10, ['*'], 'repair_page');
@@ -181,7 +181,7 @@ class InventoryController extends Controller
         if ($request->filled('repair_status')) {
             $repair_history_query->where('repair_status', $request->repair_status);
         }
-        $repair_history = $repair_history_query->paginate(10, ['*'], 'repair_page');
+        $repair_history = $repair_history_query->paginate(10, ['*'], 'repair_page')->withQueryString();
 
 
         $total_assets = Asset::count();
