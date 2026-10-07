@@ -34,7 +34,11 @@
                             <select name="device_type" id="device_type" class="select" required>
                                 <option value="" selected>Select Type</option>
                                 @foreach($device_type as $device_types)
-                                <option value="{{$device_types->code}}">{{$device_types->name}}</option>
+                                <option value="{{$device_types->code}}"
+                                    data-has-basic="{{ $device_types->has_basic }}"
+                                    data-has-hardware="{{ $device_types->has_hardware }}"
+                                    data-has-purchase="{{ $device_types->has_purchase }}"
+                                    data-has-license-notes="{{ $device_types->has_license_notes }}">{{$device_types->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -49,7 +53,7 @@
                                 <input type="text" name="model" id="model" class="input" required>
                             </div>
                         </div>
-                        <div id="computerFields">
+                        <div id="hardwareFields">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Processor</label>
@@ -90,35 +94,43 @@
                                     <label>Peripherals</label>
                                     <input type="text" name="peripherals" class="input" placeholder="e.g. Mouse, Keyboard">
                                 </div>
-                                <div class="form-group">
-                                    <label>Operating System</label>
-                                    <input type="text" name="operating_system" class="input">
-                                </div>
                             </div>
+                            <div id="softwareFields">
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Product Key OS</label>
-                                    <input type="text" name="product_key_os" class="input">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Operating System</label>
+                                        <input type="text" name="operating_system" class="input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Product Key OS</label>
+                                        <input type="text" name="product_key_os" class="input">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Product Key Others</label>
-                                    <input type="text" name="product_key_other" class="input">
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label>Product Key Others</label>
+                                        <input type="text" name="product_key_other" class="input">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Purchase Date</label>
-                                <input type="date" name="purchase_date" class="input">
-                            </div>
-                            <div class="form-group">
-                                <label>Warranty Expiry</label>
-                                <input type="date" name="warranty_expiry" class="input">
-                            </div>
-                            <div class="form-group">
-                                <label>Vendor</label>
-                                <input type="text" name="vendor" class="input">
+                        <div id="purchaseFields">
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Purchase Date</label>
+                                    <input type="date" name="purchase_date" class="input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Warranty Expiry</label>
+                                    <input type="date" name="warranty_expiry" class="input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Vendor</label>
+                                    <input type="text" name="vendor" class="input">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,84 +174,56 @@
     </div>
 
     <script>
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     const textarea = document.getElementById('serial_numbers');
-        //     const counter  = document.getElementById('serialCount');
+        document.addEventListener("DOMContentLoaded", function() {
+            const deviceType = document.getElementById("device_type");
 
-        //     if (textarea && counter) {
-        //         const updateCount = () => {
-        //             const lines = textarea.value
-        //                 .split('\n')
-        //                 .map(l => l.trim())
-        //                 .filter(l => l !== '');
-        //             counter.textContent = lines.length;
-        //         };
-        //         textarea.addEventListener('input', updateCount);
-        //         updateCount();
-        //     }
-        // });
-        const textarea = document.getElementById('serial_numbers');
-        const counter = document.getElementById('serialCount');
-        const duplicateMessage = document.getElementById('duplicateMessage');
-        const submitBtn = document.getElementById('submitBtn');
-
-        function updateSerialInfo() {
-
-            const serials = textarea.value
-                .split(/\r?\n/)
-                .map(s => s.trim())
-                .filter(s => s !== '');
-
-            // Update count
-            counter.textContent = serials.length;
-
-            // Check duplicates
-            const seen = new Set();
-            const duplicates = [];
-
-            serials.forEach(serial => {
-                if (seen.has(serial) && !duplicates.includes(serial)) {
-                    duplicates.push(serial);
-                }
-                seen.add(serial);
-            });
-
-            if (duplicates.length > 0) {
-                duplicateMessage.classList.remove('hidden');
-                duplicateMessage.textContent =
-                    'Duplicate serial number(s): ' + duplicates.join(', ');
-                submitBtn.disabled = true;
-            } else {
-                duplicateMessage.classList.add('hidden');
-                duplicateMessage.textContent = '';
-                submitBtn.disabled = false;
-            }
-        }
-
-        textarea.addEventListener('input', updateSerialInfo);
-        updateSerialInfo();
-
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const deviceType = document.getElementById('device_type');
-            const computerFields = document.getElementById('computerFields');
+            const hardwareFields = document.getElementById("hardwareFields");
+            const softwareFields = document.getElementById("softwareFields");
+            const purchaseFields = document.getElementById("purchaseFields");
 
             function toggleFields() {
+                if (!deviceType) return;
 
-                const isPrinter = deviceType.value === 'printer';
+                const selectedOption =
+                    deviceType.options[deviceType.selectedIndex];
 
-                computerFields.style.display = isPrinter ? 'none' : 'block';
+                const deviceConfig = {
+                    hasHardware: selectedOption.dataset.hasHardware === "1",
+                    hasPurchase: selectedOption.dataset.hasPurchase === "1",
+                    hasLicenseNotes: selectedOption.dataset.hasLicenseNotes === "1",
+                };
 
-                computerFields.querySelectorAll('input, select, textarea').forEach(input => {
-                    input.disabled = isPrinter;
+                toggleSection(
+                    hardwareFields,
+                    deviceConfig.hasHardware
+                );
+
+                toggleSection(
+                    softwareFields,
+                    deviceConfig.hasLicenseNotes
+                );
+
+                toggleSection(
+                    purchaseFields,
+                    deviceConfig.hasPurchase
+                );
+            }
+
+            function toggleSection(section, shouldShow) {
+                if (!section) return;
+
+                section.style.display = shouldShow ? "block" : "none";
+
+                section.querySelectorAll(
+                    "input, select, textarea"
+                ).forEach((input) => {
+                    input.disabled = !shouldShow;
                 });
             }
 
-            deviceType.addEventListener('change', toggleFields);
+            deviceType.addEventListener("change", toggleFields);
 
-            toggleFields(); // para gumana agad pag refresh
+            toggleFields();
         });
     </script>
 </body>
