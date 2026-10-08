@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Asset;
+use App\Models\Department;
 
 class Assignment extends Model
 {
@@ -22,8 +23,12 @@ class Assignment extends Model
     ];
 
     // RELATION TO ASSET
-     public function asset()    
+    public function asset()
     {
         return $this->belongsTo(Asset::class);
+    }
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }
