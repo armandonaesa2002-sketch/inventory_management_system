@@ -78,11 +78,9 @@
                         <label>Prepared By</label>
                         <select name="prepared_by" id="" class="select" required>
                             <option value="">Select here</option>
-                            <option>Ben Amora</option>
-                            <option>Sam Garcia</option>
-                            <option>Hans Jimenez</option>
-                            <option>Cohen Flores</option>
-                            <option>Armando Naesa</option>
+                            @foreach($data['preparedby_options'] as $preparedby)
+                            <option value="{{$preparedby->code}}">{{$preparedby->name}}</option>
+                            @endforeach
                         </select>
                     </div>
 

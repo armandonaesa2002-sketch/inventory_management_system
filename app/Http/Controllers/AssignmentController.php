@@ -8,6 +8,7 @@ use App\Models\Asset;
 use App\Models\Assignment;
 use App\Models\RepairHistory;
 use App\Models\Department;
+use App\Models\PreparedBy;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class AssignmentController extends Controller
@@ -17,7 +18,8 @@ class AssignmentController extends Controller
 
         $assets = Asset::where('status', 'Available')->get();
         $departments = Department::where('is_active', true)->get();
-        $data = array_merge(compact('assets', 'departments'));
+        $preparedby_options = PreparedBy::where('is_active', true)->get();
+        $data = array_merge(compact('assets', 'departments', 'preparedby_options'));
         return view('inventories.assign', compact('data'));
     }
     public function assign_user(Request $request)
