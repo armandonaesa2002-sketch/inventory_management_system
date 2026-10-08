@@ -27,7 +27,7 @@
                     <label for="asset_id">Device Assignment</label>
                     <select name="asset_id" id="asset_id" class="select" required>
                         <option value="" selected>Select Device</option>
-                        @foreach($assets as $asset)
+                        @foreach($data['assets'] as $asset)
                         @if($asset->device_type === 'desktop')
                         <option value="{{$asset->id}}">
                             {{$asset->asset_tag}} - {{$asset->brand}} - {{$asset->software->product_key_os}}
@@ -51,23 +51,9 @@
                         <label>Department</label>
                         <select name="department" class="select" required>
                             <option value="">Select Department</option>
-                            <option>Warehouse</option>
-                            <option>Marketing</option>
-                            <option>Accounting</option>
-                            <option>Visual Merch</option>
-                            <option>Store Dev't</option>
-                            <option>Management</option>
-                            <option>Human Resources</option>
-                            <option>E-Commerce</option>
-                            <option>Brand Team</option>
-                            <option>Learning Dev't</option>
-                            <option>Information Technology</option>
-                            <option>Regulatory</option>
-                            <option>Logistics</option>
-                            <option>Triple A</option>
-                            <option>Sales Team</option>
-                            <option>Tiktok</option>
-                            <option>Security Team</option>
+                            @foreach($data['departments'] as $department)
+                            <option value="{{$department->id}}">{{$department->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
