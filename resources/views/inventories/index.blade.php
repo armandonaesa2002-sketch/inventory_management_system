@@ -227,23 +227,12 @@
 
                                 <select name="department" class="select">
                                     <option value="">All Department</option>
-                                    <option value="Warehouse" {{request('department') == 'Warehouse' ? 'selected' : ''}}>Warehouse</option>
-                                    <option value="Marketing" {{request('department') == 'Marketing' ? 'selected' : ''}}>Marketing</option>
-                                    <option value="Accounting" {{request('department') == 'Accounting' ? 'selected' : ''}}>Accounting</option>
-                                    <option value="Visual Merch" {{request('department') == 'Visual Merch' ? 'selected' : ''}}>Visual Merch</option>
-                                    <option value="Store Devt" {{request('department') == 'Store Devt' ? 'selected' : ''}}>Store Dev't</option>
-                                    <option value="Management" {{request('department') == 'Management' ? 'selected' : ''}}>Management</option>
-                                    <option value="Human Resource" {{request('department') == 'Human Resource' ? 'selected' : ''}}>Human Resources</option>
-                                    <option value="E-Commerce" {{request('department') == 'E-Commerce' ? 'selected' : ''}}>E-Commerce</option>
-                                    <option value="Brand Team" {{request('department') == 'Brand Team' ? 'selected' : ''}}>Brand Team</option>
-                                    <option value="Learning Devt" {{request('department') == 'Learning Devt' ? 'selected' : ''}}>Learning Dev't</option>
-                                    <option value="Information Technology" {{request('department') == 'Information Technology' ? 'selected' : ''}}>Information Technology</option>
-                                    <option value="Regulatory" {{request('department') == 'Regulatory' ? 'selected' : ''}}>Regulatory</option>
-                                    <option value="Logistics" {{request('department') == 'Logistics' ? 'selected' : ''}}>Logistics</option>
-                                    <option value="Triple A" {{request('department') == 'Triple A' ? 'selected' : ''}}>Triple A</option>
-                                    <option value="Sales Team" {{request('department') == 'Sales Team' ? 'selected' : ''}}>Sales Team</option>
-                                    <option value="Tiktok" {{request('department') == 'Tiktok' ? 'selected' : ''}}>Tiktok</option>
-                                    <option value="Security Team" {{request('department') == 'Security Team' ? 'selected' : ''}}>Security Team</option>
+
+                                    @foreach($data['department'] as $departments)
+                                    @if($departments->is_active == true)
+                                    <option value="{{$departments->code}}" {{request('department') == $departments->code ? 'selected' : ''}}>{{$departments->name}}</option>
+                                    @endif
+                                    @endforeach
                                 </select>
 
                                 <select name="assignment_status" class="select">

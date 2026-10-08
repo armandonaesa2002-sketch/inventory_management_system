@@ -12,6 +12,7 @@ use App\Models\Audit;
 use App\Models\HardwareSpec;
 use App\Models\RepairHistory;
 use App\Models\Software;
+use App\Models\Department;
 use App\Exports\AssetsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -191,8 +192,21 @@ class InventoryController extends Controller
         $total_decommissioned = Asset::where('status', 'Decommissioned')->count();
         $total_lost = Asset::where('status', 'Lost')->count();
         $device_type = DeviceType::all();
+        $department = Department::all();
 
-        $data = array_merge(compact('assets', 'assignments', 'repair_history', 'total_assets', 'total_available', 'total_assigned', 'total_repair', 'total_decommissioned', 'total_lost', 'device_type'));
+        $data = array_merge(compact(
+            'assets',
+            'assignments',
+            'repair_history',
+            'total_assets',
+            'total_available',
+            'total_assigned',
+            'total_repair',
+            'total_decommissioned',
+            'total_lost',
+            'device_type',
+            'department'
+        ));
 
         return view('inventories.index', compact('data'));
     }
