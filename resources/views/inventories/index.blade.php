@@ -318,7 +318,7 @@
                                 <tr>
                                     <td>{{$assignment->asset->asset_tag}}</td>
                                     <td>{{$assignment->user_name}}</td>
-                                    <td>{{$assignment->department_id}}</td>
+                                    <td>{{$assignment->department->name}}</td>
                                     <td>{{$assignment->location}}</td>
                                     <td>{{$assignment->created_at->format('M d, Y h:i A')}}</td>
                                     <td>{{$assignment->updated_at->format('M d, Y h:i A')}}</td>

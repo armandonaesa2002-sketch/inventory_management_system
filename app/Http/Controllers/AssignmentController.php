@@ -29,7 +29,7 @@ class AssignmentController extends Controller
             $assignment = Assignment::create([
                 'asset_id' => $request->asset_id,
                 'user_name' => $request->user_name,
-                'department' => $request->department,
+                'department_id' => $request->department,
                 'location' => $request->location,
                 'designation' => $request->designation,
                 'inclusion' => $request->inclusion,
