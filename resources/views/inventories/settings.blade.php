@@ -70,7 +70,7 @@
                         <h2>Device Type Configuration</h2>
 
                         <div class="section-header-actions">
-                            <a class="btn btn-primary" href="{{route('inventory.create')}}">+ Add Datatypes</a>
+                            <a class="btn btn-primary" href="">+ Add Datatypes</a>
                         </div>
                     </div>
 
@@ -83,30 +83,63 @@
                         <table class="table">
                             <thead class="caps">
                                 <tr>
-                                    <th>Asset Tag</th>
-                                    <th>Device Type</th>
-                                    <th>Brand</th>
-                                    <th>Model</th>
-                                    <th>Serial Number</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Asset Prefix</th>
                                     <th>Status</th>
+                                    <th>Basic Info</th>
+                                    <th>Hardware</th>
+                                    <th>Purchase</th>
+                                    <th>License & Notes</th>
+                                    <th>Created At</th>
                                     <th colspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @forelse($data['device_types'] as $device_type)
                                 <tr>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>4</td>
-                                    <td>5</td>
-                                    <td>6</td>
+                                    <td>{{$device_type->code}}</td>
+                                    <td>{{$device_type->name}}</td>
+                                    <td>{{$device_type->asset_prefix}}</td>
+                                    <td>
+                                        <span class="status-badge {{$device_type->is_active == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->is_active == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge {{$device_type->has_basic == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_basic == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge {{$device_type->has_hardware == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_hardware == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge {{$device_type->has_purchase == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_purchase == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge {{$device_type->has_license_notes == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_license_notes == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td>{{$device_type->created_at->format('M d, Y h:i A')}}</td>
+
                                     <td colspan="3">
                                         <a class="btn btn-sm btn-outline" href="">Edit</a>
 
                                         <a class="btn btn-sm btn-danger" href="">Delete</a>
                                     </td>
                                 </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="10">No record found</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
