@@ -229,9 +229,9 @@
                                     <option value="">All Department</option>
 
                                     @foreach($data['department'] as $departments)
-                                    @if($departments->is_active == true)
+
                                     <option value="{{$departments->id}}" {{request('department') == $departments->id ? 'selected' : ''}}>{{$departments->name}}</option>
-                                    @endif
+
                                     @endforeach
                                 </select>
 

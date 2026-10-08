@@ -21,12 +21,12 @@ class InventoryController extends Controller
 
     public function create()
     {
-        $device_type = DeviceType::all();
+        $device_type = DeviceType::where('is_active', true)->get();
         return view('inventories.create', compact('device_type'));
     }
     public function create_multiple()
     {
-        $device_type = DeviceType::all();
+        $device_type = DeviceType::where('is_active', true)->get();
         return view('inventories.multiple', compact('device_type'));
     }
 
@@ -191,8 +191,8 @@ class InventoryController extends Controller
         $total_repair = Asset::where('status', 'For repair')->count();
         $total_decommissioned = Asset::where('status', 'Decommissioned')->count();
         $total_lost = Asset::where('status', 'Lost')->count();
-        $device_type = DeviceType::all();
-        $department = Department::all();
+        $device_type = DeviceType::where('is_active', true)->get();
+        $department = Department::where('is_active', true)->get();
 
         $data = array_merge(compact(
             'assets',
