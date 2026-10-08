@@ -160,7 +160,7 @@ class InventoryController extends Controller
             });
         }
         if ($request->filled('department')) {
-            $assignment->where('department', $request->department);
+            $assignment->where('department_id', $request->department);
         }
         if ($request->filled('assignment_status')) {
             $assignment->where('status', $request->assignment_status);

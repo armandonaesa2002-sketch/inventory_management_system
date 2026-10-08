@@ -230,7 +230,7 @@
 
                                     @foreach($data['department'] as $departments)
                                     @if($departments->is_active == true)
-                                    <option value="{{$departments->code}}" {{request('department') == $departments->code ? 'selected' : ''}}>{{$departments->name}}</option>
+                                    <option value="{{$departments->id}}" {{request('department') == $departments->id ? 'selected' : ''}}>{{$departments->name}}</option>
                                     @endif
                                     @endforeach
                                 </select>
@@ -318,7 +318,7 @@
                                 <tr>
                                     <td>{{$assignment->asset->asset_tag}}</td>
                                     <td>{{$assignment->user_name}}</td>
-                                    <td>{{$assignment->department}}</td>
+                                    <td>{{$assignment->department_id}}</td>
                                     <td>{{$assignment->location}}</td>
                                     <td>{{$assignment->created_at->format('M d, Y h:i A')}}</td>
                                     <td>{{$assignment->updated_at->format('M d, Y h:i A')}}</td>
