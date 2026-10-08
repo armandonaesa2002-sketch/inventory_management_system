@@ -44,12 +44,12 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
 
-                <a href="#assets" class="sidebar-link active">
+                <a href="{{route('inventory.ink_stock')}}" class="sidebar-link active">
                     <span class="sidebar-icon">▣</span>
                     <span class="sidebar-text">Ink Stock</span>
                 </a>
 
-                <a href="#repair_history" class="sidebar-link">
+                <a href="{{route('inventory.settings')}}" class="sidebar-link">
                     <span class="sidebar-icon">⚒</span>
                     <span class="sidebar-text">Settings</span>
                 </a>

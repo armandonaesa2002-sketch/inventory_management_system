@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\InkStockController;
+use App\Http\Controllers\SettingsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,6 +59,8 @@ Route::post('/inventory/{ink}/remove_ink', [InkStockController::class, 'remove_i
 //Ink Transaction
 Route::get('/inventory/transaction_form', [InkStockController::class, 'transaction_form'])->name('inventory.transaction_form');
 Route::post('/inventory/transact_form', [InkStockController::class, 'transact_form'])->name('inventory.transact_form');
+//Settings
+Route::get('/inventory/settings', [SettingsController::class, 'settings'])->name('inventory.settings');
 
 
 
