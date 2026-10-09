@@ -224,7 +224,9 @@ class AssignmentController extends Controller
 
         $assignment_count = Assignment::where('asset_id', $asset->id)->count();
         $remarks = $assignment_count === 1 ? 'Brand New' : 'Reissued';
-
+        $prepared_by = PreparedBy::find($assignment->preparedby_id);
+        $department = Department::find($assignment->department_id);
+        // dd($department);
 
         $template = new TemplateProcessor(
             storage_path('app/templates/liability_form.docx')
@@ -244,10 +246,10 @@ class AssignmentController extends Controller
         $template->setValue('label', $label);
         $template->setValue('item_description', $combined_description);
         $template->setValue('user_name', $assignment->user_name);
-        $template->setValue('department', $assignment->department);
+        $template->setValue('department', $department->name);
         $template->setValue('designation', $assignment->designation);
         $template->setValue('remarks', $remarks);
-        $template->setValue('it_name', $assignment->prepared_by);
+        $template->setValue('it_name', $prepared_by->name);
         $template->setValue('serial_number', $serial);
         $template->setValue('created_at', $assignment->created_at->format('m/d/Y'));
 

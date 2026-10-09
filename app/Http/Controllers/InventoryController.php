@@ -422,8 +422,7 @@ class InventoryController extends Controller
                 $query->latest();
             },
         ]);
-
-        return view('inventories.asset_view', ['asset' => $asset]);
+        return view('inventories.asset_view', compact('asset'));
     }
 
     public function export(Request $request)

@@ -142,7 +142,7 @@
                                     @forelse($asset->assignment as $assignment)
                                     <tr>
                                         <td>{{$assignment->user_name}}</td>
-                                        <td>{{$assignment->department}}</td>
+                                        <td>{{$assignment->department->name}}</td>
                                         <td>{{$assignment->location}}</td>
                                         <td>{{$assignment->created_at}}</td>
                                         <td>{{$assignment->updated_at}}</td>
