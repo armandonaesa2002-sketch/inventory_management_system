@@ -19,7 +19,7 @@ class Assignment extends Model
         'remarks',
         'designation',
         'inclusion',
-        'prepared_by'
+        'preparedby_id'
     ];
 
     // RELATION TO ASSET

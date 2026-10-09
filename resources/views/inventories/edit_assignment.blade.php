@@ -78,13 +78,11 @@
                     </div>
                     <div class="form-group">
                         <label>Prepared By</label>
-                        <select name="assignment[prepared_by]" class="select" required>
+                        <select name="assignment[preparedby_id]" class="select" required>
                             <option value="">Select here</option>
-                            <option value="Ben Amora" {{old('assignment.prepared_by', $assignment->prepared_by) == 'Ben Amora' ? 'selected' : ''}}>Ben Amora</option>
-                            <option value="Sam Garcia" {{old('assignment.prepared_by', $assignment->prepared_by) == 'Sam Garcia' ? 'selected' : ''}}>Sam Garcia</option>
-                            <option value="Hans Jimenez" {{old('assignment.prepared_by', $assignment->prepared_by) == 'Hans Jimenez' ? 'selected' : ''}}>Hans Jimenez</option>
-                            <option value="Cohen Flores" {{old('assignment.prepared_by', $assignment->prepared_by) == 'Cohen Flores' ? 'selected' : ''}}>Cohen Flores</option>
-                            <option value="Armando Naesa" {{old('assignment.prepared_by', $assignment->prepared_by) == 'Armando Naesa' ? 'selected' : ''}}>Armando Naesa</option>
+                            @foreach($prepared_by as $prepared_by_who)
+                            <option value="{{$prepared_by_who->id}}" {{old('assignment.preparedby_id', $assignment->preparedby_id) == $prepared_by_who->id ? 'selected' : ''}}>{{$prepared_by_who->name}}</option>
+                            @endforeach
                         </select>
                     </div>
 

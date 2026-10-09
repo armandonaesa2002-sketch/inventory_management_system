@@ -33,7 +33,7 @@ class AssignmentController extends Controller
                 'location' => $request->location,
                 'designation' => $request->designation,
                 'inclusion' => $request->inclusion,
-                'prepared_by' => $request->prepared_by
+                'preparedby_id' => $request->prepared_by
             ]);
             // dd($assignment);
 

@@ -79,7 +79,7 @@
                         <select name="prepared_by" id="" class="select" required>
                             <option value="">Select here</option>
                             @foreach($data['preparedby_options'] as $preparedby)
-                            <option value="{{$preparedby->code}}">{{$preparedby->name}}</option>
+                            <option value="{{$preparedby->id}}">{{$preparedby->name}}</option>
                             @endforeach
                         </select>
                     </div>
