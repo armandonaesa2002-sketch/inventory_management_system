@@ -59,7 +59,8 @@ class AssignmentController extends Controller
     }
     public function delete_assignment(Assignment $assignment)
     {
-        return view('inventories.delete_assignment', ['assignment' => $assignment]);
+        $department = Department::find($assignment->department_id);
+        return view('inventories.delete_assignment', compact('assignment', 'department'));
     }
     public function remove_assignment(Assignment $assignment)
     {

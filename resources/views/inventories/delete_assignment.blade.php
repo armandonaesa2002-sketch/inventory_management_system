@@ -41,7 +41,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Department</label>
-                    <input type="text" class="input" value="{{$assignment->department}}" disabled>
+                    <input type="text" class="input" value="{{$department->name}}" disabled>
                 </div>
                 <div class="form-group">
                     <label>Location</label>
