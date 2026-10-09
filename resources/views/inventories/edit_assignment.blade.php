@@ -26,13 +26,17 @@
                 {{ session('info') }}
             </div>
             @endif
-
+            @php
+            $assignment = $data['assignment'];
+            $department = $data['department'];
+            $prepared_by = $data['preparedby_options'];
+            @endphp
             <div class="asset-tag-label">
                 <span class="label">Asset Tag:</span>
                 <span class="value">{{$assignment->asset->asset_tag}}</span>
             </div>
 
-            <form action="{{route('inventory.update_assignment', ['assignment' => $assignment])}}" method="POST">
+            <form action="{{route('inventory.update_assignment', $assignment->id)}}" method="POST">
                 @csrf
                 @method('put')
                 <div class="form-row">
@@ -45,25 +49,11 @@
 
                     <div class="form-group">
                         <label>Department</label>
-                        <select name="assignment[department]" class="select" required>
+                        <select name="assignment[department_id]" class="select" required>
                             <option value="">Select Department</option>
-                            <option value="Warehouse" {{old('assignment.department', $assignment->department) == 'Warehouse' ? 'selected' : ''}}>Warehouse</option>
-                            <option value="Marketing" {{old('assignment.department', $assignment->department) == 'Marketing' ? 'selected' : ''}}>Marketing</option>
-                            <option value="Accounting" {{old('assignment.department', $assignment->department) == 'Accounting' ? 'selected' : ''}}>Accounting</option>
-                            <option value="Visual Merch" {{old('assignment.department', $assignment->department) == 'Visual Merch' ? 'selected' : ''}}>Visual Merch</option>
-                            <option value="Store Devt" {{old('assignment.department', $assignment->department) == 'Store Devt' ? 'selected' : ''}}>Store Dev't</option>
-                            <option value="Management" {{old('assignment.department', $assignment->department) == 'Management' ? 'selected' : ''}}>Management</option>
-                            <option value="Human Resources" {{old('assignment.department', $assignment->department) == 'Human Resources' ? 'selected' : ''}}>Human Resources</option>
-                            <option value="E-Commerce" {{old('assignment.department', $assignment->department) == 'E-Commerce' ? 'selected' : ''}}>E-Commerce</option>
-                            <option value="Brand Team" {{old('assignment.department', $assignment->department) == 'Brand Team' ? 'selected' : ''}}>Brand Team</option>
-                            <option value="Learning Devt" {{old('assignment.department', $assignment->department) == 'Learning Devt' ? 'selected' : ''}}>Learning Dev't</option>
-                            <option value="Information Technology" {{old('assignment.department', $assignment->department) == 'Information Technology' ? 'selected' : ''}}>Information Technology</option>
-                            <option value="Regulatory" {{old('assignment.department', $assignment->department) == 'Regulatory' ? 'selected' : ''}}>Regulatory</option>
-                            <option value="Logistics" {{old('assignment.department', $assignment->department) == 'Logistics' ? 'selected' : ''}}>Logistics</option>
-                            <option value="Triple A" {{old('assignment.department', $assignment->department) == 'Triple A' ? 'selected' : ''}}>Triple A</option>
-                            <option value="Sales Team" {{old('assignment.department', $assignment->department) == 'Sales Team' ? 'selected' : ''}}>Sales Team</option>
-                            <option value="Tiktok" {{old('assignment.department', $assignment->department) == 'Tiktok' ? 'selected' : ''}}>Tiktok</option>
-                            <option value="Security Team" {{old('assignment.department', $assignment->department) == 'Security Team' ? 'selected' : ''}}>Security Team</option>
+                            @foreach($department as $departments)
+                            <option value="{{$departments->id}}" {{old('assignment.department_id', $assignment->department_id == $departments->id ? 'selected' : '')}}>{{$departments->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

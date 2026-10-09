@@ -46,10 +46,14 @@ class AssignmentController extends Controller
 
     public function edit_assignment(Assignment $assignment)
     {
-        return view('inventories.edit_assignment', ['assignment' => $assignment]);
+        $department = Department::where('is_active', true)->get();
+        $preparedby_options = PreparedBy::where('is_active', true)->get();
+        $data = array_merge(compact('department', 'preparedby_options', 'assignment'));
+        return view('inventories.edit_assignment', compact('data'));
     }
     public function update_assignment(Assignment $assignment, Request $request)
     {
+        // dd($request->all());
         $assignment->fill($request->input('assignment'));
         if (!$assignment->isDirty()) {
             return back()->with('info', 'No change made');
