@@ -349,7 +349,8 @@ class InventoryController extends Controller
 
         // $data = [];
 
-        $prefix = Asset::getAssetPrefix($request->device_type);
+        $deviceType = DeviceType::findOrFail($request->device_type);
+        $prefix = $deviceType->asset_prefix;
         $lastAsset = Asset::where('asset_tag', 'like', $prefix . '-%')
             ->latest('id')
             ->first();
@@ -367,7 +368,7 @@ class InventoryController extends Controller
                 //main asset
                 $asset = Asset::create([
                     'asset_tag' => $asset_tag,
-                    'device_type' => $request->device_type,
+                    'device_type_id' => $request->device_type,
                     'brand' => $request->brand,
                     'model' => $request->model,
                     'serial_number' => $serial,
