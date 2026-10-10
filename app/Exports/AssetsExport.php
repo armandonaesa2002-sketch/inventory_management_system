@@ -36,14 +36,14 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
 
             $query->where(function ($query) use ($search) {
                 $query->where('asset_tag', 'like', "%{$search}%")
-                      ->orWhere('serial_number', 'like', "%{$search}%")
-                      ->orWhere('brand', 'like', "%{$search}%")
-                      ->orWhere('model', 'like', "%{$search}%");
+                    ->orWhere('serial_number', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%");
             });
         }
 
         if ($this->device_type) {
-            $query->where('device_type', $this->device_type);
+            $query->where('device_type_id', $this->device_type);
         }
 
         if ($this->status) {
@@ -55,7 +55,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
             $active_assignment = $asset->assignment->where('status', 'In Use')->first();
             return [
                 $asset->asset_tag,
-                $asset->device_type_label,
+                $asset->device_type->name,
                 $asset->brand,
                 $asset->model,
                 $asset->serial_number,
@@ -77,7 +77,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
 
                 $asset->status,
                 $active_assignment?->user_name,
-                $active_assignment?->department,
+                $active_assignment?->department?->name,
                 $active_assignment?->designation,
                 $active_assignment?->location,
                 $active_assignment?->inclusion,
