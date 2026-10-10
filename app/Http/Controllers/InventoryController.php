@@ -138,7 +138,7 @@ class InventoryController extends Controller
         }
 
         if ($request->filled('device_type')) {
-            $asset_query->where('device_type', $request->device_type);
+            $asset_query->where('device_type_id', $request->device_type);
         }
         if ($request->filled('status')) {
             $asset_query->where('status', $request->status);

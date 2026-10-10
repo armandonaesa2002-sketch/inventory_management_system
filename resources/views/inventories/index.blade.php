@@ -113,7 +113,7 @@
                                 <select name="device_type" class="select">
                                     <option value="">All Device Types</option>
                                     @foreach($data['device_type'] as $device_types)
-                                    <option value="{{$device_types->code}}" {{ request('device_type') == $device_types->code ? 'selected' : '' }}>{{$device_types->name}}</option>
+                                    <option value="{{$device_types->id}}" {{ request('device_type') == $device_types->id ? 'selected' : '' }}>{{$device_types->name}}</option>
                                     @endforeach
                                 </select>
 
