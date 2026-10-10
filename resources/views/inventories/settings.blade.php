@@ -80,7 +80,7 @@
 
 
                     @if(session('success-devicetype'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success" id="datatypeMessage">
                         {{session('success-devicetype')}}
                     </div>
                     @endif
@@ -132,10 +132,44 @@
                                         </span>
                                     </td>
 
-                                    <td colspan="3">
-                                        <a class="btn btn-sm btn-outline" href="">Edit</a>
+                                    <td colspan="2">
 
-                                        <a class="btn btn-sm btn-danger" href="">Delete</a>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline"
+                                            onclick="openEditDatatypeModal(this)"
+                                            data-id="{{ $device_type->id }}"
+                                            data-code="{{ $device_type->code }}"
+                                            data-name="{{ $device_type->name }}"
+                                            data-prefix="{{ $device_type->asset_prefix }}"
+                                            data-hardware="{{ $device_type->has_hardware ? '1' : '0' }}"
+                                            data-purchase="{{ $device_type->has_purchase ? '1' : '0' }}"
+                                            data-license="{{ $device_type->has_license_notes ? '1' : '0' }}">
+                                            Edit
+                                        </button>
+
+
+
+                                        <form action="{{ route('device_types.toggle', $device_type->id) }}"
+                                            method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            @if ($device_type->is_active)
+                                            <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Deactivate this device type?')">
+                                                Deactivate
+                                            </button>
+                                            @else
+                                            <button type="submit"
+                                                class="btn btn-sm btn-primary"
+                                                onclick="return confirm('Reactivate this device type?')">
+                                                Reactivate
+                                            </button>
+                                            @endif
+                                        </form>
+
                                     </td>
                                 </tr>
                                 @empty
@@ -153,6 +187,18 @@
                             openDatatypeModal();
                         });
                     </script>
+                    @elseif (session('edit_device_type_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-id="{{ session('edit_device_type_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditDatatypeModal(button);
+                            }
+                        });
+                    </script>
                     @endif
                     <!-- {{-- ADD DATATYPE MODAL --}} -->
                     <div id="addDatatypeModal" class="modal">
@@ -164,12 +210,12 @@
                                 &times;
                             </button>
 
-                            <h2 class="modal-title">Add Device Type</h2>
-                            <p class="modal-text">Configure a new device type.</p>
+                            <h2 class="modal-title" id="datatypeModalTitle">Add Device Type</h2>
+                            <p class="modal-text" id="datatypeModalText">Configure a new device type.</p>
 
-                            <form action="{{route('device_type')}}" method="POST">
+                            <form action="{{route('device_type')}}" id="datatypeForm" method="POST">
                                 @if ($errors->any())
-                                <div class="alert alert-danger">
+                                <div class="alert alert-danger" id="datatypeMessage">
 
                                     @foreach ($errors->all() as $error)
                                     <p>{{ $error }}</p>
@@ -177,8 +223,14 @@
 
                                 </div>
                                 @endif
+                                @if (session('info'))
+                                <div class="alert alert-success" id="datatypeMessage">
+                                    {{ session('info') }}
+                                </div>
+                                @endif
 
                                 @csrf
+                                <input type="hidden" id="datatypeMethod" name="_method" value="POST">
                                 <div class="form-row">
 
                                     <div class="form-group">
@@ -201,7 +253,7 @@
                                 <div class="form-row">
 
                                     <div class="form-group">
-                                        <input type="hidden" name="has_basic" value="1">
+                                        <input type="hidden" name="has_basic" id="has_basic" value="1">
                                         <label class="radio-label">
                                             <input type="checkbox" checked disabled>
                                             Basic Info
@@ -210,7 +262,7 @@
 
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_hardware" value="1" {{ old('has_hardware') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_hardware" id="has_hardware" value="1" {{ old('has_hardware') ? 'checked' : '' }}>
                                             Hardware
                                         </label>
                                     </div>
@@ -219,20 +271,22 @@
 
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_purchase" value="1" {{ old('has_purchase') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_purchase" id="has_purchase" value="1" {{ old('has_purchase') ? 'checked' : '' }}>
                                             Purchase
                                         </label>
                                     </div>
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_license_notes" value="1" {{ old('has_license_notes') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_license_notes" id="has_license_notes" value="1" {{ old('has_license_notes') ? 'checked' : '' }}>
                                             License & Notes
                                         </label>
                                     </div>
                                 </div>
 
                                 <div style="display: flex; gap: 10px; margin-top: 18px;">
-                                    <button type="submit" class="btn btn-primary">Save Datatype</button>
+                                    <button type="submit" id="datatypeSubmit" class="btn btn-primary">
+                                        Save Datatype
+                                    </button>
                                     <button type="button" class="btn btn-outline" onclick="closeDatatypeModal()">Cancel</button>
                                 </div>
 
@@ -248,7 +302,7 @@
                     <div class="settings-section-heading">
                         <div>
                             <h2>Account Settings</h2>
-                            <p class="text-muted">I-update ang impormasyon ng account.</p>
+                            <p class="text-muted">Update your information account.</p>
                         </div>
                     </div>
 
