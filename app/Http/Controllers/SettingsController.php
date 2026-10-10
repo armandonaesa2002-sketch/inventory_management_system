@@ -24,4 +24,29 @@ class SettingsController extends Controller
         ));
         return view('inventories.settings', compact('data'));
     }
+    public function add_device_type(Request $request)
+    {
+        // dd($request->all());
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:50', 'unique:device_types,code'],
+            'name' => ['required', 'string', 'max:100', 'unique:device_types,name'],
+            'asset_prefix' => ['required', 'string', 'max:20'],
+            'has_basic' => ['required', 'boolean'],
+            'has_hardware' => ['sometimes', 'boolean'],
+            'has_purchase' => ['sometimes', 'boolean'],
+            'has_license_notes' => ['sometimes', 'boolean'],
+        ]);
+
+        DeviceType::create([
+            'code' => $validated['code'],
+            'name' => $validated['name'],
+            'asset_prefix' => $validated['asset_prefix'],
+            'has_basic' => true,
+            'has_hardware' => $request->boolean('has_hardware'),
+            'has_purchase' => $request->boolean('has_purchase'),
+            'has_license_notes' => $request->boolean('has_license_notes'),
+        ]);
+
+        return back()->with('success-devicetype', 'Device type added successfully.');
+    }
 }

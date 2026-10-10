@@ -78,9 +78,10 @@
                         </div>
                     </div>
 
-                    @if(session('success'))
+
+                    @if(session('success-devicetype'))
                     <div class="alert alert-success">
-                        {{session('success')}}
+                        {{session('success-devicetype')}}
                     </div>
                     @endif
                     <div class="table-wrapper">
@@ -92,8 +93,8 @@
                                     <th>Asset Prefix</th>
                                     <th>Status</th>
                                     <th>Basic Info</th>
-                                    <th>Hardware</th>
                                     <th>Purchase</th>
+                                    <th>Hardware</th>
                                     <th>License & Notes</th>
                                     <th colspan="2">Action</th>
                                 </tr>
@@ -116,13 +117,13 @@
                                     </td>
 
                                     <td>
-                                        <span class="status-badge {{$device_type->has_hardware == true ? 'status-inuse' : 'status-inactive'}}">
-                                            {{$device_type->has_hardware == true ? 'Active' : 'Inactive'}}
+                                        <span class="status-badge {{$device_type->has_purchase == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_purchase == true ? 'Active' : 'Inactive'}}
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="status-badge {{$device_type->has_purchase == true ? 'status-inuse' : 'status-inactive'}}">
-                                            {{$device_type->has_purchase == true ? 'Active' : 'Inactive'}}
+                                        <span class="status-badge {{$device_type->has_hardware == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$device_type->has_hardware == true ? 'Active' : 'Inactive'}}
                                         </span>
                                     </td>
                                     <td>
@@ -146,6 +147,13 @@
                         </table>
                     </div>
 
+                    @if ($errors->any())
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            openDatatypeModal();
+                        });
+                    </script>
+                    @endif
                     <!-- {{-- ADD DATATYPE MODAL --}} -->
                     <div id="addDatatypeModal" class="modal">
                         <div class="modal-content">
@@ -160,6 +168,15 @@
                             <p class="modal-text">Configure a new device type.</p>
 
                             <form action="{{route('device_type')}}" method="POST">
+                                @if ($errors->any())
+                                <div class="alert alert-danger">
+
+                                    @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                    @endforeach
+
+                                </div>
+                                @endif
 
                                 @csrf
                                 <div class="form-row">
@@ -257,6 +274,7 @@
         </main>
 
     </div>
+
     <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
 

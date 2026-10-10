@@ -61,6 +61,8 @@ Route::get('/inventory/transaction_form', [InkStockController::class, 'transacti
 Route::post('/inventory/transact_form', [InkStockController::class, 'transact_form'])->name('inventory.transact_form');
 //Settings
 Route::get('/inventory/settings', [SettingsController::class, 'settings'])->name('inventory.settings');
+Route::POST('/device_type', [SettingsController::class, 'add_device_type'])->name('device_type');
+
 
 
 
