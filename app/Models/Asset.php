@@ -52,6 +52,7 @@ class Asset extends Model
         return $this->hasMany(RepairHistory::class);
     }
 
+    //LIABILITY FORM ITEM DESCRIPTION - CURRENTLY USING ON ASSIGNMENT CONTROLLER
     public function getItemDescriptionAttribute()
     {
         $specs = [];

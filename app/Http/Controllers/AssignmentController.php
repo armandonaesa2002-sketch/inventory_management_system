@@ -234,7 +234,7 @@ class AssignmentController extends Controller
 
         $label = "SERIAL NO.";
         $serial = $asset->serial_number;
-        if ($asset->device_type === "desktop") {
+        if ($asset->device_type->code === "desktop") {
             $label = "PRODUCT KEY";
             $serial = $asset->software->product_key_os;
         }
