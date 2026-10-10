@@ -70,7 +70,11 @@
                         <h2>Device Type Configuration</h2>
 
                         <div class="section-header-actions">
-                            <a class="btn btn-primary" href="">+ Add Datatypes</a>
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openDatatypeModal()">
+                                + Add Datatypes
+                            </button>
                         </div>
                     </div>
 
@@ -91,7 +95,6 @@
                                     <th>Hardware</th>
                                     <th>Purchase</th>
                                     <th>License & Notes</th>
-                                    <th>Created At</th>
                                     <th colspan="2">Action</th>
                                 </tr>
                             </thead>
@@ -127,7 +130,6 @@
                                             {{$device_type->has_license_notes == true ? 'Active' : 'Inactive'}}
                                         </span>
                                     </td>
-                                    <td>{{$device_type->created_at->format('M d, Y h:i A')}}</td>
 
                                     <td colspan="3">
                                         <a class="btn btn-sm btn-outline" href="">Edit</a>
@@ -143,6 +145,84 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- {{-- ADD DATATYPE MODAL --}} -->
+                    <div id="addDatatypeModal" class="modal">
+                        <div class="modal-content">
+
+                            <button type="button"
+                                class="modal-close"
+                                onclick="closeDatatypeModal()">
+                                &times;
+                            </button>
+
+                            <h2 class="modal-title">Add Device Type</h2>
+                            <p class="modal-text">Configure a new device type.</p>
+
+                            <form action="{{route('device_type')}}" method="POST">
+
+                                @csrf
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label for="code">Code</label>
+                                        <input type="text" id="code" class="input" name="code" value="{{ old('code') }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" class="input" name="name" value="{{ old('name') }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label for="asset_prefix">Asset Prefix</label>
+                                        <input type="text" id="asset_prefix" name="asset_prefix" class="input" value="{{ old('asset_prefix') }}" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <input type="hidden" name="has_basic" value="1">
+                                        <label class="radio-label">
+                                            <input type="checkbox" checked disabled>
+                                            Basic Info
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="radio-label">
+                                            <input type="checkbox" name="has_hardware" value="1" {{ old('has_hardware') ? 'checked' : '' }}>
+                                            Hardware
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label class="radio-label">
+                                            <input type="checkbox" name="has_purchase" value="1" {{ old('has_purchase') ? 'checked' : '' }}>
+                                            Purchase
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="radio-label">
+                                            <input type="checkbox" name="has_license_notes" value="1" {{ old('has_license_notes') ? 'checked' : '' }}>
+                                            License & Notes
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: 18px;">
+                                    <button type="submit" class="btn btn-primary">Save Datatype</button>
+                                    <button type="button" class="btn btn-outline" onclick="closeDatatypeModal()">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
 
 
                 </section>
@@ -177,6 +257,7 @@
         </main>
 
     </div>
+    <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
 
 </body>
