@@ -34,7 +34,7 @@
                             <select name="device_type" id="device_type" class="select" required>
                                 <option value="" selected>Select Type</option>
                                 @foreach($device_type as $device_types)
-                                <option value="{{$device_types->code}}"
+                                <option value="{{$device_types->id}}"
                                     data-has-basic="{{ $device_types->has_basic }}"
                                     data-has-hardware="{{ $device_types->has_hardware }}"
                                     data-has-purchase="{{ $device_types->has_purchase }}"
@@ -174,6 +174,47 @@
     </div>
 
     <script>
+        const textarea = document.getElementById('serial_numbers');
+        const counter = document.getElementById('serialCount');
+        const duplicateMessage = document.getElementById('duplicateMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function updateSerialInfo() {
+
+            const serials = textarea.value
+                .split(/\r?\n/)
+                .map(s => s.trim())
+                .filter(s => s !== '');
+
+            // Update count
+            counter.textContent = serials.length;
+
+            // Check duplicates
+            const seen = new Set();
+            const duplicates = [];
+
+            serials.forEach(serial => {
+                if (seen.has(serial) && !duplicates.includes(serial)) {
+                    duplicates.push(serial);
+                }
+                seen.add(serial);
+            });
+
+            if (duplicates.length > 0) {
+                duplicateMessage.classList.remove('hidden');
+                duplicateMessage.textContent =
+                    'Duplicate serial number(s): ' + duplicates.join(', ');
+                submitBtn.disabled = true;
+            } else {
+                duplicateMessage.classList.add('hidden');
+                duplicateMessage.textContent = '';
+                submitBtn.disabled = false;
+            }
+        }
+
+        textarea.addEventListener('input', updateSerialInfo);
+        updateSerialInfo();
+
         document.addEventListener("DOMContentLoaded", function() {
             const deviceType = document.getElementById("device_type");
 
