@@ -181,7 +181,7 @@
                                 @forelse($data['assets'] as $asset)
                                 <tr>
                                     <td>{{$asset->asset_tag}}</td>
-                                    <td>{{$asset->device_type_label}}</td>
+                                    <td>{{$asset->device_type->name}}</td>
                                     <td>{{$asset->brand}}</td>
                                     <td>{{$asset->model}}</td>
                                     <td>{{$asset->serial_number}}</td>

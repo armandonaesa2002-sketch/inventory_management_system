@@ -14,7 +14,7 @@ Route::get('/inventory/asset_tag/{type}', [InventoryController::class, 'generate
 //Mismong Page na ivivisit ni user '/inventory'
 // Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
 Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
-Route::post('/inventory', [InventoryController::class, 'add_stock'])->name('inventory.add');
+Route::post('/inventory/add_stock', [InventoryController::class, 'add_stock'])->name('inventory.add_stock');
 Route::get('/inventory/{asset}/edit', [InventoryController::class, 'edit_stock'])->name('inventory.edit');
 Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_stock'])->name('inventory.update');
 Route::get('/inventory/{asset}/remove', [InventoryController::class, 'remove_stock'])->name('inventory.remove');

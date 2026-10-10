@@ -43,7 +43,7 @@
             </div>
 
             <div class="multi-step">
-                <form action="{{route('inventory.add')}}" method="post">
+                <form action="{{route('inventory.add_stock')}}" method="post">
                     @csrf
                     @method('post')
 
@@ -71,7 +71,7 @@
                             <select name="device_type" id="device_type" class="select" required>
                                 <option value="" selected>Select Type</option>
                                 @foreach($device_type as $device_types)
-                                <option value="{{$device_types->code}}"
+                                <option value="{{$device_types->id}}"
                                     data-has-basic="{{ $device_types->has_basic }}"
                                     data-has-hardware="{{ $device_types->has_hardware }}"
                                     data-has-purchase="{{ $device_types->has_purchase }}"

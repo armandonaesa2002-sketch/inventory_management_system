@@ -45,12 +45,12 @@ class InventoryController extends Controller
             }
         }
 
-        $deviceType = DeviceType::where('code', $request->device_type)->firstOrFail();
+        $deviceType = DeviceType::where('id', $request->device_type)->firstOrFail();
 
         DB::transaction(function () use ($request, $deviceType) {
             $asset = Asset::create([
                 'asset_tag' => $request->asset_tag,
-                'device_type' => $request->device_type,
+                'device_type_id' => $request->device_type,
                 'brand' => $request->brand,
                 'model' => $request->model,
                 'serial_number' => $request->serial_number,
@@ -95,9 +95,9 @@ class InventoryController extends Controller
     }
 
     //Generating Tag to Json
-    public function generate_tag($type)
+    public function generate_tag($id)
     {
-        $deviceType = DeviceType::where('code', $type)
+        $deviceType = DeviceType::where('id', $id)
             ->where('is_active', true)
             ->firstOrFail();
 
@@ -220,9 +220,10 @@ class InventoryController extends Controller
 
     public function update_asset(Asset $asset, Request $request)
     {
+        // dd($request->all());
         $deviceType = DeviceType::where(
-            'code',
-            $request->input('asset.device_type')
+            'id',
+            $request->input('asset.device_type_id')
         )->firstOrFail();
 
         // ASSET
