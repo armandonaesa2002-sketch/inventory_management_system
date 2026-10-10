@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('assets', function (Blueprint $table) {
+            $table->dropColumn('device_type');
+        });
+        Schema::table('assets', function (Blueprint $table) {
+            $table->foreignId('device_type_id')->constrained('device_types');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('assets', function (Blueprint $table) {
+            $table->dropForeign(['device_type_id']);
+            $table->dropColumn('device_type_id');
+        });
+
+        Schema::table('assets', function (Blueprint $table) {
+            $table->string('device_type');
+        });
+    }
+};
