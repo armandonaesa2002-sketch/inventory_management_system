@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Asset;
 
 class DeviceType extends Model
 {
@@ -18,4 +19,9 @@ class DeviceType extends Model
         'has_purchase',
         'has_license_notes',
     ];
+
+    public function asset()
+    {
+        return $this->hasMany(Asset::class);
+    }
 }

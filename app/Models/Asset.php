@@ -8,6 +8,7 @@ use App\Models\Audit;
 use App\Models\HardwareSpec;
 use App\Models\Software;
 use App\Models\RepairHistory;
+use App\Models\DeviceType;
 
 class Asset extends Model
 {
@@ -15,7 +16,7 @@ class Asset extends Model
     //to create models using terminal type: php artisan make:model ModelName
     protected $fillable = [
         'asset_tag',
-        'device_type',
+        'device_type_id',
         'brand',
         'model',
         'serial_number',
@@ -98,5 +99,10 @@ class Asset extends Model
         }
 
         return $description;
+    }
+
+    public function device_type()
+    {
+        return $this->belongsTo(DeviceType::class);
     }
 }
