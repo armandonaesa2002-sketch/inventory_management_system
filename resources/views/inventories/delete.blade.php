@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group">
                         <label>Device Type</label>
-                        <input type="text" value="{{$asset->device_type_label}}" class="input" disabled>
+                        <input type="text" value="{{$asset->device_type->name}}" class="input" disabled>
                     </div>
                 </div>
 

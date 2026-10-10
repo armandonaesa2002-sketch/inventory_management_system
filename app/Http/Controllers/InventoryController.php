@@ -423,7 +423,8 @@ class InventoryController extends Controller
                 $query->latest();
             },
         ]);
-        return view('inventories.asset_view', compact('asset'));
+        $device_type = DeviceType::where('id', $asset->device_type_id)->firstOrFail();
+        return view('inventories.asset_view', compact('asset', 'device_type'));
     }
 
     public function export(Request $request)

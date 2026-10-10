@@ -15,7 +15,7 @@
                 <div>
                     <h1 class="form-title">{{$asset->asset_tag}}</h1>
                     <p class="form-subtitle">
-                        <span class="badge badge-type caps">{{$asset->device_type}}</span>
+                        <span class="badge badge-type caps">{{$asset->device_type->name}}</span>
                         <span class="badge badge-status caps">{{$asset->status}}</span>
                         @if ($asset->warranty_expiry)
                         @php
@@ -57,6 +57,7 @@
                             <span class="detail-label">Serial Number</span>
                             <span class="detail-value caps">{{$asset->serial_number}}</span>
                         </div>
+                        @if($device_type->has_purchase)
                         <div class="detail-row">
                             <span class="detail-label">Purchase Date</span>
                             <span class="detail-value caps">{{$asset->purchase_date ?? '—'}}</span>
@@ -69,9 +70,10 @@
                             <span class="detail-label">Vendor</span>
                             <span class="detail-value caps">{{$asset->vendor ?? '—'}}</span>
                         </div>
+                        @endif
                     </div>
 
-                    @if($asset->device_type !== 'printer')
+                    @if($device_type->has_hardware)
                     <h3 class="detail-subtitle">Hardware</h3>
                     <div class="detail-group">
                         <div class="detail-row">
@@ -103,6 +105,8 @@
                             <span class="detail-value caps">{{$asset->hardware?->peripherals ?? '—'}}</span>
                         </div>
                     </div>
+                    @endif
+                    @if($device_type->has_license_notes)
 
                     <h3 class="detail-subtitle">Software</h3>
                     <div class="detail-group">
