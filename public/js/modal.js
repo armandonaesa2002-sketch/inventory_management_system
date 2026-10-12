@@ -19,6 +19,8 @@ document.querySelectorAll(".modalreturn").forEach((button) => {
     });
 });
 
+//ASSET DATATYPE
+
 function openDatatypeModal() {
     const form = document.getElementById("datatypeForm");
 
@@ -95,5 +97,71 @@ document.addEventListener("click", function (event) {
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeDatatypeModal();
+    }
+});
+
+//DEPARTMENT MODAL
+function openDepartmentModal() {
+    const form = document.getElementById("departmentForm");
+
+    form.action = "/department";
+
+    document.getElementById("departmentModalTitle").textContent =
+        "Add Department";
+
+    document.getElementById("departmentModalText").textContent =
+        "Configure a new department.";
+
+    document.getElementById("departmentMethod").value = "POST";
+    document.getElementById("departmentSubmit").textContent = "Save department";
+
+    form.reset();
+
+    document.getElementById("addDepartmentModal").style.display = "block";
+}
+function closeDepartmentModal() {
+    document.getElementById("addDepartmentModal").style.display = "none";
+    const message = document.getElementById("departmentMessage");
+
+    if (message) {
+        message.style.display = "none";
+    }
+}
+
+function openEditDepartmentModal(button) {
+    const id = button.dataset.deptid;
+    const form = document.getElementById("departmentForm");
+
+    form.action = `/department/${id}`;
+
+    document.getElementById("departmentModalTitle").textContent =
+        "Edit Department";
+
+    document.getElementById("departmentModalText").textContent =
+        "Update the selected department.";
+
+    document.getElementById("departmentMethod").value = "PUT";
+    document.getElementById("departmentSubmit").textContent =
+        "Update department";
+
+    document.getElementById("dept_code").value = button.dataset.deptcode;
+    document.getElementById("dept_name").value = button.dataset.deptname;
+
+    document.getElementById("addDepartmentModal").style.display = "block";
+}
+
+// Close kapag nag-click sa labas ng modal
+document.addEventListener("click", function (event) {
+    const modal = document.getElementById("addDepartmentModal");
+
+    if (modal && event.target === modal) {
+        closeDepartmentModal();
+    }
+});
+
+// Close kapag pinindot ang Escape
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeDepartmentModal();
     }
 });

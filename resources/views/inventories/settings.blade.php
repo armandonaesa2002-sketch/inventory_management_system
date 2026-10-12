@@ -294,6 +294,167 @@
                         </div>
                     </div>
 
+                </section>
+
+                <section class="card" id="department">
+                    <div class="section-header">
+                        <h2>Department Configuration</h2>
+
+                        <div class="section-header-actions">
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openDepartmentModal()">
+                                + Add Department
+                            </button>
+                        </div>
+                    </div>
+
+
+                    @if(session('success-department'))
+                    <div class="alert alert-success" id="datatypeMessage">
+                        {{session('success-department')}}
+                    </div>
+                    @endif
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead class="caps">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data['departments'] as $department)
+                                <tr>
+                                    <td>{{$department->code}}</td>
+                                    <td>{{$department->name}}</td>
+                                    <td>
+                                        <span class="status-badge {{$department->is_active == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$department->is_active == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td colspan="2">
+
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline"
+                                            onclick="openEditDepartmentModal(this)"
+                                            data-deptid="{{ $department->id }}"
+                                            data-deptcode="{{ $department->code }}"
+                                            data-deptname="{{ $department->name }}">
+                                            Edit
+                                        </button>
+
+
+
+                                        <form action=""
+                                            method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            @if ($department->is_active)
+                                            <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Deactivate this department?')">
+                                                Deactivate
+                                            </button>
+                                            @else
+                                            <button type="submit"
+                                                class="btn btn-sm btn-primary"
+                                                onclick="return confirm('Reactivate this department?')">
+                                                Reactivate
+                                            </button>
+                                            @endif
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4">No record found</td>
+                                </tr>
+
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if ($errors->any())
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            openDepartmentModal();
+                        });
+                    </script>
+                    @elseif (session('edit_department_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-deptid="{{ session('edit_department_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditDepartmentModal(button);
+                            }
+                        });
+                    </script>
+                    @endif
+                    <!-- {{-- ADD DEPARTMENT MODAL --}} -->
+                    <div id="addDepartmentModal" class="modal">
+                        <div class="modal-content">
+
+                            <button type="button"
+                                class="modal-close"
+                                onclick="closeDepartmentModal()">
+                                &times;
+                            </button>
+
+                            <h2 class="modal-title" id="departmentModalTitle">Add Department</h2>
+                            <p class="modal-text" id="departmentModalText">Configure a new department.</p>
+
+                            <form action="" id="departmentForm" method="POST">
+                                @if ($errors->any())
+                                <div class="alert alert-danger" id="departmentMessage">
+
+                                    @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                    @endforeach
+
+                                </div>
+                                @endif
+                                @if (session('info'))
+                                <div class="alert alert-success" id="departmentMessage">
+                                    {{ session('info') }}
+                                </div>
+                                @endif
+
+                                @csrf
+                                <input type="hidden" id="departmentMethod" name="_method" value="POST">
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label for="dept_code">Code</label>
+                                        <input type="text" id="dept_code" class="input" name="dept_code" value="{{ old('dept_code') }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dept_name">Name</label>
+                                        <input type="text" id="dept_name" class="input" name="dept_name" value="{{ old('dept_name') }}" required>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: 18px;">
+                                    <button type="submit" id="departmentSubmit" class="btn btn-primary">
+                                        Save Department
+                                    </button>
+                                    <button type="button" class="btn btn-outline" onclick="closeDepartmentModal()">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
 
 
                 </section>
