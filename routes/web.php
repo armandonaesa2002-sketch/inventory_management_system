@@ -63,6 +63,8 @@ Route::post('/inventory/transact_form', [InkStockController::class, 'transact_fo
 Route::get('/inventory/settings', [SettingsController::class, 'settings'])->name('inventory.settings');
 Route::POST('/device_type', [SettingsController::class, 'add_device_type'])->name('device_type');
 Route::put('/device_type/{device_type}', [SettingsController::class, 'update'])->name('device_types.update');
+Route::POST('/department', [SettingsController::class, 'add_department'])->name('department');
+Route::put('/department/{department}', [SettingsController::class, 'update_department'])->name('department.update');
 
 Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
 

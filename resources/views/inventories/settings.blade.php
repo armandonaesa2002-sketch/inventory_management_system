@@ -181,7 +181,7 @@
                         </table>
                     </div>
 
-                    @if ($errors->any())
+                    @if ($errors->devicetype->any())
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             openDatatypeModal();
@@ -214,10 +214,10 @@
                             <p class="modal-text" id="datatypeModalText">Configure a new device type.</p>
 
                             <form action="{{route('device_type')}}" id="datatypeForm" method="POST">
-                                @if ($errors->any())
+                                @if ($errors->devicetype->any())
                                 <div class="alert alert-danger" id="datatypeMessage">
 
-                                    @foreach ($errors->all() as $error)
+                                    @foreach ($errors->devicetype->all() as $error)
                                     <p>{{ $error }}</p>
                                     @endforeach
 
@@ -382,13 +382,20 @@
                         </table>
                     </div>
 
-                    @if ($errors->any())
+                    @if ($errors->department->any() && session('edit_department_id'))
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
-                            openDepartmentModal();
+                            const button = document.querySelector(
+                                `[data-deptid="{{ session('edit_department_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditDepartmentModal(button);
+                            }
                         });
                     </script>
-                    @elseif (session('edit_department_id'))
+
+                    @elseif (session('info') && session('edit_department_id'))
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const button = document.querySelector(
@@ -414,11 +421,11 @@
                             <h2 class="modal-title" id="departmentModalTitle">Add Department</h2>
                             <p class="modal-text" id="departmentModalText">Configure a new department.</p>
 
-                            <form action="" id="departmentForm" method="POST">
-                                @if ($errors->any())
+                            <form action="{{route('department')}}" id="departmentForm" method="POST">
+                                @if ($errors->department->any())
                                 <div class="alert alert-danger" id="departmentMessage">
 
-                                    @foreach ($errors->all() as $error)
+                                    @foreach ($errors->department->all() as $error)
                                     <p>{{ $error }}</p>
                                     @endforeach
 
@@ -430,17 +437,27 @@
                                 </div>
                                 @endif
 
+                                @if ($errors->department->any() && session('department_form_mode') === 'add')
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        document.getElementById('addDepartmentModal').style.display = 'block';
+                                    });
+                                </script>
+                                @endif
+
                                 @csrf
                                 <input type="hidden" id="departmentMethod" name="_method" value="POST">
                                 <div class="form-row">
 
                                     <div class="form-group">
                                         <label for="dept_code">Code</label>
-                                        <input type="text" id="dept_code" class="input" name="dept_code" value="{{ old('dept_code') }}" required>
+                                        <input type="text" id="dept_code" class="input" name="dept_code"
+                                            required>
                                     </div>
                                     <div class="form-group">
                                         <label for="dept_name">Name</label>
-                                        <input type="text" id="dept_name" class="input" name="dept_name" value="{{ old('dept_name') }}" required>
+                                        <input type="text" id="dept_name" class="input" name="dept_name"
+                                            required>
                                     </div>
                                 </div>
 

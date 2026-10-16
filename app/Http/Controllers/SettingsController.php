@@ -9,6 +9,7 @@ use App\Models\PreparedBy;
 use App\Models\DeviceType;
 use App\Models\Department;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -55,7 +56,7 @@ class SettingsController extends Controller
     {
         // $device_type = DeviceType::findOrFail($device_type);
 
-        $validated = $request->validate([
+        $validated = $request->validateWithBag('devicetype', [
             'code' => [
                 'required',
                 'string',
@@ -120,5 +121,70 @@ class SettingsController extends Controller
             : 'Device type deactivated successfully.';
 
         return back()->with('success', $message);
+    }
+
+    public function add_department(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'dept_code' => ['required', 'string', 'max:50', 'unique:departments,code'],
+            'dept_name' => ['required', 'string', 'max:100', 'unique:departments,name'],
+        ]);
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'department')
+                ->withInput()
+                ->with('department_form_mode', 'add');
+        }
+
+        $validated = $validator->validated();
+
+        Department::create([
+            'code' => $validated['dept_code'],
+            'name' => $validated['dept_name'],
+        ]);
+
+        return back()->with('success-department', 'Department added successfully.');
+    }
+    public function update_department(Department $department, Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'dept_code' => ['required', 'string', 'max:50', Rule::unique('departments', 'code')->ignore($department->id),],
+            'dept_name' => ['required', 'string', 'max:100', Rule::unique('departments', 'name')->ignore($department->id),],
+        ]);
+        // Validation errors, including duplicate code/name
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'department')
+                ->withInput()
+                ->with('edit_department_id', $department->id);
+        }
+        $validated = $validator->validated();
+
+        $changes = [
+            'code' => $validated['dept_code'],
+            'name' => $validated['dept_name'],
+        ];
+
+        // Check kung may nabago
+        $hasChanges = false;
+
+        foreach ($changes as $column => $value) {
+            if ($department->{$column} != $value) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
+        if (!$hasChanges) {
+            return back()
+                ->with('info', 'No changes made.')
+                ->with('edit_department_id', $department->id);
+        }
+
+        $department->update($changes);
+
+        return back()->with('success-department', 'Department updated successfully.');
     }
 }

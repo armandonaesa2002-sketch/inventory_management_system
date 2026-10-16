@@ -120,9 +120,13 @@ function openDepartmentModal() {
     document.getElementById("addDepartmentModal").style.display = "block";
 }
 function closeDepartmentModal() {
-    document.getElementById("addDepartmentModal").style.display = "none";
-    const message = document.getElementById("departmentMessage");
+    const modal = document.getElementById("addDepartmentModal");
+    const form = document.getElementById("departmentForm");
 
+    modal.style.display = "none";
+    form.reset();
+
+    const message = document.getElementById("departmentMessage");
     if (message) {
         message.style.display = "none";
     }
