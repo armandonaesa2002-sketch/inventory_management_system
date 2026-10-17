@@ -181,7 +181,7 @@
                         </table>
                     </div>
 
-                    @if ($errors->devicetype->any())
+                    @if ($errors->devicetype->any() && session('device_type_form_mode') === 'add_device_type')
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             openDatatypeModal();
@@ -223,9 +223,9 @@
 
                                 </div>
                                 @endif
-                                @if (session('info'))
+                                @if (session('device_info'))
                                 <div class="alert alert-success" id="datatypeMessage">
-                                    {{ session('info') }}
+                                    {{ session('device_info') }}
                                 </div>
                                 @endif
 
@@ -235,11 +235,11 @@
 
                                     <div class="form-group">
                                         <label for="code">Code</label>
-                                        <input type="text" id="code" class="input" name="code" value="{{ old('code') }}" required>
+                                        <input type="text" id="code" class="input" name="code" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" class="input" name="name" value="{{ old('name') }}" required>
+                                        <input type="text" id="name" class="input" name="name" required>
                                     </div>
                                 </div>
 
@@ -247,7 +247,7 @@
 
                                     <div class="form-group">
                                         <label for="asset_prefix">Asset Prefix</label>
-                                        <input type="text" id="asset_prefix" name="asset_prefix" class="input" value="{{ old('asset_prefix') }}" required>
+                                        <input type="text" id="asset_prefix" name="asset_prefix" class="input" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -262,7 +262,7 @@
 
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_hardware" id="has_hardware" value="1" {{ old('has_hardware') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_hardware" id="has_hardware" value="1">
                                             Hardware
                                         </label>
                                     </div>
@@ -271,13 +271,13 @@
 
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_purchase" id="has_purchase" value="1" {{ old('has_purchase') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_purchase" id="has_purchase" value="1">
                                             Purchase
                                         </label>
                                     </div>
                                     <div class="form-group">
                                         <label class="radio-label">
-                                            <input type="checkbox" name="has_license_notes" id="has_license_notes" value="1" {{ old('has_license_notes') ? 'checked' : '' }}>
+                                            <input type="checkbox" name="has_license_notes" id="has_license_notes" value="1">
                                             License & Notes
                                         </label>
                                     </div>

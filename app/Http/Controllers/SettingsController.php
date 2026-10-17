@@ -29,7 +29,7 @@ class SettingsController extends Controller
     public function add_device_type(Request $request)
     {
         // dd($request->all());
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'max:50', 'unique:device_types,code'],
             'name' => ['required', 'string', 'max:100', 'unique:device_types,name'],
             'asset_prefix' => ['required', 'string', 'max:20'],
@@ -39,6 +39,13 @@ class SettingsController extends Controller
             'has_license_notes' => ['sometimes', 'boolean'],
         ]);
 
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'devicetype')
+                ->withInput()
+                ->with('device_type_form_mode', 'add_device_type');
+        }
+        $validated = $validator->validated();
         DeviceType::create([
             'code' => $validated['code'],
             'name' => $validated['name'],
@@ -55,26 +62,22 @@ class SettingsController extends Controller
     public function update(DeviceType $device_type, Request $request)
     {
         // $device_type = DeviceType::findOrFail($device_type);
-
-        $validated = $request->validateWithBag('devicetype', [
-            'code' => [
-                'required',
-                'string',
-                'max:50',
-                Rule::unique('device_types', 'code')->ignore($device_type->id),
-            ],
-            'name' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::unique('device_types', 'name')->ignore($device_type->id),
-            ],
+        $validator = Validator::make($request->all(), [
+            'code' => ['required', 'string', 'max:50', Rule::unique('device_types', 'code')->ignore($device_type->id)],
+            'name' => ['required', 'string', 'max:100', Rule::unique('device_types', 'name')->ignore($device_type->id)],
             'asset_prefix' => ['required', 'string', 'max:20'],
+            'has_basic' => ['required', 'boolean'],
             'has_hardware' => ['sometimes', 'boolean'],
             'has_purchase' => ['sometimes', 'boolean'],
             'has_license_notes' => ['sometimes', 'boolean'],
         ]);
-
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'devicetype')
+                ->withInput()
+                ->with('edit_device_type_id', $device_type->id);
+        }
+        $validated = $validator->validated();
         $changes = [
             'code' => $validated['code'],
             'name' => $validated['name'],
@@ -97,7 +100,7 @@ class SettingsController extends Controller
 
         if (!$hasChanges) {
             return back()->with([
-                'info' => 'No changes made.',
+                'device_info' => 'No changes made.',
                 'edit_device_type_id' => $device_type->id,
             ]);
         }
