@@ -61,7 +61,6 @@ class SettingsController extends Controller
 
     public function update(DeviceType $device_type, Request $request)
     {
-        // $device_type = DeviceType::findOrFail($device_type);
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'max:50', Rule::unique('device_types', 'code')->ignore($device_type->id)],
             'name' => ['required', 'string', 'max:100', Rule::unique('device_types', 'name')->ignore($device_type->id)],
@@ -110,7 +109,7 @@ class SettingsController extends Controller
         return back()->with('success-devicetype', 'Device type updated successfully.');
     }
 
-
+    //DEACTIVATE AND ACTIVATE DEVICE TYPE
     public function toggle_device_type($id)
     {
         $device_type = DeviceType::findOrFail($id);
@@ -123,7 +122,7 @@ class SettingsController extends Controller
             ? 'Device type activated successfully.'
             : 'Device type deactivated successfully.';
 
-        return back()->with('success', $message);
+        return back()->with('success-devicetype', $message);
     }
 
     public function add_department(Request $request)
@@ -149,6 +148,7 @@ class SettingsController extends Controller
 
         return back()->with('success-department', 'Department added successfully.');
     }
+
     public function update_department(Department $department, Request $request)
     {
         // dd($request->all());
@@ -189,5 +189,21 @@ class SettingsController extends Controller
         $department->update($changes);
 
         return back()->with('success-department', 'Department updated successfully.');
+    }
+
+    //DEACTIVATE AND ACTIVATE DEPARTMENT
+    public function toggle_department($id)
+    {
+        $department = Department::findOrFail($id);
+
+        $department->update([
+            'is_active' => !$department->is_active,
+        ]);
+
+        $message = $department->is_active
+            ? 'Department activated successfully.'
+            : 'Department deactivated successfully.';
+
+        return back()->with('success-department', $message);
     }
 }

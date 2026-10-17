@@ -67,6 +67,7 @@ Route::POST('/department', [SettingsController::class, 'add_department'])->name(
 Route::put('/department/{department}', [SettingsController::class, 'update_department'])->name('department.update');
 
 Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
+Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
 
 
 

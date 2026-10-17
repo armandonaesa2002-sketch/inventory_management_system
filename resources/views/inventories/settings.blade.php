@@ -348,7 +348,7 @@
 
 
 
-                                        <form action=""
+                                        <form action="{{route('department.toggle', $department->id)}}"
                                             method="POST"
                                             style="display:inline;">
                                             @csrf
