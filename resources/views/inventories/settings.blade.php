@@ -73,7 +73,7 @@
                             <button type="button"
                                 class="btn btn-primary"
                                 onclick="openDatatypeModal()">
-                                + Add Datatypes
+                                + Add Device Type
                             </button>
                         </div>
                     </div>
@@ -466,6 +466,188 @@
                                         Save Department
                                     </button>
                                     <button type="button" class="btn btn-outline" onclick="closeDepartmentModal()">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </section>
+
+
+                <!-- PREPARED BY -->
+                <section class="card" id="preparedby">
+                    <div class="section-header">
+                        <h2>Prepared By Configuration</h2>
+
+                        <div class="section-header-actions">
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openPreparedbyModal()">
+                                + Add Name
+                            </button>
+                        </div>
+                    </div>
+
+
+                    @if(session('success-preparedby'))
+                    <div class="alert alert-success" id="datatypeMessage">
+                        {{session('success-preparedby')}}
+                    </div>
+                    @endif
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead class="caps">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data['preparedby_options'] as $preparedby)
+                                <tr>
+                                    <td>{{$preparedby->code}}</td>
+                                    <td>{{$preparedby->name}}</td>
+                                    <td>
+                                        <span class="status-badge {{$preparedby->is_active == true ? 'status-inuse' : 'status-inactive'}}">
+                                            {{$preparedby->is_active == true ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </td>
+                                    <td colspan="2">
+
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline"
+                                            onclick="openEditPreparedbyModal(this)"
+                                            data-prepid="{{ $preparedby->id }}"
+                                            data-prepcode="{{ $preparedby->code }}"
+                                            data-prepname="{{ $preparedby->name }}">
+                                            Edit
+                                        </button>
+
+
+
+                                        <form action=""
+                                            method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            @if ($preparedby->is_active)
+                                            <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Deactivate this name?')">
+                                                Deactivate
+                                            </button>
+                                            @else
+                                            <button type="submit"
+                                                class="btn btn-sm btn-primary"
+                                                onclick="return confirm('Reactivate this name?')">
+                                                Reactivate
+                                            </button>
+                                            @endif
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4">No record found</td>
+                                </tr>
+
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if ($errors->preparedby->any() && session('edit_preparedby_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-prepid="{{ session('edit_preparedby_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditPreparedbyModal(button);
+                            }
+                        });
+                    </script>
+
+                    @elseif (session('preparedby_info') && session('edit_preparedby_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-prepid="{{ session('edit_preparedby_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditPreparedbyModal(button);
+                            }
+                        });
+                    </script>
+                    @endif
+                    <!-- {{-- ADD PREPARED BY MODAL --}} -->
+                    <div id="addPreparedbyModal" class="modal">
+                        <div class="modal-content">
+
+                            <button type="button"
+                                class="modal-close"
+                                onclick="closePreparedbyModal()">
+                                &times;
+                            </button>
+
+                            <h2 class="modal-title" id="preparedbyModalTitle">Add Prepared by</h2>
+                            <p class="modal-text" id="preparedbyModalText">Configure a new name.</p>
+
+                            <form action="" id="preparedbyForm" method="POST">
+                                @if ($errors->preparedby->any())
+                                <div class="alert alert-danger" id="preparedbyMessage">
+
+                                    @foreach ($errors->preparedby->all() as $error)
+                                    <p>{{ $error }}</p>
+                                    @endforeach
+
+                                </div>
+                                @endif
+                                @if (session('info-preparedby'))
+                                <div class="alert alert-success" id="preparedbyMessage">
+                                    {{ session('info-preparedby') }}
+                                </div>
+                                @endif
+
+                                @if ($errors->preparedby->any() && session('preparedby_form_mode') === 'add_preparedby')
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        document.getElementById('addPreparebyModal').style.display = 'block';
+                                    });
+                                </script>
+                                @endif
+
+                                @csrf
+                                <input type="hidden" id="preparedbyMethod" name="_method" value="POST">
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label for="prep_code">Code</label>
+                                        <input type="text" id="prep_code" class="input" name="prep_code"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prep_name">Name</label>
+                                        <input type="text" id="prep_name" class="input" name="prep_name"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: 18px;">
+                                    <button type="submit" id="preparedbySubmit" class="btn btn-primary">
+                                        Save Name
+                                    </button>
+                                    <button type="button" class="btn btn-outline" onclick="closePreparedbyModal()">Cancel</button>
                                 </div>
 
                             </form>

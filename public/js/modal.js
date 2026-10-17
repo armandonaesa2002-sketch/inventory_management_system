@@ -33,7 +33,7 @@ function openDatatypeModal() {
         "Configure a new device type.";
 
     document.getElementById("datatypeMethod").value = "POST";
-    document.getElementById("datatypeSubmit").textContent = "Save Datatype";
+    document.getElementById("datatypeSubmit").textContent = "Save Device Type";
 
     form.reset();
 
@@ -57,7 +57,8 @@ function openEditDatatypeModal(button) {
         "Update the selected device type.";
 
     document.getElementById("datatypeMethod").value = "PUT";
-    document.getElementById("datatypeSubmit").textContent = "Update Datatype";
+    document.getElementById("datatypeSubmit").textContent =
+        "Update Device Type";
 
     document.getElementById("code").value = button.dataset.code;
     document.getElementById("name").value = button.dataset.name;
@@ -167,5 +168,72 @@ document.addEventListener("click", function (event) {
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeDepartmentModal();
+    }
+});
+
+//PREPAREDBY MODAL
+function openPreparedbyModal() {
+    const form = document.getElementById("preparedbyForm");
+
+    form.action = "/preparedby";
+
+    document.getElementById("preparedbyModalTitle").textContent = "Add Name";
+
+    document.getElementById("preparedbyModalText").textContent =
+        "Configure a new name.";
+
+    document.getElementById("preparedbyMethod").value = "POST";
+    document.getElementById("preparedbySubmit").textContent = "Save Name";
+
+    form.reset();
+
+    document.getElementById("addPreparedbyModal").style.display = "block";
+}
+function closePreparedbyModal() {
+    const modal = document.getElementById("addPreparedbyModal");
+    const form = document.getElementById("preparedbyForm");
+
+    modal.style.display = "none";
+    form.reset();
+
+    const message = document.getElementById("preparedbyMessage");
+    if (message) {
+        message.style.display = "none";
+    }
+}
+
+function openEditPreparedbyModal(button) {
+    const id = button.dataset.prepid;
+    const form = document.getElementById("preparedbyForm");
+
+    form.action = `/preparedby/${id}`;
+
+    document.getElementById("preparedbyModalTitle").textContent = "Edit Name";
+
+    document.getElementById("preparedbyModalText").textContent =
+        "Update the selected name.";
+
+    document.getElementById("preparedbyMethod").value = "PUT";
+    document.getElementById("preparedbySubmit").textContent = "Update Name";
+
+    document.getElementById("prep_code").value = button.dataset.prepcode;
+    document.getElementById("prep_name").value = button.dataset.prepname;
+
+    document.getElementById("addPreparedbyModal").style.display = "block";
+}
+
+// Close kapag nag-click sa labas ng modal
+document.addEventListener("click", function (event) {
+    const modal = document.getElementById("addPreparedbyModal");
+
+    if (modal && event.target === modal) {
+        closePreparedbyModal();
+    }
+});
+
+// Close kapag pinindot ang Escape
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closePreparedbyModal();
     }
 });
