@@ -206,4 +206,85 @@ class SettingsController extends Controller
 
         return back()->with('success-department', $message);
     }
+
+    public function add_preparedby(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'prep_code' => ['required', 'string', 'max:50', 'unique:prepared_by_options,code'],
+            'prep_name' => ['required', 'string', 'max:100', 'unique:prepared_by_options,name'],
+        ]);
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'preparedby')
+                ->withInput()
+                ->with('preparedby_form_mode', 'add_preparedby');
+        }
+
+        $validated = $validator->validated();
+
+        PreparedBy::create([
+            'code' => $validated['prep_code'],
+            'name' => $validated['prep_name'],
+        ]);
+
+        return back()->with('success-preparedby', 'Department added successfully.');
+    }
+
+    public function update_preparedby(PreparedBy $preparedby, Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'prep_code' => ['required', 'string', 'max:50', Rule::unique('prepared_by_options', 'code')->ignore($preparedby->id),],
+            'prep_name' => ['required', 'string', 'max:100', Rule::unique('prepared_by_options', 'name')->ignore($preparedby->id),],
+        ]);
+        // Validation errors, including duplicate code/name
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'preparedby')
+                ->withInput()
+                ->with('edit_preparedby_id', $preparedby->id);
+        }
+        $validated = $validator->validated();
+
+        $changes = [
+            'code' => $validated['prep_code'],
+            'name' => $validated['prep_name'],
+        ];
+
+        // Check kung may nabago
+        $hasChanges = false;
+
+        foreach ($changes as $column => $value) {
+            if ($preparedby->{$column} != $value) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
+        if (!$hasChanges) {
+            return back()
+                ->with('info-preparedby', 'No changes made.')
+                ->with('edit_preparedby_id', $preparedby->id);
+        }
+
+        $preparedby->update($changes);
+
+        return back()->with('success-preparedby', 'Name updated successfully.');
+    }
+    //DEACTIVE AND ACTIVATE PREPAREDBY
+    public function toggle_preparedby($id)
+    {
+        $preparedby = PreparedBy::findOrFail($id);
+
+        $preparedby->update([
+            'is_active' => !$preparedby->is_active,
+        ]);
+
+        $message = $preparedby->is_active
+            ? 'Name activated successfully.'
+            : 'Name deactivated successfully.';
+
+        return back()->with('success-preparedby', $message);
+    }
 }

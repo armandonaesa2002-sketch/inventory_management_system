@@ -66,8 +66,12 @@ Route::put('/device_type/{device_type}', [SettingsController::class, 'update'])-
 Route::POST('/department', [SettingsController::class, 'add_department'])->name('department');
 Route::put('/department/{department}', [SettingsController::class, 'update_department'])->name('department.update');
 
+Route::POST('/preparedby', [SettingsController::class, 'add_preparedby'])->name('preparedby');
+Route::put('/preparedby/{preparedby}', [SettingsController::class, 'update_preparedby'])->name('preparedby.update');
+
 Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
 Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
+Route::patch('/preparedby/{preparedby}/toggle', [SettingsController::class, 'toggle_preparedby'])->name('preparedby.toggle');
 
 
 

@@ -530,7 +530,7 @@
 
 
 
-                                        <form action=""
+                                        <form action="{{route('preparedby.toggle', $preparedby->id)}}"
                                             method="POST"
                                             style="display:inline;">
                                             @csrf
@@ -577,7 +577,7 @@
                         });
                     </script>
 
-                    @elseif (session('preparedby_info') && session('edit_preparedby_id'))
+                    @elseif (session('info-preparedby') && session('edit_preparedby_id'))
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const button = document.querySelector(
@@ -603,7 +603,7 @@
                             <h2 class="modal-title" id="preparedbyModalTitle">Add Prepared by</h2>
                             <p class="modal-text" id="preparedbyModalText">Configure a new name.</p>
 
-                            <form action="" id="preparedbyForm" method="POST">
+                            <form action="{{route('preparedby')}}" id="preparedbyForm" method="POST">
                                 @if ($errors->preparedby->any())
                                 <div class="alert alert-danger" id="preparedbyMessage">
 
@@ -622,7 +622,7 @@
                                 @if ($errors->preparedby->any() && session('preparedby_form_mode') === 'add_preparedby')
                                 <script>
                                     document.addEventListener('DOMContentLoaded', function() {
-                                        document.getElementById('addPreparebyModal').style.display = 'block';
+                                        document.getElementById('addPreparedbyModal').style.display = 'block';
                                     });
                                 </script>
                                 @endif
