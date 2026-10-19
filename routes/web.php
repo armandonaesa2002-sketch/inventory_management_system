@@ -5,6 +5,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\InkStockController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -73,6 +74,15 @@ Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 't
 Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
 Route::patch('/preparedby/{preparedby}/toggle', [SettingsController::class, 'toggle_preparedby'])->name('preparedby.toggle');
 
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
+});
+
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 
 

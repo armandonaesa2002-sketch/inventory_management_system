@@ -53,6 +53,14 @@
                     <span class="sidebar-icon">⚒</span>
                     <span class="sidebar-text">Settings</span>
                 </a>
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+
+                    <button type="submit" class="sidebar-link logout-button">
+                        <span class="sidebar-icon"></span>
+                        <span class="sidebar-text">Logout</span>
+                    </button>
+                </form>
 
             </nav>
 
