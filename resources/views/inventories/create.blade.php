@@ -121,7 +121,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>RAM (GB)</label>
-                                <input type="number" name="ram_gb" class="input">
+                                <input type="text" name="ram_gb" class="input">
                                 <div class="error">Required field</div>
                             </div>
                             <div class="form-group">

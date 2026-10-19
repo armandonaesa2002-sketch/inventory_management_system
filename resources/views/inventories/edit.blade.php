@@ -107,7 +107,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="ram">RAM (GB)</label>
-                            <input type="number" name="hardware[ram_gb]" value="{{$asset->hardware->ram_gb ?? ''}}"
+                            <input type="text" name="hardware[ram_gb]" value="{{$asset->hardware->ram_gb ?? ''}}"
                                 placeholder="RAM" class="input">
                         </div>
                         <div class="form-group">
