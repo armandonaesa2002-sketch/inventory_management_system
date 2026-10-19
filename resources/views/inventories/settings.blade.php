@@ -657,33 +657,6 @@
 
 
                 </section>
-
-                <section class="card settings-card">
-                    <div class="settings-section-heading">
-                        <div>
-                            <h2>Account Settings</h2>
-                            <p class="text-muted">Update your information account.</p>
-                        </div>
-                    </div>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input class="input" type="text" id="name" name="name">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input class="input" type="email" id="email" name="email">
-                            </div>
-                        </div>
-
-                        <div class="settings-actions">
-                            <button class="btn btn-primary" type="submit">Save Changes</button>
-                        </div>
-                    </form>
-                </section>
             </div>
         </main>
 
