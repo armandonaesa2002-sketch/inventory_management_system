@@ -44,6 +44,8 @@ a {
     color: #ffffff;
 
     padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
 
     overflow-y: auto;
 
@@ -93,6 +95,10 @@ a {
 .sidebar-link.active {
     background: #2563eb;
     color: #ffffff;
+}
+.sidebar-logout {
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 /* MAIN CONTENT */

@@ -82,7 +82,6 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 
 

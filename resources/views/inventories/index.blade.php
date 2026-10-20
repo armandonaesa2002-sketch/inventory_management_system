@@ -53,16 +53,18 @@
                     <span class="sidebar-icon">⚒</span>
                     <span class="sidebar-text">Settings</span>
                 </a>
-                <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                    @csrf
-
-                    <button type="submit" class="sidebar-link logout-button">
-                        <span class="sidebar-icon"></span>
-                        <span class="sidebar-text">Logout</span>
-                    </button>
-                </form>
-
             </nav>
+            <a href="{{ route('logout') }}"
+                class="sidebar-link sidebar-logout"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <span class="sidebar-icon">⏻</span>
+                <span class="sidebar-text">Logout</span>
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+
 
         </aside>
         <!-- MAIN CONTENT -->
