@@ -11,70 +11,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/inventory/asset_tag/{type}', [InventoryController::class, 'generate_tag']);
-//Mismong Page na ivivisit ni user '/inventory'
-// Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
-Route::post('/inventory/add_stock', [InventoryController::class, 'add_stock'])->name('inventory.add_stock');
-Route::get('/inventory/{asset}/edit', [InventoryController::class, 'edit_stock'])->name('inventory.edit');
-Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_stock'])->name('inventory.update');
-Route::get('/inventory/{asset}/remove', [InventoryController::class, 'remove_stock'])->name('inventory.remove');
-Route::delete('/inventory/{asset}/delete', [InventoryController::class, 'delete_stock'])->name('inventory.delete');
-Route::get('/inventory', [InventoryController::class, 'display_index'])->name('inventory.display_index');
-Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_asset'])->name('inventory.update_asset');
-
-//Assignment Route
-Route::get('/inventory/assign', [AssignmentController::class, 'assign'])->name('inventory.assign');
-Route::put('/inventory/assign-user', [AssignmentController::class, 'assign_user'])->name('inventory.assign_user');
-//edit Assignment
-Route::get('/inventory/{assignment}/edit_assignment', [AssignmentController::class, 'edit_assignment'])->name('inventory.edit_assignment');
-Route::put('/inventory/{assignment}/update_assignment', [AssignmentController::class, 'update_assignment'])->name('inventory.update_assignment');
-Route::get('/inventory/{assignment}/delete_assignment', [AssignmentController::class, 'delete_assignment'])->name('inventory.delete_assignment');
-Route::delete('/inventory/{assignment}/remove_assignment', [AssignmentController::class, 'remove_assignment'])->name('inventory.remove_assignment');
-//Return Assignment
-Route::get('/inventory/{assignment}/returnpage_assignment', [AssignmentController::class, 'returnpage_assignment'])->name('inventory.returnpage_assignment');
-Route::put('/inventory/{assignment}/confirm_return', [AssignmentController::class, 'confirm_return'])->name('inventory.confirm_return');
-//Undo Return
-Route::put('/inventory/{assignment}/undo_return', [AssignmentController::class, 'undo_return'])->name('inventory.undo_return');
-//Mark as complete
-Route::post('/inventory/{id}/mark_as_complete', [AssignmentController::class, 'mark_as_complete'])->name('inventory.mark_as_complete');
-//Multiple Creation
-Route::get('/inventory/create_multiple', [InventoryController::class, 'create_multiple'])->name('inventory.create_multiple');
-Route::post('/inventory/confirm_multipleCreate', [InventoryController::class, 'confirm_multipleCreate'])->name('inventory.confirm_multipleCreate');
-//View Asset
-Route::get('/inventory/{asset}/view_asset', [InventoryController::class, 'view_asset'])->name('inventory.view_asset');
-//Liability Form
-Route::get('/inventory/{assignment}/liability_form', [AssignmentController::class, 'print_liabilityform'])->name('inventory.liability_form');
-//Export Excel
-Route::get('/inventory/export', [InventoryController::class, 'export'])->name('inventory.export');
-//Ink Stock
-Route::get('/inventory/ink_stock', [InkStockController::class, 'ink_stock'])->name('inventory.ink_stock');
-Route::get('/inventory/add_ink_page', [InkStockController::class, 'add_ink_page'])->name('inventory.add_ink_page');
-Route::post('/inventory/create_ink', [InkStockController::class, 'create_ink'])->name('inventory.create_ink');
-Route::get('/inventory/add_multipleink', [InkStockController::class, 'add_multipleink'])->name('inventory.add_multipleink');
-Route::post('/inventory/create_multipleink', [InkStockController::class, 'create_multipleink'])->name('inventory.create_multipleink');
-Route::get('/inventory/{ink}/edit_ink', [InkStockController::class, 'edit_ink'])->name('inventory.edit_ink');
-Route::post('/inventory/{ink}/update_ink', [InkStockController::class, 'update_ink'])->name('inventory.update_ink');
-Route::get('/inventory/{ink}/delete_ink', [InkStockController::class, 'delete_ink'])->name('inventory.delete_ink');
-Route::post('/inventory/{ink}/remove_ink', [InkStockController::class, 'remove_ink'])->name('inventory.remove_ink');
-//Ink Transaction
-Route::get('/inventory/transaction_form', [InkStockController::class, 'transaction_form'])->name('inventory.transaction_form');
-Route::post('/inventory/transact_form', [InkStockController::class, 'transact_form'])->name('inventory.transact_form');
-//Settings
-Route::get('/inventory/settings', [SettingsController::class, 'settings'])->name('inventory.settings');
-Route::POST('/device_type', [SettingsController::class, 'add_device_type'])->name('device_type');
-Route::put('/device_type/{device_type}', [SettingsController::class, 'update'])->name('device_types.update');
-Route::POST('/department', [SettingsController::class, 'add_department'])->name('department');
-Route::put('/department/{department}', [SettingsController::class, 'update_department'])->name('department.update');
-
-Route::POST('/preparedby', [SettingsController::class, 'add_preparedby'])->name('preparedby');
-Route::put('/preparedby/{preparedby}', [SettingsController::class, 'update_preparedby'])->name('preparedby.update');
-
-Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
-Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
-Route::patch('/preparedby/{preparedby}/toggle', [SettingsController::class, 'toggle_preparedby'])->name('preparedby.toggle');
-
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
@@ -82,7 +18,71 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::middleware('auth')->group(function () {
 
+    Route::get('/inventory/asset_tag/{type}', [InventoryController::class, 'generate_tag']);
+    //Mismong Page na ivivisit ni user '/inventory'
+    // Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::post('/inventory/add_stock', [InventoryController::class, 'add_stock'])->name('inventory.add_stock');
+    Route::get('/inventory/{asset}/edit', [InventoryController::class, 'edit_stock'])->name('inventory.edit');
+    Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_stock'])->name('inventory.update');
+    Route::get('/inventory/{asset}/remove', [InventoryController::class, 'remove_stock'])->name('inventory.remove');
+    Route::delete('/inventory/{asset}/delete', [InventoryController::class, 'delete_stock'])->name('inventory.delete');
+    Route::get('/inventory', [InventoryController::class, 'display_index'])->name('inventory.display_index');
+    Route::put('/inventory/{asset}/update', [InventoryController::class, 'update_asset'])->name('inventory.update_asset');
+
+    //Assignment Route
+    Route::get('/inventory/assign', [AssignmentController::class, 'assign'])->name('inventory.assign');
+    Route::put('/inventory/assign-user', [AssignmentController::class, 'assign_user'])->name('inventory.assign_user');
+    //edit Assignment
+    Route::get('/inventory/{assignment}/edit_assignment', [AssignmentController::class, 'edit_assignment'])->name('inventory.edit_assignment');
+    Route::put('/inventory/{assignment}/update_assignment', [AssignmentController::class, 'update_assignment'])->name('inventory.update_assignment');
+    Route::get('/inventory/{assignment}/delete_assignment', [AssignmentController::class, 'delete_assignment'])->name('inventory.delete_assignment');
+    Route::delete('/inventory/{assignment}/remove_assignment', [AssignmentController::class, 'remove_assignment'])->name('inventory.remove_assignment');
+    //Return Assignment
+    Route::get('/inventory/{assignment}/returnpage_assignment', [AssignmentController::class, 'returnpage_assignment'])->name('inventory.returnpage_assignment');
+    Route::put('/inventory/{assignment}/confirm_return', [AssignmentController::class, 'confirm_return'])->name('inventory.confirm_return');
+    //Undo Return
+    Route::put('/inventory/{assignment}/undo_return', [AssignmentController::class, 'undo_return'])->name('inventory.undo_return');
+    //Mark as complete
+    Route::post('/inventory/{id}/mark_as_complete', [AssignmentController::class, 'mark_as_complete'])->name('inventory.mark_as_complete');
+    //Multiple Creation
+    Route::get('/inventory/create_multiple', [InventoryController::class, 'create_multiple'])->name('inventory.create_multiple');
+    Route::post('/inventory/confirm_multipleCreate', [InventoryController::class, 'confirm_multipleCreate'])->name('inventory.confirm_multipleCreate');
+    //View Asset
+    Route::get('/inventory/{asset}/view_asset', [InventoryController::class, 'view_asset'])->name('inventory.view_asset');
+    //Liability Form
+    Route::get('/inventory/{assignment}/liability_form', [AssignmentController::class, 'print_liabilityform'])->name('inventory.liability_form');
+    //Export Excel
+    Route::get('/inventory/export', [InventoryController::class, 'export'])->name('inventory.export');
+    //Ink Stock
+    Route::get('/inventory/ink_stock', [InkStockController::class, 'ink_stock'])->name('inventory.ink_stock');
+    Route::get('/inventory/add_ink_page', [InkStockController::class, 'add_ink_page'])->name('inventory.add_ink_page');
+    Route::post('/inventory/create_ink', [InkStockController::class, 'create_ink'])->name('inventory.create_ink');
+    Route::get('/inventory/add_multipleink', [InkStockController::class, 'add_multipleink'])->name('inventory.add_multipleink');
+    Route::post('/inventory/create_multipleink', [InkStockController::class, 'create_multipleink'])->name('inventory.create_multipleink');
+    Route::get('/inventory/{ink}/edit_ink', [InkStockController::class, 'edit_ink'])->name('inventory.edit_ink');
+    Route::post('/inventory/{ink}/update_ink', [InkStockController::class, 'update_ink'])->name('inventory.update_ink');
+    Route::get('/inventory/{ink}/delete_ink', [InkStockController::class, 'delete_ink'])->name('inventory.delete_ink');
+    Route::post('/inventory/{ink}/remove_ink', [InkStockController::class, 'remove_ink'])->name('inventory.remove_ink');
+    //Ink Transaction
+    Route::get('/inventory/transaction_form', [InkStockController::class, 'transaction_form'])->name('inventory.transaction_form');
+    Route::post('/inventory/transact_form', [InkStockController::class, 'transact_form'])->name('inventory.transact_form');
+    //Settings
+    Route::get('/inventory/settings', [SettingsController::class, 'settings'])->name('inventory.settings');
+    Route::POST('/device_type', [SettingsController::class, 'add_device_type'])->name('device_type');
+    Route::put('/device_type/{device_type}', [SettingsController::class, 'update'])->name('device_types.update');
+    Route::POST('/department', [SettingsController::class, 'add_department'])->name('department');
+    Route::put('/department/{department}', [SettingsController::class, 'update_department'])->name('department.update');
+
+    Route::POST('/preparedby', [SettingsController::class, 'add_preparedby'])->name('preparedby');
+    Route::put('/preparedby/{preparedby}', [SettingsController::class, 'update_preparedby'])->name('preparedby.update');
+
+    Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
+    Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
+    Route::patch('/preparedby/{preparedby}/toggle', [SettingsController::class, 'toggle_preparedby'])->name('preparedby.toggle');
+});
 
 
 
