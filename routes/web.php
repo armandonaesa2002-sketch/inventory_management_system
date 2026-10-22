@@ -82,6 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/device_type/{device_type}/toggle', [SettingsController::class, 'toggle_device_type'])->name('device_types.toggle');
     Route::patch('/department/{deparment}/toggle', [SettingsController::class, 'toggle_department'])->name('department.toggle');
     Route::patch('/preparedby/{preparedby}/toggle', [SettingsController::class, 'toggle_preparedby'])->name('preparedby.toggle');
+
+
+    Route::POST('/update_info/{user_id}', [SettingsController::class, 'update_info'])->name('update_info');
 });
 
 

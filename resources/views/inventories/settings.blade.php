@@ -670,23 +670,33 @@
 
                 <section class="card settings-card">
                     <div class="settings-section-heading">
-                        <div>
+                        <div id="account">
                             <h2>Account Settings</h2>
                             <p class="text-muted">Update your information account.</p>
                         </div>
                     </div>
+                    @if(session('no_change'))
+                    <div class="alert alert-success">
+                        {{session('no_change')}}
+                    </div>
+                    @endif
+                    @if(session('success-update'))
+                    <div class="alert alert-success">
+                        {{session('success-update')}}
+                    </div>
+                    @endif
 
-                    <form action="" method="POST">
+                    <form action="{{route('update_info', $data['user']->id)}}#account" method="POST">
                         @csrf
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input class="input" type="text" id="name" name="name" value="{{$data['user']->name}}">
+                                <input class="input" type="text" id="name" name="name" value="{{$data['user']->name}}" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input class="input" type="email" id="email" name="email" value="{{$data['user']->email}}">
+                                <input class="input" type="email" id="email" name="email" value="{{$data['user']->email}}" required>
                             </div>
                         </div>
 

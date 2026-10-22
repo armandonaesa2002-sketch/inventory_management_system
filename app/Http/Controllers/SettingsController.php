@@ -290,4 +290,33 @@ class SettingsController extends Controller
 
         return back()->with('success-preparedby', $message);
     }
+
+    public function update_info(User $user_id, Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user_id->id),],
+        ]);
+
+        $validated = $validator->validated();
+
+        $changes = [
+            'name' => $validated['name'],
+            'email' => $validated['email']
+        ];
+        $hasChanges = false;
+
+        foreach ($changes as $column => $value) {
+            if ($user_id->{$column} != $value) {
+                $hasChanges = true;
+                break;
+            }
+        }
+        if (!$hasChanges) {
+            return back()->with('no_change', 'No change made');
+        }
+        $user_id->update($changes);
+        return back()->with('success-update', 'Info Successfully Updated');
+    }
 }
