@@ -669,11 +669,19 @@
                 </section>
 
                 <section class="card settings-card">
-                    <div class="settings-section-heading">
-                        <div id="account">
+                    <div class="section-header" id="account">
+                        <div>
                             <h2>Account Settings</h2>
                             <p class="text-muted">Update your information account.</p>
                         </div>
+                        <div class="section-header-actions">
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openPreparedbyModal()">
+                                Update Password
+                            </button>
+                        </div>
+
                     </div>
                     @if(session('no_change'))
                     <div class="alert alert-success">
