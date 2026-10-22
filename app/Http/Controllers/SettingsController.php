@@ -46,7 +46,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'devicetype')
                 ->withInput()
-                ->with('device_type_form_mode', 'add_device_type');
+                ->with('device_type_form_mode', 'add_device_type')->withFragment('assets');
         }
         $validated = $validator->validated();
         DeviceType::create([
@@ -59,7 +59,7 @@ class SettingsController extends Controller
             'has_license_notes' => $request->boolean('has_license_notes'),
         ]);
 
-        return back()->with('success-devicetype', 'Device type added successfully.');
+        return back()->with('success-devicetype', 'Device type added successfully.')->withFragment('assets');
     }
 
     public function update(DeviceType $device_type, Request $request)
@@ -77,7 +77,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'devicetype')
                 ->withInput()
-                ->with('edit_device_type_id', $device_type->id);
+                ->with('edit_device_type_id', $device_type->id)->withFragment('assets');
         }
         $validated = $validator->validated();
         $changes = [
@@ -104,12 +104,12 @@ class SettingsController extends Controller
             return back()->with([
                 'device_info' => 'No changes made.',
                 'edit_device_type_id' => $device_type->id,
-            ]);
+            ])->withFragment('assets');
         }
 
         $device_type->update($changes);
 
-        return back()->with('success-devicetype', 'Device type updated successfully.');
+        return back()->with('success-devicetype', 'Device type updated successfully.')->withFragment('assets');
     }
 
     //DEACTIVATE AND ACTIVATE DEVICE TYPE
@@ -125,7 +125,7 @@ class SettingsController extends Controller
             ? 'Device type activated successfully.'
             : 'Device type deactivated successfully.';
 
-        return back()->with('success-devicetype', $message);
+        return back()->with('success-devicetype', $message)->withFragment('assets');
     }
 
     public function add_department(Request $request)
@@ -139,7 +139,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'department')
                 ->withInput()
-                ->with('department_form_mode', 'add');
+                ->with('department_form_mode', 'add')->withFragment('department');
         }
 
         $validated = $validator->validated();
@@ -149,7 +149,7 @@ class SettingsController extends Controller
             'name' => $validated['dept_name'],
         ]);
 
-        return back()->with('success-department', 'Department added successfully.');
+        return back()->with('success-department', 'Department added successfully.')->withFragment('department');
     }
 
     public function update_department(Department $department, Request $request)
@@ -164,7 +164,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'department')
                 ->withInput()
-                ->with('edit_department_id', $department->id);
+                ->with('edit_department_id', $department->id)->withFragment('department');
         }
         $validated = $validator->validated();
 
@@ -186,12 +186,12 @@ class SettingsController extends Controller
         if (!$hasChanges) {
             return back()
                 ->with('info', 'No changes made.')
-                ->with('edit_department_id', $department->id);
+                ->with('edit_department_id', $department->id)->withFragment('department');
         }
 
         $department->update($changes);
 
-        return back()->with('success-department', 'Department updated successfully.');
+        return back()->with('success-department', 'Department updated successfully.')->withFragment('department');
     }
 
     //DEACTIVATE AND ACTIVATE DEPARTMENT
@@ -207,7 +207,7 @@ class SettingsController extends Controller
             ? 'Department activated successfully.'
             : 'Department deactivated successfully.';
 
-        return back()->with('success-department', $message);
+        return back()->with('success-department', $message)->withFragment('department');
     }
 
     public function add_preparedby(Request $request)
@@ -221,7 +221,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'preparedby')
                 ->withInput()
-                ->with('preparedby_form_mode', 'add_preparedby');
+                ->with('preparedby_form_mode', 'add_preparedby')->withFragment('preparedby');
         }
 
         $validated = $validator->validated();
@@ -231,7 +231,7 @@ class SettingsController extends Controller
             'name' => $validated['prep_name'],
         ]);
 
-        return back()->with('success-preparedby', 'Department added successfully.');
+        return back()->with('success-preparedby', 'Department added successfully.')->withFragment('preparedby');
     }
 
     public function update_preparedby(PreparedBy $preparedby, Request $request)
@@ -246,7 +246,7 @@ class SettingsController extends Controller
             return back()
                 ->withErrors($validator, 'preparedby')
                 ->withInput()
-                ->with('edit_preparedby_id', $preparedby->id);
+                ->with('edit_preparedby_id', $preparedby->id)->withFragment('preparedby');
         }
         $validated = $validator->validated();
 
@@ -268,12 +268,12 @@ class SettingsController extends Controller
         if (!$hasChanges) {
             return back()
                 ->with('info-preparedby', 'No changes made.')
-                ->with('edit_preparedby_id', $preparedby->id);
+                ->with('edit_preparedby_id', $preparedby->id)->withFragment('preparedby');
         }
 
         $preparedby->update($changes);
 
-        return back()->with('success-preparedby', 'Name updated successfully.');
+        return back()->with('success-preparedby', 'Name updated successfully.')->withFragment('preparedby');
     }
     //DEACTIVE AND ACTIVATE PREPAREDBY
     public function toggle_preparedby($id)
@@ -288,7 +288,7 @@ class SettingsController extends Controller
             ? 'Name activated successfully.'
             : 'Name deactivated successfully.';
 
-        return back()->with('success-preparedby', $message);
+        return back()->with('success-preparedby', $message)->withFragment('preparedby');
     }
 
     public function update_info(User $user_id, Request $request)
