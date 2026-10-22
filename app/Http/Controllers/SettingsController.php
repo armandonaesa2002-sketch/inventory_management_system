@@ -8,6 +8,8 @@ use Illuminate\Validation\ValidationException;
 use App\Models\PreparedBy;
 use App\Models\DeviceType;
 use App\Models\Department;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,11 +20,12 @@ class SettingsController extends Controller
         $device_types = DeviceType::all();
         $departments = Department::all();
         $preparedby_options = PreparedBy::all();
+        $user = Auth::user();
         $data = array_merge(compact(
             'device_types',
             'departments',
-            'preparedby_options'
-
+            'preparedby_options',
+            'user'
         ));
         return view('inventories.settings', compact('data'));
     }
