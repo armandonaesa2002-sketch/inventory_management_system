@@ -237,3 +237,38 @@ document.addEventListener("keydown", function (event) {
         closePreparedbyModal();
     }
 });
+
+//CHANGE PASSWORD MODAL
+function openChangePasswordModal() {
+    const form = document.getElementById("changePasswordForm");
+    form.reset();
+    document.getElementById("changePasswordModal").style.display = "block";
+}
+function closeChangePasswordModal() {
+    const modal = document.getElementById("changePasswordModal");
+    const form = document.getElementById("changePasswordForm");
+
+    modal.style.display = "none";
+    form.reset();
+
+    const message = document.getElementById("changePasswordMessage");
+    if (message) {
+        message.style.display = "none";
+    }
+}
+
+// Close kapag nag-click sa labas ng modal
+document.addEventListener("click", function (event) {
+    const modal = document.getElementById("changePasswordModal");
+
+    if (modal && event.target === modal) {
+        closeChangePasswordModal();
+    }
+});
+
+// Close kapag pinindot ang Escape
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeChangePasswordModal();
+    }
+});

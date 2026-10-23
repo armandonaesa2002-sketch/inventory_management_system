@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::POST('/update_info/{user_id}', [SettingsController::class, 'update_info'])->name('update_info');
+    Route::POST('/change_password', [SettingsController::class, 'change_password'])->name('change_password');
 });
 
 

@@ -1488,3 +1488,28 @@ a {
     box-sizing: border-box;
     width: 100%;
 }
+
+/* CHANGE PASSWORD TOGGLE */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper .input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%, -50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    color: #374151;
+    /* padding: 4px; */
+}

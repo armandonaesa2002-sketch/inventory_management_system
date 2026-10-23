@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -318,5 +319,21 @@ class SettingsController extends Controller
         }
         $user_id->update($changes);
         return back()->with('success-update', 'Info Successfully Updated');
+    }
+
+    public function change_password(Request $request)
+    {
+        // dd($request->all());
+        $request->validateWithBag('password', [
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', 'string', 'min:8'],
+            'confirm_password' => ['required', 'same:new_password',],
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return back()->with('success-password', 'Password changed successfully!');
     }
 }

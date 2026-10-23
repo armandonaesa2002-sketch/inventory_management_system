@@ -677,8 +677,8 @@
                         <div class="section-header-actions">
                             <button type="button"
                                 class="btn btn-primary"
-                                onclick="openPreparedbyModal()">
-                                Update Password
+                                onclick="openChangePasswordModal()">
+                                Change Password
                             </button>
                         </div>
 
@@ -691,6 +691,11 @@
                     @if(session('success-update'))
                     <div class="alert alert-success">
                         {{session('success-update')}}
+                    </div>
+                    @endif
+                    @if(session('success-password'))
+                    <div class="alert alert-success">
+                        {{session('success-password')}}
                     </div>
                     @endif
 
@@ -713,6 +718,85 @@
                         </div>
                     </form>
                 </section>
+                @if($errors->password->any())
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        openChangePasswordModal();
+                    });
+                </script>
+                @endif
+                <!-- {{-- CHANGE PASSWORD MODAL --}} -->
+                <div id="changePasswordModal" class="modal">
+                    <div class="modal-content">
+
+                        <button type="button"
+                            class="modal-close"
+                            onclick="closeChangePasswordModal()">
+                            &times;
+                        </button>
+
+                        <h2 class="modal-title">Change Password</h2>
+                        <p class="modal-text">Change your password</p>
+
+                        <form action="{{route('change_password')}}#account" id="changePasswordForm" method="POST">
+                            @csrf
+                            @if ($errors->password->any())
+                            <div class="alert alert-danger" id="changePasswordMessage">
+                                <ul>
+                                    @foreach ($errors->password->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            <div class="form-group">
+                                <label for="current_password">Current Password</label>
+                                <input type="password" id="current_password" class="input" name="current_password"
+                                    required>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="password-wrapper">
+
+                                    <label for="new_password">New Password</label>
+                                    <input type="password" id="new_password" class="input" name="new_password"
+                                        required>
+                                    <button type="button" class="toggle-password"
+                                        onclick="togglePassword('new_password', this)"
+                                        aria-label="Show password">
+                                        show
+                                    </button>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="password-wrapper">
+
+                                    <label for="confirm_password">Confirm Password</label>
+                                    <input type="password" id="confirm_password" class="input" name="confirm_password"
+                                        required>
+                                    <button type="button" class="toggle-password"
+                                        onclick="togglePassword('confirm_password', this)"
+                                        aria-label="Show password">
+                                        show
+                                    </button>
+                                </div>
+                            </div>
+
+
+                            <div style="display: flex; gap: 10px; margin-top: 18px;">
+                                <button type="submit" id="changePasswordSubmit" class="btn btn-primary">
+                                    Change password
+                                </button>
+                                <button type="button" class="btn btn-outline" onclick="closeChangePasswordModal()">Cancel</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -720,6 +804,21 @@
 
     <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
+    <script>
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "hide";
+                button.setAttribute("aria-label", "Hide password");
+            } else {
+                input.type = "password";
+                button.textContent = "show";
+                button.setAttribute("aria-label", "Show password");
+            }
+        }
+    </script>
 
 </body>
 
