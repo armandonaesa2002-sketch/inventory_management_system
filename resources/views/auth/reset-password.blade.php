@@ -43,7 +43,7 @@
                 @endif
 
                 <div class="field">
-                    <label for="username">Email</label>
+                    <label for="email">Email</label>
                     <input
                         type="email"
                         id="email"
@@ -55,33 +55,37 @@
 
                 </div>
                 <div class="field">
-                    <label for="password">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="New Password"
-                        required>
-                    <button type="button" class="toggle-password"
-                        onclick="togglePassword('new_password', this)"
-                        aria-label="Show password">
-                        show
-                    </button>
+                    <div class="password-wrapper">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="New Password"
+                            required>
+                        <button type="button" class="toggle-password"
+                            onclick="togglePassword('password', this)"
+                            aria-label="Show password">
+                            show
+                        </button>
+                    </div>
 
                 </div>
                 <div class="field">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        id="password_confirmation"
-                        placeholder="Confirm Password"
-                        required>
-                    <button type="button" class="toggle-password"
-                        onclick="togglePassword('password_confirmation', this)"
-                        aria-label="Show password">
-                        show
-                    </button>
+                    <div class="password-wrapper">
+                        <label for="password_confirmation">Confirm Password</label>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            id="password_confirmation"
+                            placeholder="Confirm Password"
+                            required>
+                        <button type="button" class="toggle-password"
+                            onclick="togglePassword('password_confirmation', this)"
+                            aria-label="Show password">
+                            show
+                        </button>
+                    </div>
 
                 </div>
                 <button class="sign-in" type="submit">Reset Password</button>

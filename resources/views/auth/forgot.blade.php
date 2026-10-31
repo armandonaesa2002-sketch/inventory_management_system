@@ -33,6 +33,11 @@
                 @csrf
                 <h2>Forgot Password</h2>
                 <p class="intro">type email to reset</p>
+                @if(session('send-success'))
+                <div class="alert alert-success">
+                    {{session('send-success')}}
+                </div>
+                @endif
                 @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)

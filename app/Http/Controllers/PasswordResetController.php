@@ -27,16 +27,14 @@ class PasswordResetController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Password reset link sent to your email.'
-            ]);
+            return redirect()
+                ->route('auth.forgot')
+                ->with('send-success', 'Password reset link sent to your email.');
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => __($status)
-        ], 400);
+        return back()
+            ->withErrors(['email' => __($status)])
+            ->withInput();
     }
 
     public function resetPassword(Request $request)
