@@ -35,7 +35,7 @@
                 <p class="intro">type email to reset</p>
                 @if(session('send-success'))
                 <div class="alert alert-success">
-                    {{session('send-success')}}
+                    <p>{{session('send-success')}}</p>
                 </div>
                 @endif
                 @if ($errors->any())
