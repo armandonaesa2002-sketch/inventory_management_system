@@ -6,6 +6,8 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\InkStockController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PasswordResetController;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,9 +16,19 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
+    Route::get('/forgot', [PasswordResetController::class, 'forgot'])->name('auth.forgot');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', function ($token) {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => request()->query('email')
+        ]);
+    })->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
 
 Route::middleware('auth')->group(function () {
 

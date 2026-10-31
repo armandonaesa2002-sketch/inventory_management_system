@@ -72,7 +72,7 @@
                         <input type="checkbox" name="remember">
                         Remember me
                     </label>
-                    <a href="#">Forgot password?</a>
+                    <a href="{{route('auth.forgot')}}">Forgot password?</a>
                 </div>
 
                 <button class="sign-in" type="submit">Sign In</button>

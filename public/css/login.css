@@ -301,3 +301,6 @@ a:hover {
     margin-bottom: 14px;
     font-size: 14px;
 }
+.back {
+    justify-content: end;
+}
