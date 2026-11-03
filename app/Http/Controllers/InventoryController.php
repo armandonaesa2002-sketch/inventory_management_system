@@ -133,7 +133,10 @@ class InventoryController extends Controller
                 $query->where('asset_tag', 'like', "%{$search}%")
                     ->orWhere('serial_number', 'like', "%{$search}%")
                     ->orWhere('brand', 'like', "%{$search}%")
-                    ->orWhere('model', 'like', "%{$search}%");
+                    ->orWhere('model', 'like', "%{$search}%")
+                    ->orWhereHas('software', function ($softwareQuery) use ($search) {
+                        $softwareQuery->where('product_key_os', 'like', "%{$search}%");
+                    });
             });
         }
 
