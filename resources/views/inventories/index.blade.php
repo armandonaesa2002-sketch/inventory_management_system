@@ -182,19 +182,27 @@
                                     <th>Device Type</th>
                                     <th>Brand</th>
                                     <th>Model</th>
-                                    <th>Serial Number</th>
+                                    <th>Serial/Product Key</th>
                                     <th>Status</th>
                                     <th colspan="3">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($data['assets'] as $asset)
+                                @php
+                                $serial = trim($asset->serial_number ?? '');
+                                $productKey = trim($asset->software?->product_key_os ?? '');
+
+                                $identifier = $serial !== '' && strtoupper($serial) !== 'N/A'
+                                ? $serial
+                                : ($productKey !== '' ? $productKey : '—');
+                                @endphp
                                 <tr>
                                     <td>{{$asset->asset_tag}}</td>
                                     <td>{{$asset->device_type->name}}</td>
                                     <td>{{$asset->brand}}</td>
                                     <td>{{$asset->model}}</td>
-                                    <td>{{$asset->serial_number}}</td>
+                                    <td>{{$identifier}}</td>
                                     <td>
                                         <span class="status-badge {{$asset->status === 'In Use' ? 'status-inuse' : ($asset->status === 'Returned' ? 'status-returned' : 'status-other')}}">
                                             {{$asset->status}}
