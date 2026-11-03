@@ -10,7 +10,7 @@ use App\Http\Controllers\PasswordResetController;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware('guest')->group(function () {
