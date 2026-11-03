@@ -38,7 +38,8 @@
                                     data-has-basic="{{ $device_types->has_basic }}"
                                     data-has-hardware="{{ $device_types->has_hardware }}"
                                     data-has-purchase="{{ $device_types->has_purchase }}"
-                                    data-has-license-notes="{{ $device_types->has_license_notes }}">{{$device_types->name}}</option>
+                                    data-has-license-notes="{{ $device_types->has_license_notes }}"
+                                    data-identifier="{{ $device_types->identifier ? '1' : '0' }}">{{$device_types->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -96,22 +97,10 @@
                                 </div>
                             </div>
                             <div id="softwareFields">
-
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Operating System</label>
                                         <input type="text" name="operating_system" class="input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Product Key OS</label>
-                                        <input type="text" name="product_key_os" class="input">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-
-                                    <div class="form-group">
-                                        <label>Product Key Others</label>
-                                        <input type="text" name="product_key_other" class="input">
                                     </div>
                                 </div>
                             </div>
@@ -137,17 +126,17 @@
 
                     <!-- RIGHT: SERIAL NUMBERS -->
                     <div class="bulk-column">
-                        <h2 class="step-title">Serial Numbers</h2>
+                        <h2 id="identifierLabel" class="step-title">Serial Numbers</h2>
 
                         <p class="form-subtitle">
-                            Enter one serial number per line. Each line will create one asset.
+                            Enter one serial/product key number per line. Each line will create one asset.
                         </p>
 
                         <div class="form-group">
-                            <textarea name="serial_numbers"
+                            <textarea name="identifiers"
                                 rows="14"
                                 class="textarea"
-                                id="serial_numbers"
+                                id="identifiers"
                                 placeholder="One serial number per line"
                                 required
                                 style="resize: none;"></textarea>
@@ -157,9 +146,9 @@
                             Total: <span id="serialCount">0</span> asset(s)
                         </p>
                         <p id="duplicateMessage" class=" serial-count text-danger hidden"></p>
-                        @if ($errors->has('serial_numbers'))
+                        @if ($errors->has('identifiers'))
                         <p class="serial-count text-danger">
-                            {{ $errors->first('serial_numbers') }}
+                            {{ $errors->first('identifiers') }}
                         </p>
                         @endif
                     </div>
@@ -174,7 +163,7 @@
     </div>
 
     <script>
-        const textarea = document.getElementById('serial_numbers');
+        const textarea = document.getElementById('identifiers');
         const counter = document.getElementById('serialCount');
         const duplicateMessage = document.getElementById('duplicateMessage');
         const submitBtn = document.getElementById('submitBtn');
@@ -265,6 +254,32 @@
             deviceType.addEventListener("change", toggleFields);
 
             toggleFields();
+
+            const identifierField = document.getElementById("identifiers");
+            const identifierLabel = document.getElementById("identifierLabel");
+
+            function updateIdentifierField() {
+                const option = deviceType.options[deviceType.selectedIndex];
+                const usesProductKey =
+                    option?.dataset.identifier === "1";
+
+                identifierLabel.textContent = usesProductKey ?
+                    "Product Keys" :
+                    "Serial Numbers";
+
+                identifierField.placeholder = usesProductKey ?
+                    "One product key per line" :
+                    "One serial number per line";
+            }
+
+            deviceType.addEventListener("change", () => {
+                updateIdentifierField();
+                toggleFields();
+            });
+
+            updateIdentifierField();
+
+
         });
     </script>
 </body>

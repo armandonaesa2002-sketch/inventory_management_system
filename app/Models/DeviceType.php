@@ -18,6 +18,7 @@ class DeviceType extends Model
         'has_hardware',
         'has_purchase',
         'has_license_notes',
+        'identifier',
     ];
 
     public function asset()

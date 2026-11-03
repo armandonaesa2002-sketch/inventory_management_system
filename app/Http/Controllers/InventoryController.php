@@ -317,39 +317,41 @@ class InventoryController extends Controller
     public function confirm_multipleCreate(Request $request)
     {
 
+        // dd($request->all());
         $request->validate([
-            'device_type' => 'required',
+            'device_type' => 'required|exists:device_types,id',
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
-            'serial_numbers' => 'required|string'
+            'identifiers' => 'required|string'
         ]);
 
-        $serials = array_filter(array_map(
-            'trim',
-            preg_split('/\r\n|\r|\n/', $request->serial_numbers)
+        $identifiers = array_values(array_filter(
+            array_map('trim', preg_split('/\r\n|\r|\n/', $request->input('identifiers'))),
+            fn($value) => $value !== ''
         ));
 
-        if (count($serials) !== count(array_unique($serials))) {
+        if (count($identifiers) !== count(array_unique($identifiers))) {
             return back()
                 ->withInput()
-                ->withErrors([
-                    'serial_numbers' => 'Duplicate Serial numbers found.'
-                ]);
+                ->withErrors(['identifiers' => 'Duplicate identifier found.']);
         }
 
-        $existing = Asset::whereIn('serial_number', $serials)->pluck('serial_number');
+        $deviceType = DeviceType::findOrFail($request->device_type);
+
+        $usesProductKey = (bool) $deviceType->identifier;
+
+        $existing = $usesProductKey
+            ? Software::whereIn('product_key_os', $identifiers)->pluck('product_key_os')
+            : Asset::whereIn('serial_number', $identifiers)->pluck('serial_number');
 
         if ($existing->isNotEmpty()) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'serial_numbers' => 'These serial numbers already exist: ' . $existing->implode(', ')
+                    'identifiers' => 'These identifier already exist: ' . $existing->implode(', ')
                 ]);
         }
 
-        // $data = [];
-
-        $deviceType = DeviceType::findOrFail($request->device_type);
         $prefix = $deviceType->asset_prefix;
         $lastAsset = Asset::where('asset_tag', 'like', $prefix . '-%')
             ->latest('id')
@@ -360,23 +362,27 @@ class InventoryController extends Controller
             $lastNumber = 0;
         }
 
-        DB::transaction(function () use ($request, $serials, $lastNumber, $prefix) {
-            foreach ($serials as $serial) {
+        DB::transaction(function () use ($request, $lastNumber, $prefix, $identifiers, $usesProductKey, $deviceType) {
+            foreach ($identifiers as $identifier) {
                 $lastNumber++;
 
                 $asset_tag = $prefix . '-' . str_pad($lastNumber, 4, '0', STR_PAD_LEFT);
                 //main asset
-                $asset = Asset::create([
+                $assetData = [
                     'asset_tag' => $asset_tag,
                     'device_type_id' => $request->device_type,
                     'brand' => $request->brand,
                     'model' => $request->model,
-                    'serial_number' => $serial,
                     'purchase_date' => $request->purchase_date,
                     'warranty_expiry' => $request->warranty_expiry,
                     'vendor' => $request->vendor,
                     'remarks' => $request->remarks
-                ]);
+                ];
+
+                if (!$usesProductKey) {
+                    $assetData['serial_number'] = $identifier;
+                }
+                $asset = Asset::create($assetData);
 
                 $audit = Audit::create([
                     'asset_id' => $asset->id,
@@ -384,7 +390,7 @@ class InventoryController extends Controller
                 ]);
 
                 // Computer fields only
-                if ($request->device_type !== 'printer') {
+                if ($deviceType->has_hardware) {
                     $hardware_specs = HardwareSpec::create([
                         'asset_id' => $asset->id,
                         'processor' => $request->processor,
@@ -396,12 +402,14 @@ class InventoryController extends Controller
                         'peripherals' => $request->peripherals
                     ]);
 
-                    $software = Software::create([
+                    $softwareData = [
                         'asset_id' => $asset->id,
                         'operating_system' => $request->operating_system,
-                        'product_key_os' => $request->product_key_os,
-                        'product_key_other' => $request->product_key_other
-                    ]);
+                    ];
+                    if ($usesProductKey) {
+                        $softwareData['product_key_os'] = $identifier;
+                    }
+                    $software = Software::create($softwareData);
                 }
             }
         });
