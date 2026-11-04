@@ -8,6 +8,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use Mockery\Generator\StringManipulation\Pass\Pass;
+use App\Http\Controllers\AssetImportController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -98,6 +99,11 @@ Route::middleware('auth')->group(function () {
 
     Route::POST('/update_info/{user_id}', [SettingsController::class, 'update_info'])->name('update_info');
     Route::POST('/change_password', [SettingsController::class, 'change_password'])->name('change_password');
+
+    Route::post('/assets/import/preview', [AssetImportController::class, 'preview'])->name('assets.import.preview');
+    Route::get('/assets/import', function () {
+        return view('assets.import');
+    })->name('assets.import.form');
 });
 
 
