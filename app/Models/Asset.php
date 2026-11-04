@@ -62,7 +62,7 @@ class Asset extends Model
         }
 
         if ($this->hardware?->ram_gb) {
-            $specs[] = $this->hardware->ram_gb . 'GB RAM';
+            $specs[] = $this->hardware->ram_gb;
         }
 
         if ($this->hardware?->storage) {
