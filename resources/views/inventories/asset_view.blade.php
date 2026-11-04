@@ -140,6 +140,7 @@
                                         <th>Date Assigned</th>
                                         <th>Date Updated</th>
                                         <th>Status</th>
+                                        <th>Liability</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -151,6 +152,9 @@
                                         <td>{{$assignment->created_at}}</td>
                                         <td>{{$assignment->updated_at}}</td>
                                         <td>{{$assignment->status}}</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline" href="{{route('inventory.liability_form', ['assignment' => $assignment])}}">Print Liability</a>
+                                        </td>
 
                                     </tr>
                                     @empty
