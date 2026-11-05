@@ -156,7 +156,7 @@
                                 </a>
                                 @endif
                             </form>
-
+                            <a class="btn btn-primary" href="{{route('assets.import.form')}}">Import</a>
                             <div class="section-header-buttons">
                                 <a href="{{ route('inventory.export', [
                                 'search' => request('search'),

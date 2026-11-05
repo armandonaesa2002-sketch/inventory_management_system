@@ -104,6 +104,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/assets/import', function () {
         return view('assets.import');
     })->name('assets.import.form');
+
+    Route::post('/assets/import/confirm', [AssetImportController::class, 'confirm'])->name('assets.import.confirm');
+
 });
 
 

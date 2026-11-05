@@ -93,10 +93,45 @@
 
             </div>
 
-            <a href="{{ route('assets.import.form') }}"
-                class="btn btn-secondary">
-                Back
-            </a>
+            
+<form action="{{ route('assets.import.confirm') }}" method="POST">
+
+    @csrf
+
+    @php
+    $hasUser = $rows->contains(function ($row) {
+        return !empty(trim($row['user'] ?? ''));
+    });
+    @endphp
+
+    @if ($hasUser)
+        <div class="mb-3" style="max-width: 350px;">
+            <label class="form-label fw-bold">Prepared By</label>
+
+            <select name="preparedby_id" class="form-select" required>
+                <option value="">Select Prepared By</option>
+
+                @foreach ($preparedByOptions as $option)
+                    <option value="{{ $option->id }}">
+                        {{ $option->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+
+    <button type="submit" class="btn btn-success">
+        Confirm Import
+    </button>
+
+    <a href="{{ route('assets.import.form') }}"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+
 
         </div>
 
