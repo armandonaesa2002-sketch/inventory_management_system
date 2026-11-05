@@ -17,6 +17,7 @@ use App\Models\PreparedBy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
+use App\Exports\FailedAssetsExport;
 
 class AssetImportController extends Controller
 {
@@ -86,6 +87,7 @@ public function confirm(Request $request)
 
     $success = 0;
     $failed = [];
+    $failedExportRows = [];
 
     foreach ($rows->values() as $index => $row) {
 
@@ -250,14 +252,26 @@ public function confirm(Request $request)
 
         } catch (Throwable $e) {
 
+            $reason = $e instanceof \Illuminate\Database\QueryException
+                ? 'Database error while saving this row.'
+                : $e->getMessage();
+
             $failed[] = [
                 'row' => $excelRow,
-                'reason' => $e instanceof \Illuminate\Database\QueryException
-                    ? 'Database error while saving this row.'
-                    : $e->getMessage(),
+                'reason' => $reason,
+            ];
+
+            $failedExportRows[] = [
+                'row' => $excelRow,
+                'data' => is_array($row) ? $row : $row->toArray(),
+                'reason' => $reason,
             ];
         }
     }
+
+    session([
+        'failed_import_rows' => $failedExportRows
+    ]);
 
     // Delete temporary Excel file
     Storage::delete($path);
@@ -269,6 +283,19 @@ public function confirm(Request $request)
     ));
 }
 
+public function downloadFailed()
+{
+    $failedRows = session('failed_import_rows', []);
 
+    if (empty($failedRows)) {
+        return redirect()->route('assets.import.form')
+            ->with('error', 'No failed records available.');
+    }
+
+    return Excel::download(
+        new FailedAssetsExport($failedRows),
+        'failed-assets.xlsx'
+    );
+}
 
 }

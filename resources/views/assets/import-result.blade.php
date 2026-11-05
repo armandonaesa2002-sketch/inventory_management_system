@@ -35,6 +35,10 @@
         @if(count($failed) > 0)
 
             <h5>Failed Records</h5>
+            <a href="{{ route('assets.import.download-failed') }}"
+            class="btn btn-success mb-3">
+                Download Failed Excel
+            </a>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">

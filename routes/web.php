@@ -107,6 +107,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/assets/import/confirm', [AssetImportController::class, 'confirm'])->name('assets.import.confirm');
 
+    Route::get('/assets/import/download-failed', [AssetImportController::class, 'downloadFailed'])->name('assets.import.download-failed');
+
 });
 
 
