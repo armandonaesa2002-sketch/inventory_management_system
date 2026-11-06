@@ -84,6 +84,7 @@ public function confirm(Request $request)
     ]);
 
     $preparedById = $hasUser ? $request->preparedby_id : null;
+    $ignoreMissingIdentifier = $request->boolean('ignore_missing_identifier');
 
     $success = 0;
     $failed = [];
@@ -98,7 +99,8 @@ public function confirm(Request $request)
 
             DB::transaction(function () use (
                 $row,
-                $preparedById
+                $preparedById,
+                $ignoreMissingIdentifier
             ) {
 
                 $getValue = function ($key) use ($row) {
@@ -129,15 +131,22 @@ public function confirm(Request $request)
 
                 if ($usesProductKey) {
 
-                    if (!$productKey) {
+                    if (!$productKey && !$ignoreMissingIdentifier) {
                         throw new \Exception('Missing Product Key OS.');
                     }
 
-                    if (Software::where('product_key_os', $productKey)->exists()) {
+                    if (
+                        $productKey &&
+                        Software::where('product_key_os', $productKey)->exists()
+                    ) {
                         throw new \Exception('Duplicate Product Key OS: ' . $productKey);
                     }
 
                 } else {
+
+                    if (!$serialNumber && !$ignoreMissingIdentifier) {
+                        throw new \Exception('Missing Serial Number.');
+                    }
 
                     if (
                         $serialNumber &&

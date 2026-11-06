@@ -1523,3 +1523,15 @@ a {
     color: #374151;
     /* padding: 4px; */
 }
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-option input {
+    width: auto;
+    margin: 0;
+}

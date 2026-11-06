@@ -58,6 +58,23 @@
                     });
                 @endphp
 
+                <div class="form-group">
+                    <label class="checkbox-option" for="ignoreMissingIdentifier">
+                        <input
+                            type="checkbox"
+                            name="ignore_missing_identifier"
+                            value="1"
+                            id="ignoreMissingIdentifier"
+                        >
+                        <span>Ignore missing Serial Number / Product Key OS</span>
+                    </label>
+
+                    <p class="form-subtitle">
+                        Allow importing records even if their required identifier is missing.
+                    </p>
+                </div>
+
+
                 @if ($hasUser)
                     <div class="form-group">
                         <label for="preparedby_id">Prepared By</label>
