@@ -1,78 +1,82 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Import Results</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 
-<body style="background:#f4f6f9;">
+<body class="inventory-body">
+    <div class="container">
+        <section class="card">
 
-<div class="container py-5">
+            <header class="form-header">
+                <div>
+                    <h1 class="form-title">Excel Import Results</h1>
+                    <p class="form-subtitle">
+                        Summary of the records processed from your Excel file.
+                    </p>
+                </div>
+            </header>
+            <div class="stats-grid">
+                <div class="stat-card stat-available">
+                    <span class="stat-label">Successful Import</span>
+                    <span class="stat-value">{{ $success }}</span>
+                </div>
 
-    <div class="card shadow-sm p-4">
-
-        <h3>Excel Import Results</h3>
-
-        <div class="row my-4">
-            <div class="col-md-6">
-                <div class="alert alert-success">
-                    Successful Imports:
-                    <strong>{{ $success }}</strong>
+                <div class="stat-card stat-lost">
+                    <span class="stat-label">Failed Imports</span>
+                    <span class="stat-value">{{ count($failed) }}</span>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="alert alert-danger">
-                    Failed Imports:
-                    <strong>{{ count($failed) }}</strong>
+            @if (count($failed) > 0)
+                <div class="form-group">
+                    <label>Failed Records</label>
+
+                    <p>
+                        <a href="{{ route('assets.import.download-failed') }}"
+                           class="btn btn-outline">
+                            Download Failed Excel
+                        </a>
+                    </p>
                 </div>
-            </div>
-        </div>
 
-        @if(count($failed) > 0)
-
-            <h5>Failed Records</h5>
-            <a href="{{ route('assets.import.download-failed') }}"
-            class="btn btn-success mb-3">
-                Download Failed Excel
-            </a>
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Excel Row</th>
-                            <th>Reason</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach($failed as $item)
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>{{ $item['row'] }}</td>
-                                <td>{{ $item['reason'] }}</td>
+                                <th>Excel Row</th>
+                                <th>Reason</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($failed as $item)
+                                <tr>
+                                    <td>{{ $item['row'] }}</td>
+                                    <td>{{ $item['reason'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p>All records imported successfully!</p>
+            @endif
+
+            <div class="step-actions">
+                <a href="{{ route('assets.import.form') }}" class="btn btn-primary">
+                    Back to Import
+                </a>
             </div>
 
-        @else
-            <div class="alert alert-success">
-                All records imported successfully!
-            </div>
-        @endif
-
-        <a href="{{ route('assets.import.form') }}" class="btn btn-primary">
-            Back to Import
-        </a>
-
+        </section>
     </div>
-
-</div>
-
 </body>
+
 </html>

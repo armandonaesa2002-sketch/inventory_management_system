@@ -123,6 +123,16 @@ a {
     margin: 32px auto;
     padding: 0 16px;
 }
+.container-import {
+    max-width: 800px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+.container-preview {
+    max-width: 1300px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
 
 /* HEADER / TOP BAR */
 .top-bar {
