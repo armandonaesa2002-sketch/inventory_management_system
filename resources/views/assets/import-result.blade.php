@@ -66,7 +66,9 @@
                     </table>
                 </div>
             @else
-                <p>All records imported successfully!</p>
+            <div class="alert alert-success">
+                All records imported successfully!
+            </div>
             @endif
 
             <div class="step-actions">

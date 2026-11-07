@@ -24,7 +24,8 @@ class Asset extends Model
         'warranty_expiry',
         'vendor',
         'status',
-        'remarks'
+        'remarks',
+        'import_reference'
     ];
 
     //RELATIONSHIPS BELOW

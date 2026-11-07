@@ -72,18 +72,19 @@ public function confirm(Request $request)
     $rows = $import->getRows();
 
     // Check if Excel contains assigned users
-    $hasUser = $rows->contains(function ($row) {
-        return trim((string) ($row['user'] ?? '')) !== '';
+    $hasAssignment = $rows->contains(function ($row) {
+        return trim((string) ($row['user'] ?? '')) !== ''
+            || trim((string) ($row['department'] ?? '')) !== '';
     });
 
     // Validate Prepared By only if there are assignments
     $request->validate([
-        'preparedby_id' => $hasUser
+        'preparedby_id' => $hasAssignment
             ? 'required|exists:prepared_by_options,id'
             : 'nullable',
     ]);
 
-    $preparedById = $hasUser ? $request->preparedby_id : null;
+    $preparedById = $hasAssignment ? $request->preparedby_id : null;
     $ignoreMissingIdentifier = $request->boolean('ignore_missing_identifier');
 
     $success = 0;
@@ -129,6 +130,46 @@ public function confirm(Request $request)
                 $serialNumber = $getValue('serial_number');
                 $productKey = $getValue('product_key_os');
 
+
+                $missingIdentifier = $usesProductKey
+                    ? !$productKey
+                    : !$serialNumber;
+
+                $importReference = null;
+
+                if ($missingIdentifier && $ignoreMissingIdentifier) {
+
+                    $referenceData = [
+                        'device_type_id' => $deviceType->id,
+                        'brand' => strtolower($getValue('brand') ?? ''),
+                        'model' => strtolower($getValue('model') ?? ''),
+                        'purchase_date' => $getValue('purchase_date'),
+                        'warranty_expiry' => $getValue('warranty_expiry'),
+                        'vendor' => strtolower($getValue('vendor') ?? ''),
+                        'processor' => strtolower($getValue('processor') ?? ''),
+                        'ram_gb' => $getValue('ram_gb'),
+                        'storage' => strtolower($getValue('storage') ?? ''),
+                        'monitor' => strtolower($getValue('monitor') ?? ''),
+                        'gpu' => strtolower($getValue('gpu') ?? ''),
+                        'power_supply' => strtolower($getValue('power_supply') ?? ''),
+                        'peripherals' => strtolower($getValue('peripherals') ?? ''),
+                        'user' => strtolower($getValue('user') ?? ''),
+                        'department' => strtolower($getValue('department') ?? ''),
+                    ];
+
+                    $importReference = hash(
+                        'sha256',
+                        json_encode($referenceData)
+                    );
+
+                    if (Asset::where('import_reference', $importReference)->exists()) {
+                        throw new \Exception(
+                            'Duplicate import: This asset with the same details and assignment was already imported.'
+                        );
+                    }
+                }
+
+
                 if ($usesProductKey) {
 
                     if (!$productKey && !$ignoreMissingIdentifier) {
@@ -170,7 +211,7 @@ public function confirm(Request $request)
 
                 $assetTag = $prefix . '-' .
                     str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-
+    
                 // Create Asset
                 $asset = Asset::create([
                     'asset_tag' => $assetTag,
@@ -188,7 +229,8 @@ public function confirm(Request $request)
                     'vendor' => $deviceType->has_purchase
                         ? $getValue('vendor') : null,
 
-                    'status' => 'Available',
+                    'status' => ($getValue('user') || $getValue('department')) ? 'Assigned' : 'Available',
+                    'import_reference' => $importReference,
                 ]);
 
                 // Create Audit
@@ -227,8 +269,9 @@ public function confirm(Request $request)
 
                 // Create Assignment only if User exists
                 $user = $getValue('user');
+                $departmentName = $getValue('department');
 
-                if ($user) {
+                if ($user || $departmentName) {
 
                     $departmentName = $getValue('department');
 
