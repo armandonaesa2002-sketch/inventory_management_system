@@ -55,7 +55,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Serial Number</span>
-                            <span class="detail-value caps">{{$asset->serial_number}}</span>
+                            <span class="detail-value caps">{{$asset->serial_number ?? '—'}}</span>
                         </div>
                         @if($device_type->has_purchase)
                         <div class="detail-row">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">RAM (GB)</span>
-                            <span class="detail-value caps">{{$asset->hardware?->ram_gb.' GB' ?? '—'}}</span>
+                            <span class="detail-value caps">{{$asset->hardware?->ram_gb ?? '—'}}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Storage</span>
@@ -149,7 +149,7 @@
                                         <td>{{$assignment->user_name}}</td>
                                         <td>{{$assignment->department->name}}</td>
                                         <td>{{$assignment->location}}</td>
-                                        <td>{{$assignment->created_at}}</td>
+                                        <td>{{$assignment->release_date}}</td>
                                         <td>{{$assignment->updated_at}}</td>
                                         <td>{{$assignment->status}}</td>
                                         <td>

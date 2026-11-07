@@ -33,7 +33,8 @@ class AssignmentController extends Controller
                 'location' => $request->location,
                 'designation' => $request->designation,
                 'inclusion' => $request->inclusion,
-                'preparedby_id' => $request->prepared_by
+                'preparedby_id' => $request->prepared_by,
+                'release_date' => now()
             ]);
             // dd($assignment);
 
@@ -41,7 +42,7 @@ class AssignmentController extends Controller
             $target_asset->status = 'Assigned';
             $target_asset->save();
         });
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'User Successfully assigned');
+        return redirect(route('inventory.display_index'))->with('success-assignment', 'User Successfully assigned')->withFragment('assignment');
     }
 
     public function edit_assignment(Assignment $assignment)
@@ -59,7 +60,7 @@ class AssignmentController extends Controller
             return back()->with('info', 'No change made');
         }
         $assignment->save();
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated');
+        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
     }
     public function delete_assignment(Assignment $assignment)
     {
@@ -77,7 +78,7 @@ class AssignmentController extends Controller
 
             $assignment->delete();
         });
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Deleted');
+        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Deleted')->withFragment('assignment');
     }
 
     public function returnpage_assignment(Assignment $assignment)
@@ -118,7 +119,7 @@ class AssignmentController extends Controller
             $assignment->save();
         });
 
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated');
+        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
     }
     public function undo_return(Assignment $assignment)
     {
@@ -170,7 +171,7 @@ class AssignmentController extends Controller
             }
         });
 
-        return back()->with('success-assignment', 'Action has been undone.');
+        return back()->with('success-assignment', 'Action has been undone.')->withFragment('assignment');
     }
 
     public function mark_as_complete(Request $request, $id)
@@ -213,7 +214,7 @@ class AssignmentController extends Controller
             }
         });
 
-        return back()->with('success-assignment', 'Successfully Mark as Complete');
+        return back()->with('success-assignment', 'Successfully Mark as Complete')->withFragment('assignment');
     }
 
     public function print_liabilityform(Assignment $assignment)

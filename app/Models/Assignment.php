@@ -19,8 +19,15 @@ class Assignment extends Model
         'remarks',
         'designation',
         'inclusion',
-        'preparedby_id'
+        'preparedby_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'release_date' => 'date',
+        ];
+    }
 
     // RELATION TO ASSET
     public function asset()
