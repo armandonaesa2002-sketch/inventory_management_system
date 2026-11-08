@@ -192,10 +192,10 @@
                                 @php
                                 $serial = trim($asset->serial_number ?? '');
                                 $productKey = trim($asset->software?->product_key_os ?? '');
-
-                                $identifier = $serial !== '' && strtoupper($serial) !== 'N/A'
-                                ? $serial
-                                : ($productKey !== '' ? $productKey : '—');
+                                $usesProductKey = $asset->device_type->identifier;
+                                $identifier = $usesProductKey
+                                ? ($productKey !== '' ? $productKey : ($serial !== '' && strtoupper($serial) !== 'N/A' ? $serial : '—'))
+                                : ($serial !== '' && strtoupper($serial) !== 'N/A' ? $serial : ($productKey !== '' ? $productKey : '—'));
                                 @endphp
                                 <tr>
                                     <td>{{$asset->asset_tag}}</td>

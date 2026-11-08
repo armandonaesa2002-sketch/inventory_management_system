@@ -256,12 +256,15 @@ class AssignmentController extends Controller
 
         $fileName = 'Liability_Form_' .
             $asset->asset_tag . '_' .
-            str_replace(' ', '_', $assignment->user_name) . '_' .
+            preg_replace(
+                '/[\/\\\\:*?"<>|]/',
+                '_',
+                preg_replace('/\s+/', '_', trim($assignment->user_name))
+            ) . '_' .
             $assignment->id .
             '.docx';
-        $outputPath = storage_path(
-            'app/templates/' . $fileName
-        );
+
+        $outputPath = storage_path('app/' . $fileName);
 
         $template->saveAs($outputPath);
 

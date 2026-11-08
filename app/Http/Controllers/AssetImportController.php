@@ -217,7 +217,7 @@ class AssetImportController extends Controller
                         'device_type_id' => $deviceType->id,
                         'brand' => $getValue('brand'),
                         'model' => $getValue('model'),
-                        'serial_number' => $usesProductKey ? null : $serialNumber,
+                        'serial_number' => $serialNumber,
 
                         'purchase_date' => $deviceType->has_purchase
                             ? $getValue('purchase_date') : null,
