@@ -20,6 +20,7 @@ class Assignment extends Model
         'designation',
         'inclusion',
         'preparedby_id',
+        'release_date',
     ];
 
     protected function casts(): array

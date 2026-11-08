@@ -91,6 +91,51 @@ class AssetImportController extends Controller
         $failed = [];
         $failedExportRows = [];
 
+
+        $parseDate = function ($value) {
+            if ($value === null || trim((string) $value) === '') {
+                return null;
+            }
+
+            // DateTime object
+            if ($value instanceof \DateTimeInterface) {
+                return $value->format('Y-m-d');
+            }
+
+            // Excel serial date
+            if (is_numeric($value)) {
+                // 1. Convert the serial date to a temporary DateTime object (e.g., 46152 becomes May 10, 2026)
+                $tempDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $value);
+
+                // 2. Extract the flipped parts Excel calculated (Month: 5, Day: 10, Year: 2026)
+                $excelMonth = (int) $tempDate->format('n');
+                $excelDay   = (int) $tempDate->format('j');
+                $excelYear  = (int) $tempDate->format('Y');
+
+                // 3. Reverse them: Use Excel's Day (10) as your Month, and Excel's Month (5) as your Day
+                // Only flip if the month and day can validly switch (Excel's day must be 12 or less)
+                if ($excelDay <= 12) {
+                    try {
+                        return \Carbon\Carbon::createFromFormat('!n/j/Y', "{$excelDay}/{$excelMonth}/{$excelYear}")->format('Y-m-d');
+                    } catch (\InvalidArgumentException $e) {
+                        // If rewriting fails, fall back to the original interpretation
+                        return $tempDate->format('Y-m-d');
+                    }
+                }
+
+                // If the day is greater than 12 (e.g., Oct 25), Excel couldn't flip it, so it's already correct
+                return $tempDate->format('Y-m-d');
+            }
+
+            // MM/DD/YYYY string fallback
+            return \Carbon\Carbon::createFromFormat(
+                '!n/j/Y',
+                trim($value)
+            )->format('Y-m-d');
+        };
+
+
+
         foreach ($rows->values() as $index => $row) {
 
             // Excel row number (header is row 1)
@@ -101,7 +146,8 @@ class AssetImportController extends Controller
                 DB::transaction(function () use (
                     $row,
                     $preparedById,
-                    $ignoreMissingIdentifier
+                    $ignoreMissingIdentifier,
+                    $parseDate
                 ) {
 
                     $getValue = function ($key) use ($row) {
@@ -297,7 +343,7 @@ class AssetImportController extends Controller
                             'inclusion' => $getValue('inclusion'),
                             'status' => 'In Use',
                             'preparedby_id' => $preparedById,
-                            'release_date' => $getValue('release_date'),
+                            'release_date' => $parseDate($row['release_date'] ?? null),
                         ]);
                     }
                 });
