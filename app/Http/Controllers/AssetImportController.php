@@ -93,7 +93,7 @@ class AssetImportController extends Controller
 
 
         $parseDate = function ($value) {
-            if ($value === null || trim((string) $value) === '') {
+            if ($value === null) {
                 return null;
             }
 
@@ -102,37 +102,50 @@ class AssetImportController extends Controller
                 return $value->format('Y-m-d');
             }
 
+            $value = trim((string) $value);
+
+            if ($value === '') {
+                return null;
+            }
+
             // Excel serial date
             if (is_numeric($value)) {
-                // 1. Convert the serial date to a temporary DateTime object (e.g., 46152 becomes May 10, 2026)
-                $tempDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $value);
+                $tempDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(
+                    (float) $value
+                );
 
-                // 2. Extract the flipped parts Excel calculated (Month: 5, Day: 10, Year: 2026)
                 $excelMonth = (int) $tempDate->format('n');
                 $excelDay   = (int) $tempDate->format('j');
                 $excelYear  = (int) $tempDate->format('Y');
 
-                // 3. Reverse them: Use Excel's Day (10) as your Month, and Excel's Month (5) as your Day
-                // Only flip if the month and day can validly switch (Excel's day must be 12 or less)
+                // Panatilihin ang custom na month/day flip para sa file mo
                 if ($excelDay <= 12) {
                     try {
-                        return \Carbon\Carbon::createFromFormat('!n/j/Y', "{$excelDay}/{$excelMonth}/{$excelYear}")->format('Y-m-d');
+                        return \Carbon\Carbon::createFromFormat(
+                            '!n/j/Y',
+                            "{$excelDay}/{$excelMonth}/{$excelYear}"
+                        )->format('Y-m-d');
                     } catch (\InvalidArgumentException $e) {
-                        // If rewriting fails, fall back to the original interpretation
                         return $tempDate->format('Y-m-d');
                     }
                 }
 
-                // If the day is greater than 12 (e.g., Oct 25), Excel couldn't flip it, so it's already correct
                 return $tempDate->format('Y-m-d');
             }
 
-            // MM/DD/YYYY string fallback
-            return \Carbon\Carbon::createFromFormat(
-                '!n/j/Y',
-                trim($value)
-            )->format('Y-m-d');
+            // MM/DD/YY o MM/DD/YYYY
+            $format = preg_match('/^\d{1,2}\/\d{1,2}\/\d{2}$/', $value)
+                ? '!n/j/y'
+                : '!n/j/Y';
+
+            try {
+                return \Carbon\Carbon::createFromFormat($format, $value)->format('Y-m-d');
+            } catch (\InvalidArgumentException $e) {
+                return null;
+            }
         };
+
+        
 
 
 
