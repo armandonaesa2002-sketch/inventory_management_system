@@ -21,6 +21,27 @@
                         Summary of the records processed from your Excel file.
                     </p>
                 </div>
+                <div class="step-actions">
+                    @if(isset($batch) && !$batch->reverted_at)
+                        <form action="{{ route('assets.import.revert', $batch->id) }}"
+                            method="POST"
+                            onsubmit="return confirm('Are you sure you want to revert this import? All assets and related records from this batch will be deleted.')">
+
+                            @csrf
+
+                            <button type="submit" class="btn btn-danger">
+                                Revert Import
+                            </button>
+                        </form>
+                    @elseif(isset($batch) && $batch->reverted_at)
+                        <span class="badge bg-secondary">
+                            This import has already been reverted.
+                        </span>
+                    @endif
+                    <a href="{{ route('assets.import.form') }}" class="btn btn-primary">
+                        Back to Import
+                    </a>
+                </div>
             </header>
             <div class="stats-grid">
                 <div class="stat-card stat-available">
@@ -33,6 +54,7 @@
                     <span class="stat-value">{{ count($failed) }}</span>
                 </div>
             </div>
+            
 
             @if (count($failed) > 0)
                 <div class="form-group">
@@ -71,11 +93,7 @@
             </div>
             @endif
 
-            <div class="step-actions">
-                <a href="{{ route('assets.import.form') }}" class="btn btn-primary">
-                    Back to Import
-                </a>
-            </div>
+            
 
         </section>
     </div>

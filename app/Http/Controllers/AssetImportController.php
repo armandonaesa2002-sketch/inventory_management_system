@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 use App\Exports\FailedAssetsExport;
+use App\Models\AssetImportBatch;
 
 class AssetImportController extends Controller
 {
@@ -38,8 +39,11 @@ class AssetImportController extends Controller
         // 3. Store uploaded Excel file
         $path = $request->file('file')->store('imports');
 
-        // 4. Save file path in session
-        session(['asset_import_path' => $path]);
+        // 4. Save file path and original filename in session
+        session([
+            'asset_import_path' => $path,
+            'asset_import_original_name' => $request->file('file')->getClientOriginalName(),
+        ]);
 
         // 5. Read Excel file for preview
         $import = new AssetsImport();
@@ -59,6 +63,7 @@ class AssetImportController extends Controller
     public function confirm(Request $request)
     {
         $path = session('asset_import_path');
+        $originalFileName = session('asset_import_original_name');
 
         if (!$path || !Storage::exists($path)) {
             return redirect()->route('assets.import.form')
@@ -90,6 +95,15 @@ class AssetImportController extends Controller
         $success = 0;
         $failed = [];
         $failedExportRows = [];
+
+        $batch = AssetImportBatch::create([
+            'batch_code' => 'IMP-' . now()->format('YmdHis') . '-' . strtoupper(\Illuminate\Support\Str::random(4)),
+            'file_name' => $originalFileName,
+            'imported_by' => auth()->id(),
+            'total_success' => 0,
+            'total_failed' => 0,
+            'imported_at' => now(),
+        ]);
 
 
         $parseDate = function ($value) {
@@ -160,7 +174,8 @@ class AssetImportController extends Controller
                     $row,
                     $preparedById,
                     $ignoreMissingIdentifier,
-                    $parseDate
+                    $parseDate,
+                    $batch
                 ) {
 
                     $getValue = function ($key) use ($row) {
@@ -291,6 +306,7 @@ class AssetImportController extends Controller
 
                         'status' => ($getValue('user') || $getValue('department')) ? 'Assigned' : 'Available',
                         'import_reference' => $importReference,
+                        'import_batch_id' => $batch->id,
                     ]);
 
                     // Create Audit
@@ -381,6 +397,16 @@ class AssetImportController extends Controller
             }
         }
 
+        if ($success > 0) {
+            $batch->update([
+                'total_success' => $success,
+                'total_failed' => count($failed),
+            ]);
+        } else {
+            $batch->delete();
+            $batch = null;
+        }
+
         session([
             'failed_import_rows' => $failedExportRows
         ]);
@@ -391,7 +417,8 @@ class AssetImportController extends Controller
 
         return view('assets.import-result', compact(
             'success',
-            'failed'
+            'failed',
+            'batch'
         ));
     }
 
@@ -408,5 +435,40 @@ class AssetImportController extends Controller
             new FailedAssetsExport($failedRows),
             'failed-assets.xlsx'
         );
+    }
+
+    public function revert($id)
+    {
+        // Find import batch
+        // Check if already reverted
+        // Check if safe to delete
+        // Delete related records
+        // Delete imported assets
+        // Mark batch as reverted
+
+        $batch = AssetImportBatch::with('assets')->findOrFail($id);
+
+        // Prevent reverting the same batch twice
+        if ($batch->reverted_at) {
+            return redirect()->back()->with('error', 'This import batch has already been reverted.');
+        }
+
+        DB::transaction(function () use ($batch) {
+
+            // Delete only assets belonging to this import batch
+            $batch->assets()->delete();
+
+            // Mark batch as reverted for audit history
+            $batch->update([
+                'reverted_at' => now(),
+            ]);
+        });
+
+        return redirect()->route('assets.import.form')->with(
+            'success',
+            'Import batch ' . $batch->batch_code . ' has been successfully reverted.'
+        );
+
+
     }
 }

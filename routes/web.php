@@ -109,6 +109,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/assets/import/download-failed', [AssetImportController::class, 'downloadFailed'])->name('assets.import.download-failed');
 
+    Route::post('/assets/import/{id}/revert', [AssetImportController::class, 'revert'])->name('assets.import.revert');
+
 });
 
 

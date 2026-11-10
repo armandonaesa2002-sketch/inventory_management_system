@@ -9,6 +9,7 @@ use App\Models\HardwareSpec;
 use App\Models\Software;
 use App\Models\RepairHistory;
 use App\Models\DeviceType;
+use App\Models\AssetImportBatch;
 
 class Asset extends Model
 {
@@ -25,7 +26,8 @@ class Asset extends Model
         'vendor',
         'status',
         'remarks',
-        'import_reference'
+        'import_reference',
+        'import_batch_id'
     ];
 
     //RELATIONSHIPS BELOW
@@ -106,5 +108,10 @@ class Asset extends Model
     public function device_type()
     {
         return $this->belongsTo(DeviceType::class);
+    }
+
+    public function importBatch()
+    {
+        return $this->belongsTo(AssetImportBatch::class, 'import_batch_id');
     }
 }
