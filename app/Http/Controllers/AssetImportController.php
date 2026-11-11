@@ -14,6 +14,7 @@ use App\Models\Audit;
 use App\Models\Assignment;
 use App\Models\Department;
 use App\Models\PreparedBy;
+use App\Models\RepairHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -401,6 +402,7 @@ class AssetImportController extends Controller
             $batch->update([
                 'total_success' => $success,
                 'total_failed' => count($failed),
+                'completed_at' => now(),
             ]);
         } else {
             $batch->delete();
@@ -437,38 +439,89 @@ class AssetImportController extends Controller
         );
     }
 
-    public function revert($id)
+    
+    public function revert(Request $request, $id)
     {
-        // Find import batch
+        $redirectRoute = $request->input('return_to') === 'settings'
+            ? 'inventory.settings'
+            : 'assets.import.form';
+
+        $batch = AssetImportBatch::findOrFail($id);
+
         // Check if already reverted
-        // Check if safe to delete
-        // Delete related records
-        // Delete imported assets
-        // Mark batch as reverted
-
-        $batch = AssetImportBatch::with('assets')->findOrFail($id);
-
-        // Prevent reverting the same batch twice
         if ($batch->reverted_at) {
-            return redirect()->back()->with('error', 'This import batch has already been reverted.');
+            return redirect()->route($redirectRoute)
+                ->with('error', 'This import batch has already been reverted.')->withFragment('import_alert');
         }
 
+        // Check if completion timestamp exists
+        if (!$batch->completed_at) {
+            return redirect()->route($redirectRoute)
+                ->with('error', 'Cannot safely revert this batch. Completion timestamp is missing.')->withFragment('import_alert');
+        }
+
+        $completedAt = $batch->completed_at;
+
+        // Get imported asset IDs
+        $assetIds = $batch->assets()->pluck('id');
+
+        if ($assetIds->isEmpty()) {
+            return redirect()->route($redirectRoute)
+                ->with('error', 'No imported assets found in this batch.')->withFragment('import_alert');
+        }
+
+        // Check if imported assets were modified after import
+        $hasChanges = $batch->assets()
+            ->where(function ($query) use ($completedAt) {
+                $query->where('created_at', '>', $completedAt)
+                    ->orWhere('updated_at', '>', $completedAt);
+            })
+            ->exists();
+
+        // Check all related records
+        $relatedModels = [
+            Assignment::class,
+            Audit::class,
+            HardwareSpec::class,
+            Software::class,
+            RepairHistory::class,
+        ];
+
+        foreach ($relatedModels as $model) {
+
+            $hasRelatedChanges = $model::whereIn('asset_id', $assetIds)
+                ->where(function ($query) use ($completedAt) {
+                    $query->where('created_at', '>', $completedAt)
+                        ->orWhere('updated_at', '>', $completedAt);
+                })
+                ->exists();
+
+            if ($hasRelatedChanges) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
+        // Block revert if changes were detected
+        if ($hasChanges) {
+            return redirect()->route($redirectRoute)
+                ->with('error', 'Cannot revert this batch because some imported assets or related records have been modified after import.')->withFragment('import_alert');
+        }
+
+        // Safe to revert
         DB::transaction(function () use ($batch) {
 
-            // Delete only assets belonging to this import batch
             $batch->assets()->delete();
 
-            // Mark batch as reverted for audit history
             $batch->update([
                 'reverted_at' => now(),
             ]);
         });
 
-        return redirect()->route('assets.import.form')->with(
+        return redirect()->route($redirectRoute)->with(
             'success',
             'Import batch ' . $batch->batch_code . ' has been successfully reverted.'
-        );
-
-
+        )->withFragment('import_alert');
     }
+
 }

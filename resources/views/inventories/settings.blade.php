@@ -668,19 +668,193 @@
 
                 </section>
 
+
+                <!-- IMPORT HISTORY -->
+                <section class="card" id="import_alert">
+                    <div class="section-header">
+                        <h2>Import Batch History</h2>
+                        <!-- <div class="section-header-actions">
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openPreparedbyModal()">
+                                + Add Name
+                            </button>
+                        </div> -->
+                    </div>
+
+
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead class="caps">
+                                <tr>
+                                    <th>Batch Code</th>
+                                    <th>File Name</th>
+                                    <th>Imported By</th>
+                                    <th>Total Success</th>
+                                    <th>Total Failed</th>
+                                    <th>Imported At</th>
+                                    <th>Reverted At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data['asset_import_batch'] as $asset_import_batch)
+                                <tr>
+                                    <td>{{$asset_import_batch->batch_code}}</td>
+                                    <td>{{$asset_import_batch->file_name}}</td>
+                                    <td>{{$asset_import_batch->users->name}}</td>
+                                    <td>{{$asset_import_batch->total_success}}</td>
+                                    <td>{{$asset_import_batch->total_failed}}</td>
+                                    <td>{{$asset_import_batch->imported_at}}</td>
+                                    <td>{{$asset_import_batch->reverted_at ?? '-'}}</td>
+                                    
+                                        @if(!$asset_import_batch->reverted_at)
+                                        <td>
+
+                                            <form action="{{ route('assets.import.revert', $asset_import_batch->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to revert this import? All assets and related records from this batch will be deleted.')">
+    
+                                                @csrf
+                                                <input type="hidden" name="return_to" value="settings">
+    
+                                                <button type="submit" class="btn btn-danger">
+                                                    Revert
+                                                </button>
+                                            </form>
+                                        </td>
+                                        @else 
+                                        <td class="text-muted">
+                                            <p>Reverted</p>
+                                        </td>
+                                        @endif
+                                    
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4">No record found</td>
+                                </tr>
+
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-wrapper">
+                        {{ $data['asset_import_batch']->links() }}
+                    </div>
+
+                    @if ($errors->preparedby->any() && session('edit_preparedby_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-prepid="{{ session('edit_preparedby_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditPreparedbyModal(button);
+                            }
+                        });
+                    </script>
+
+                    @elseif (session('info-preparedby') && session('edit_preparedby_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.querySelector(
+                                `[data-prepid="{{ session('edit_preparedby_id') }}"]`
+                            );
+
+                            if (button) {
+                                openEditPreparedbyModal(button);
+                            }
+                        });
+                    </script>
+                    @endif
+                    <!-- {{-- ADD PREPARED BY MODAL --}} -->
+                    <div id="addPreparedbyModal" class="modal">
+                        <div class="modal-content">
+
+                            <button type="button"
+                                class="modal-close"
+                                onclick="closePreparedbyModal()">
+                                &times;
+                            </button>
+
+                            <h2 class="modal-title" id="preparedbyModalTitle">Add Prepared by</h2>
+                            <p class="modal-text" id="preparedbyModalText">Configure a new name.</p>
+
+                            <form action="{{route('preparedby')}}" id="preparedbyForm" method="POST">
+                                @if ($errors->preparedby->any())
+                                <div class="alert alert-danger" id="preparedbyMessage">
+
+                                    @foreach ($errors->preparedby->all() as $error)
+                                    <p>{{ $error }}</p>
+                                    @endforeach
+
+                                </div>
+                                @endif
+                                @if (session('info-preparedby'))
+                                <div class="alert alert-success" id="preparedbyMessage">
+                                    {{ session('info-preparedby') }}
+                                </div>
+                                @endif
+
+                                @if ($errors->preparedby->any() && session('preparedby_form_mode') === 'add_preparedby')
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        document.getElementById('addPreparedbyModal').style.display = 'block';
+                                    });
+                                </script>
+                                @endif
+
+                                @csrf
+                                <input type="hidden" id="preparedbyMethod" name="_method" value="POST">
+                                <div class="form-row">
+
+                                    <div class="form-group">
+                                        <label for="prep_code">Code</label>
+                                        <input type="text" id="prep_code" class="input" name="prep_code"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prep_name">Name</label>
+                                        <input type="text" id="prep_name" class="input" name="prep_name"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: 18px;">
+                                    <button type="submit" id="preparedbySubmit" class="btn btn-primary">
+                                        Save Name
+                                    </button>
+                                    <button type="button" class="btn btn-outline" onclick="closePreparedbyModal()">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </section>
+
                 <section class="card settings-card">
                     <div class="section-header" id="account">
                         <div>
                             <h2>Account Settings</h2>
                             <p class="text-muted">Update your information account.</p>
                         </div>
-                        <div class="section-header-actions">
-                            <button type="button"
-                                class="btn btn-primary"
-                                onclick="openChangePasswordModal()">
-                                Change Password
-                            </button>
-                        </div>
+                        
 
                     </div>
                     @if(session('no_change'))
@@ -712,8 +886,15 @@
                                 <input class="input" type="email" id="email" name="email" value="{{$data['user']->email}}" required>
                             </div>
                         </div>
-
-                        <div class="settings-actions">
+                        <div class="section-header-actions">
+                            </div>
+                            
+                            <div class="settings-actions">
+                            <button type="button"
+                                class="btn btn-primary"
+                                onclick="openChangePasswordModal()">
+                                Change Password
+                            </button>
                             <button class="btn btn-primary" type="submit">Save Changes</button>
                         </div>
                     </form>

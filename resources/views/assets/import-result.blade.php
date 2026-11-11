@@ -28,6 +28,7 @@
                             onsubmit="return confirm('Are you sure you want to revert this import? All assets and related records from this batch will be deleted.')">
 
                             @csrf
+                            <input type="hidden" name="return_to" value="import">
 
                             <button type="submit" class="btn btn-danger">
                                 Revert Import

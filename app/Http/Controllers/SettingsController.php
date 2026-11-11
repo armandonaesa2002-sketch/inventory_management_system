@@ -9,6 +9,7 @@ use App\Models\PreparedBy;
 use App\Models\DeviceType;
 use App\Models\Department;
 use App\Models\User;
+use App\Models\AssetImportBatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -21,12 +22,15 @@ class SettingsController extends Controller
         $device_types = DeviceType::all();
         $departments = Department::all();
         $preparedby_options = PreparedBy::all();
+        // $asset_import_batches = AssetImportBatch::all();
+        $asset_import_batch = AssetImportBatch::query()->paginate(10, ['*'], 'page_number')->withQueryString()->fragment('import_alert');
         $user = Auth::user();
         $data = array_merge(compact(
             'device_types',
             'departments',
             'preparedby_options',
-            'user'
+            'user',
+            'asset_import_batch'
         ));
         return view('inventories.settings', compact('data'));
     }
