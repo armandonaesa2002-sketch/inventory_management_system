@@ -78,7 +78,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
                 $asset->status,
                 $active_assignment?->user_name,
                 $active_assignment?->department?->name,
-                $active_assignment?->release_date,
+                $active_assignment?->release_date?->format('m/d/Y'),
                 $active_assignment?->designation,
                 $active_assignment?->location,
                 $active_assignment?->inclusion,
