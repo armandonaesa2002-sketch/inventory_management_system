@@ -30,6 +30,11 @@ class Asset extends Model
         'import_batch_id'
     ];
 
+    protected $casts = [
+        'purchase_date' => 'date',
+        'warranty_expiry' => 'date',
+    ];
+
     //RELATIONSHIPS BELOW
 
     public function hardware()

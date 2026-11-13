@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Table;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 
 class AssetsExport implements FromCollection, WithHeadings, WithEvents
@@ -54,13 +55,14 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
 
             $active_assignment = $asset->assignment->where('status', 'In Use')->first();
             return [
+                $asset->id,
                 $asset->asset_tag,
                 $asset->device_type->name,
                 $asset->brand,
                 $asset->model,
                 $asset->serial_number,
-                $asset->purchase_date,
-                $asset->warranty_expiry,
+                $asset->purchase_date?->format('m/d/Y'),
+                $asset->warranty_expiry?->format('m/d/Y'),
                 $asset->vendor,
 
                 $asset->hardware?->processor,
@@ -90,6 +92,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
     public function headings(): array
     {
         return [
+            'Asset Id',
             'Asset Tag',
             'Device Type',
             'Brand',
@@ -136,9 +139,12 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
 
                 $sheet->addTable($table);
 
-                //Auto fit columns
-                foreach (range('A', $lastColumn) as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                // Auto fit columns (supports beyond column Z)
+                $highestColumnIndex = Coordinate::columnIndexFromString($lastColumn);
+
+                for ($col = 1; $col <= $highestColumnIndex; $col++) {
+                    $columnLetter = Coordinate::stringFromColumnIndex($col);
+                    $sheet->getColumnDimension($columnLetter)->setAutoSize(true);
                 }
             },
         ];
