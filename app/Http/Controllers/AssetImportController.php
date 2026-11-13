@@ -184,6 +184,22 @@ class AssetImportController extends Controller
                         return $value !== '' ? $value : null;
                     };
 
+                    $assetId = $getValue('asset_id');
+
+                    // Check Asset ID from exported Excel
+                    if ($assetId !== null) {
+
+                        if (!filter_var($assetId, FILTER_VALIDATE_INT) || (int) $assetId <= 0) {
+                            throw new \Exception('Invalid Asset ID: ' . $assetId);
+                        }
+
+                        if (Asset::where('id', $assetId)->exists()) {
+                            throw new \Exception('Duplicate Asset ID: ' . $assetId);
+                        }
+
+                        throw new \Exception('Asset ID not found: ' . $assetId);
+                    }
+
                     // Find Device Type using NAME
                     $deviceTypeName = $getValue('device_type');
 
@@ -202,7 +218,11 @@ class AssetImportController extends Controller
                     // Identifier checking
                     $usesProductKey = (bool) $deviceType->identifier;
 
-                    $serialNumber = $getValue('serial_number');
+                    $serialNumber = strtoupper(trim($getValue('serial_number') ?? ''));
+
+                    $serialNumber = $serialNumber === '' || $serialNumber === 'N/A'
+                        ? null
+                        : $serialNumber;
                     $productKey = $getValue('product_key_os');
 
 
@@ -214,22 +234,30 @@ class AssetImportController extends Controller
 
                     if ($missingIdentifier && $ignoreMissingIdentifier) {
 
+                        $normalize = function ($value) {
+                            if ($value === null) {
+                                return '';
+                            }
+
+                            return strtolower(trim((string) $value));
+                        };
+
                         $referenceData = [
-                            'device_type_id' => $deviceType->id,
-                            'brand' => strtolower($getValue('brand') ?? ''),
-                            'model' => strtolower($getValue('model') ?? ''),
-                            'purchase_date' => $getValue('purchase_date'),
-                            'warranty_expiry' => $getValue('warranty_expiry'),
-                            'vendor' => strtolower($getValue('vendor') ?? ''),
-                            'processor' => strtolower($getValue('processor') ?? ''),
-                            'ram_gb' => $getValue('ram_gb'),
-                            'storage' => strtolower($getValue('storage') ?? ''),
-                            'monitor' => strtolower($getValue('monitor') ?? ''),
-                            'gpu' => strtolower($getValue('gpu') ?? ''),
-                            'power_supply' => strtolower($getValue('power_supply') ?? ''),
-                            'peripherals' => strtolower($getValue('peripherals') ?? ''),
-                            'user' => strtolower($getValue('user') ?? ''),
-                            'department' => strtolower($getValue('department') ?? ''),
+                            'device_type_id' => (int) $deviceType->id,
+                            'brand' => $normalize($getValue('brand')),
+                            'model' => $normalize($getValue('model')),
+                            'purchase_date' => $normalize($getValue('purchase_date')),
+                            'warranty_expiry' => $normalize($getValue('warranty_expiry')),
+                            'vendor' => $normalize($getValue('vendor')),
+                            'processor' => $normalize($getValue('processor')),
+                            'ram_gb' => $normalize($getValue('ram_gb')),
+                            'storage' => $normalize($getValue('storage')),
+                            'monitor' => $normalize($getValue('monitor')),
+                            'gpu' => $normalize($getValue('gpu')),
+                            'power_supply' => $normalize($getValue('power_supply')),
+                            'peripherals' => $normalize($getValue('peripherals')),
+                            'user' => $normalize($getValue('user')),
+                            'department' => $normalize($getValue('department')),
                         ];
 
                         $importReference = hash(
@@ -295,10 +323,10 @@ class AssetImportController extends Controller
                         'serial_number' => $serialNumber,
 
                         'purchase_date' => $deviceType->has_purchase
-                            ? $getValue('purchase_date') : null,
+                            ? $parseDate($row['purchase_date'] ?? null) : null,
 
                         'warranty_expiry' => $deviceType->has_purchase
-                            ? $getValue('warranty_expiry') : null,
+                            ? $parseDate($row['warranty_expiry'] ?? null) : null,
 
                         'vendor' => $deviceType->has_purchase
                             ? $getValue('vendor') : null,
