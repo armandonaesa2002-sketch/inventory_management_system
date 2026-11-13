@@ -162,7 +162,7 @@
                                 'search' => request('search'),
                                 'device_type' => request('device_type'),
                                 'status' => request('status'),
-                            ]) }}" class="btn btn-primary">Export Excel</a>
+                            ]) }}" class="btn btn-primary @if($data['assets']->isEmpty()) display_none @endif">Export Excel</a>
                                 <a class="btn btn-primary" href="{{route('inventory.create')}}">+ Add Item</a>
                                 <a class="btn btn-primary" href="{{route('inventory.create_multiple')}}">+ Add Multiple Item</a>
                             </div>
