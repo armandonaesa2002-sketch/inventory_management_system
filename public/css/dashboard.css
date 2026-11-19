@@ -795,17 +795,56 @@ a {
 
 /* Optional: center on small screens */
 @media (max-width: 640px) {
-    .pagination-wrapper {
-        justify-content: center;
-    }
-
     .pagination-wrapper nav > div:last-child {
+        width: 100%;
+        min-width: 0;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: 8px;
     }
 
-    .pagination-wrapper nav > div:last-child > div:first-child {
-        display: none; /* itago 'Showing 1 to 5 of 6 results' sa maliit na screen */
+    .pagination-wrapper nav > div:last-child > div:last-child {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* I-wrap ang grupo ng pagination links */
+    .pagination-wrapper nav > div:last-child > div:last-child > span {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+
+        /* I-reset ang pill styling kung nailapat sa buong grupo */
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    /* Huwag paliitin ang mismong buttons */
+    .pagination-wrapper nav > div:last-child > div:last-child a,
+    .pagination-wrapper nav > div:last-child > div:last-child span {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .pagination-wrapper nav > div:last-child {
+        min-width: 0;
+    }
+
+    .pagination-wrapper nav > div:last-child > div:last-child {
+        display: flex;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+        justify-content: flex-start;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
