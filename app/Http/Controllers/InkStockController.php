@@ -48,6 +48,9 @@ class InkStockController extends Controller
             $ink_transaction_query->where('type', $request->type);
         }
 
+        // Latest date first
+        $ink_transaction_query->orderBy('created_at', 'desc');
+
         $ink_transaction = $ink_transaction_query->paginate(10, ['*'], 'transaction_page')->withQueryString();
 
         $total_ink = InkStock::count();

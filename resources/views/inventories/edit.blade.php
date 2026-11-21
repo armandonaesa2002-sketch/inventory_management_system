@@ -144,12 +144,12 @@
                         <div class="form-group">
                             <label for="purchase_date">Purchase Date</label>
                             <input type="date" name="asset[purchase_date]"
-                                value="{{$asset->purchase_date ?? ''}}" class="input">
+                                value="{{$asset->purchase_date?->format('Y-m-d') ?? ''}}" class="input">
                         </div>
                         <div class="form-group">
                             <label for="warranty_expiry">Warranty Expiry</label>
                             <input type="date" name="asset[warranty_expiry]"
-                                value="{{$asset->warranty_expiry ?? ''}}" class="input">
+                                value="{{$asset->warranty_expiry?->format('Y-m-d') ?? ''}}" class="input">
                         </div>
                     </div>
 
