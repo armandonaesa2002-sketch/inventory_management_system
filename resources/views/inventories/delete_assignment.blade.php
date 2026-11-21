@@ -18,7 +18,7 @@
                         This will remove this user’s assignment for the asset.
                     </p>
                 </div>
-                <a href="{{route('inventory.display_index')}}" class="btn btn-outline btn-sm">
+                <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>
@@ -66,7 +66,7 @@
                     <button type="submit" class="btn btn-danger">
                         Delete Assignment
                     </button>
-                    <a href="{{route('inventory.display_index')}}" class="btn btn-outline">
+                    <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline">
                         Cancel
                     </a>
                 </div>

@@ -16,7 +16,7 @@
                     <h1 class="form-title">Edit Assignment</h1>
                     <p class="form-subtitle">Update user and location for this asset.</p>
                 </div>
-                <a href="{{route('inventory.display_index')}}" class="btn btn-outline btn-sm">
+                <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>
@@ -90,7 +90,7 @@
 
                 <div class="step-actions">
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{route('inventory.display_index')}}" class="btn btn-outline">Cancel</a>
+                    <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </section>

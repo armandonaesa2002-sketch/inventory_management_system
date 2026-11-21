@@ -16,7 +16,7 @@
                     <h1 class="form-title">Return Asset</h1>
                     <p class="form-subtitle">Mark this device as returned and set its new status.</p>
                 </div>
-                <a href="{{route('inventory.display_index')}}" class="btn btn-outline btn-sm">
+                <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>
@@ -74,7 +74,7 @@
 
                 <div class="step-actions">
                     <button type="submit" class="btn btn-primary">Confirm Return</button>
-                    <a href="{{route('inventory.display_index')}}" class="btn btn-outline">Cancel</a>
+                    <a href="{{route('inventory.display_index', request()->query())}}#assignment" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </section>

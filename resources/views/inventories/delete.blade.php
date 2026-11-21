@@ -18,7 +18,7 @@
                         This action is permanent and will remove related records.
                     </p>
                 </div>
-                <a href="{{route('inventory.display_index')}}" class="btn btn-outline btn-sm">
+                <a href="{{route('inventory.display_index', request()->query())}}" class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>
@@ -68,7 +68,7 @@
                     <button type="submit" class="btn btn-danger">
                         Permanently Delete
                     </button>
-                    <a href="{{route('inventory.display_index')}}" class="btn btn-outline">
+                    <a href="{{route('inventory.display_index', request()->query())}}" class="btn btn-outline">
                         Cancel
                     </a>
                 </div>

@@ -34,7 +34,7 @@
                                 @endif
                     </p>
                 </div>
-                <a href="{{route('inventory.display_index')}}" class="btn btn-outline btn-sm">
+                <a href="{{route('inventory.display_index', request()->query())}}" class="btn btn-outline btn-sm">
                     Back to List
                 </a>
             </header>

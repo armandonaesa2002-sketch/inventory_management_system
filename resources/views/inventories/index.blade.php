@@ -209,11 +209,11 @@
                                         </span>
                                     </td>
                                     <td colspan="3">
-                                        <a class="btn btn-sm btn-outline" href="{{route('inventory.edit', ['asset' => $asset])}}">Edit</a>
+                                        <a class="btn btn-sm btn-outline" href="{{route('inventory.edit', ['asset' => $asset])}}?{{ http_build_query(request()->query())}}">Edit</a>
 
-                                        <a class="btn btn-sm btn-danger" href="{{route('inventory.remove', ['asset' => $asset])}}">Delete</a>
+                                        <a class="btn btn-sm btn-danger" href="{{route('inventory.remove', ['asset' => $asset])}}?{{ http_build_query(request()->query())}}">Delete</a>
 
-                                        <a class="btn btn-sm btn-secondary" href="{{route('inventory.view_asset', ['asset' => $asset])}}">View</a>
+                                        <a class="btn btn-sm btn-secondary" href="{{route('inventory.view_asset', ['asset' => $asset])}}?{{ http_build_query(request()->query())}}">View</a>
                                     </td>
                                 </tr>
                                 @empty
@@ -350,11 +350,11 @@
                                     @if(!$has_new_user)
                                     @if($assignment->status === 'In Use')
                                     <td colspan="4">
-                                        <a class="btn btn-sm btn-outline" href="{{route('inventory.edit_assignment', ['assignment' => $assignment])}}">Edit</a>
+                                        <a class="btn btn-sm btn-outline" href="{{route('inventory.edit_assignment', ['assignment' => $assignment])}}?{{ http_build_query(request()->query())}}">Edit</a>
 
-                                        <a class="btn btn-sm btn-danger" href="{{route('inventory.delete_assignment', ['assignment' => $assignment])}}">Delete</a>
+                                        <a class="btn btn-sm btn-danger" href="{{route('inventory.delete_assignment', ['assignment' => $assignment])}}?{{ http_build_query(request()->query())}}">Delete</a>
 
-                                        <a class="btn btn-sm btn-secondary" href="{{route('inventory.returnpage_assignment', ['assignment' => $assignment])}}">Return</a>
+                                        <a class="btn btn-sm btn-secondary" href="{{route('inventory.returnpage_assignment', ['assignment' => $assignment])}}?{{ http_build_query(request()->query())}}">Return</a>
                                         <a class="btn btn-sm btn-outline" href="{{route('inventory.liability_form', ['assignment' => $assignment])}}">Print Liability</a>
 
 
