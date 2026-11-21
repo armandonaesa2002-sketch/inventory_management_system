@@ -44,6 +44,7 @@
                         type="text"
                         id="login"
                         name="login"
+                        autocomplete="username"
                         value="{{ old('login') }}"
                         placeholder="Enter Email or name"
                         required

@@ -9,9 +9,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 use App\Http\Controllers\AssetImportController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('auth.login');
+    if (Auth::check()) {
+        return redirect('/inventory');
+    }
+
+    return redirect('/login');
 });
 
 Route::middleware('guest')->group(function () {
