@@ -79,6 +79,44 @@
                     <div class="stat-card stat-total">
                         <span class="stat-label">Total Assets</span>
                         <span class="stat-value">{{$data['total_assets'] ?? 0}}</span>
+                        <span class="stat-sublabel"onclick="openBreakdownModal()">View Breakdown -></span>
+                    </div>
+
+                    <!-- {{-- BREAKDOWN MODAL --}} -->
+                    <div class="modal" id="breakdownModal">
+                        <div class="modal-content">
+
+                            <button type="button"
+                                class="modal-close"
+                                onclick="closebreakdownModal()">
+                                &times;
+                            </button>
+
+                            <h2 class="modal-title">Asset Breakdown</h2>
+                            <p class="modal-text">Total Asset per device.</p>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Device Name</th>
+                                        <th>Total Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($data['total_per_device'] as $devices_count)
+                                    <tr>
+                                        <td>{{$devices_count->name}}</td>
+                                        <td>{{$devices_count->asset_count}}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="2">No record found</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
                     <div class="stat-card stat-available">

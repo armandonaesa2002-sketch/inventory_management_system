@@ -1578,3 +1578,8 @@ a {
 .display_none {
     display: none !important;
 }
+.stats-grid .stat-card .stat-sublabel {
+    font-size: 13px;
+    color: #0ea5e9;
+    cursor: pointer;
+}

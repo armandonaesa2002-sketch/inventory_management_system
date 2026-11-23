@@ -272,3 +272,20 @@ document.addEventListener("keydown", function (event) {
         closeChangePasswordModal();
     }
 });
+
+//PREPAREDBY MODAL
+function openBreakdownModal() {
+    document.getElementById("breakdownModal").style.display = "block";
+}
+function closebreakdownModal() {
+    const modal = document.getElementById("breakdownModal");
+    modal.style.display = "none";
+}
+// Close kapag nag-click sa labas ng modal
+document.addEventListener("click", function (event) {
+    const modal = document.getElementById("breakdownModal");
+
+    if (modal && event.target === modal) {
+        closebreakdownModal();
+    }
+});

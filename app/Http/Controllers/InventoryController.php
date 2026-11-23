@@ -196,6 +196,7 @@ class InventoryController extends Controller
         $total_lost = Asset::where('status', 'Lost')->count();
         $device_type = DeviceType::where('is_active', true)->get();
         $department = Department::where('is_active', true)->get();
+        $total_per_device = DeviceType::withCount('asset')->get();
 
         $data = array_merge(compact(
             'assets',
@@ -208,7 +209,8 @@ class InventoryController extends Controller
             'total_decommissioned',
             'total_lost',
             'device_type',
-            'department'
+            'department',
+            'total_per_device'
         ));
 
         return view('inventories.index', compact('data'));
