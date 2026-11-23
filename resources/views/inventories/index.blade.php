@@ -156,7 +156,7 @@
                                     name="search"
                                     value="{{ request('search') }}"
                                     class="input"
-                                    placeholder="Search tag, serial, brand, or model...">
+                                    placeholder="Search tag, serial, brand, user or model...">
 
                                 <select name="device_type" class="select">
                                     <option value="">All Device Types</option>
@@ -221,6 +221,7 @@
                                     <th>Brand</th>
                                     <th>Model</th>
                                     <th>Serial/Product Key</th>
+                                    <th>Current User</th>
                                     <th>Status</th>
                                     <th colspan="3">Action</th>
                                 </tr>
@@ -241,6 +242,7 @@
                                     <td>{{$asset->brand}}</td>
                                     <td>{{$asset->model}}</td>
                                     <td>{{$identifier}}</td>
+                                    <td>{{$asset->currentAssignment?->user_name ?? ''}}</td>
                                     <td>
                                         <span class="status-badge {{$asset->status === 'In Use' ? 'status-inuse' : ($asset->status === 'Returned' ? 'status-returned' : 'status-other')}}">
                                             {{$asset->status}}

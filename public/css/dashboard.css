@@ -998,7 +998,7 @@ a {
 
 .section-header .search-form .input {
     flex: 1;
-    min-width: 220px;
+    min-width: 250px;
     height: 36px;
 }
 

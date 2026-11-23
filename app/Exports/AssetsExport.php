@@ -29,7 +29,8 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
         $query = Asset::with([
             'hardware',
             'software',
-            'assignment'
+            'assignment',
+            'currentAssignment'
         ]);
 
         if ($this->search) {
@@ -40,7 +41,10 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
                     ->orWhere('serial_number', 'like', "%{$search}%")
                     ->orWhere('brand', 'like', "%{$search}%")
                     ->orWhere('model', 'like', "%{$search}%");
-            });
+                })
+                ->orWhereHas('currentAssignment', function ($assignmentQuery) use ($search) {
+                    $assignmentQuery->where('user_name', 'like', "%{$search}%");
+                });
         }
 
         if ($this->device_type) {

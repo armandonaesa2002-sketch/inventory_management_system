@@ -60,6 +60,14 @@ class Asset extends Model
         return $this->hasMany(RepairHistory::class);
     }
 
+    // Current assignment only
+    public function currentAssignment()
+    {
+        return $this->hasOne(Assignment::class)
+            ->where('status', 'In Use')
+            ->latestOfMany();
+    }
+
     //LIABILITY FORM ITEM DESCRIPTION - CURRENTLY USING ON ASSIGNMENT CONTROLLER
     public function getItemDescriptionAttribute()
     {
