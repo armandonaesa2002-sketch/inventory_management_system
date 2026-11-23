@@ -47,6 +47,10 @@
                 <input type="hidden" id="is_edit" value="1">
                 <input type="hidden" id="original_device_type" value="{{ $asset->device_type }}">
                 <input type="hidden" id="original_asset_tag" value="{{ $asset->asset_tag }}">
+                
+                @foreach(request()->query() as $key => $value)
+                    <input type="hidden" name="filters[{{ $key }}]" value="{{ $value }}">
+                @endforeach
 
                 <!-- BASIC -->
                 <div id="basic" class="tab-content active">

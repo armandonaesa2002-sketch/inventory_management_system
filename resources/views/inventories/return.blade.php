@@ -25,6 +25,10 @@
                 @csrf
                 @method('PUT')
 
+                 @foreach(request()->query() as $key => $value)
+                    <input type="hidden" name="filters[{{ $key }}]" value="{{ $value }}">
+                @endforeach
+
                 <h2 class="step-title">Assignment Information</h2>
 
                 <div class="form-row">

@@ -39,6 +39,11 @@
             <form action="{{route('inventory.update_assignment', $assignment->id)}}" method="POST">
                 @csrf
                 @method('put')
+
+                @foreach(request()->query() as $key => $value)
+                    <input type="hidden" name="filters[{{ $key }}]" value="{{ $value }}">
+                @endforeach
+                
                 <div class="form-row">
 
                     <div class="form-group">

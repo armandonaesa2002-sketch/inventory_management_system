@@ -62,6 +62,11 @@
             <form action="{{route('inventory.remove_assignment', ['assignment' => $assignment])}}" method="post">
                 @csrf
                 @method('delete')
+
+                 @foreach(request()->query() as $key => $value)
+                    <input type="hidden" name="filters[{{ $key }}]" value="{{ $value }}">
+                @endforeach
+
                 <div class="step-actions">
                     <button type="submit" class="btn btn-danger">
                         Delete Assignment

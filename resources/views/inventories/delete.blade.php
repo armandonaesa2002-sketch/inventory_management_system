@@ -37,6 +37,10 @@
                 @csrf
                 @method('delete')
 
+                @foreach(request()->query() as $key => $value)
+                    <input type="hidden" name="filters[{{ $key }}]" value="{{ $value }}">
+                @endforeach
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Asset Tag</label>

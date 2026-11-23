@@ -59,15 +59,16 @@ class AssignmentController extends Controller
         if (!$assignment->isDirty()) {
             return back()->with('info', 'No change made');
         }
+        $filters = $request->input('filters', []);
         $assignment->save();
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
+        return redirect(route('inventory.display_index', $filters))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
     }
     public function delete_assignment(Assignment $assignment)
     {
         $department = Department::find($assignment->department_id);
         return view('inventories.delete_assignment', compact('assignment', 'department'));
     }
-    public function remove_assignment(Assignment $assignment)
+    public function remove_assignment(Assignment $assignment, Request $request)
     {
 
         DB::transaction(function () use ($assignment) {
@@ -78,7 +79,9 @@ class AssignmentController extends Controller
 
             $assignment->delete();
         });
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Deleted')->withFragment('assignment');
+        $filters = $request->input('filters', []);    
+
+        return redirect(route('inventory.display_index', $filters))->with('success-assignment', 'Successfully Deleted')->withFragment('assignment');
     }
 
     public function returnpage_assignment(Assignment $assignment)
@@ -119,7 +122,9 @@ class AssignmentController extends Controller
             $assignment->save();
         });
 
-        return redirect(route('inventory.display_index'))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
+        $filters = $request->input('filters', []);
+
+        return redirect(route('inventory.display_index', $filters))->with('success-assignment', 'Successfully Updated')->withFragment('assignment');
     }
     public function undo_return(Assignment $assignment)
     {

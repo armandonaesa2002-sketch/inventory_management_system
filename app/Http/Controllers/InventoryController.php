@@ -305,15 +305,18 @@ class InventoryController extends Controller
             }
         });
 
-        return redirect(route('inventory.display_index'))
-            ->with('success', 'Asset Successfully Updated');
+        $filters = $request->input('filters', []);
+
+        return redirect(route('inventory.display_index', $filters))
+            ->with('success', 'Asset Successfully Updated')->withFragment('assets');
     }
 
 
-    public function delete_stock(Asset $asset)
+    public function delete_stock(Asset $asset, Request $request)
     {
+        $filters = $request->input('filters', []);
         $asset->delete();
-        return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Deleted');
+        return redirect(route('inventory.display_index', $filters))->with('success', 'Asset Successfully Deleted')->withFragment('assets');
     }
 
     public function remove_stock(Asset $asset)
