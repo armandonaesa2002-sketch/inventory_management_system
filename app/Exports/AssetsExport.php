@@ -80,6 +80,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
                 $asset->software?->operating_system,
                 $asset->software?->product_key_os,
                 $asset->software?->product_key_other,
+                $asset->amount,
 
                 $asset->status,
                 $active_assignment?->user_name,
@@ -115,6 +116,7 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
             'Operating System',
             'Product Key OS',
             'Product Key Others',
+            'Amount',
             'Status',
             'User',
             'Department',

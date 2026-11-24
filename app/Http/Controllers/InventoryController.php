@@ -54,6 +54,7 @@ class InventoryController extends Controller
                 'brand' => $request->brand,
                 'model' => $request->model,
                 'serial_number' => $request->serial_number,
+                'amount' => $request->amount,
 
                 'purchase_date' => $deviceType->has_purchase ? $request->purchase_date : null,
                 'warranty_expiry' => $deviceType->has_purchase ? $request->warranty_expiry : null,
@@ -388,7 +389,8 @@ class InventoryController extends Controller
                     'purchase_date' => $request->purchase_date,
                     'warranty_expiry' => $request->warranty_expiry,
                     'vendor' => $request->vendor,
-                    'remarks' => $request->remarks
+                    'remarks' => $request->remarks,
+                    'amount' => $request->amount
                 ];
 
                 if (!$usesProductKey) {

@@ -74,27 +74,37 @@
                         </select>
                         <div class="error">Required field</div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="brand">Brand</label>
-                        <input type="text" name="asset[brand]" placeholder="Brand" class="input"
-                            value="{{$asset->brand ?? ''}}">
-                        <div class="error">Required field</div>
-                    </div>
-
+                    
                     <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="brand">Brand</label>
+                            <input type="text" name="asset[brand]" placeholder="Brand" class="input"
+                                value="{{$asset->brand ?? ''}}">
+                            <div class="error">Required field</div>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="model">Model</label>
                             <input type="text" name="asset[model]" id="model" placeholder="Model"
                                 class="input" value="{{$asset->model ?? ''}}">
                             <div class="error">Required field</div>
                         </div>
+                    </div>
+
+                    <div class="form-row">
 
                         <div class="form-group">
                             <label for="serial_number">Serial Number</label>
                             <input type="text" name="asset[serial_number]" id="serial_number"
                                 placeholder="Serial Number" class="input"
                                 value="{{$asset->serial_number ?? ''}}">
+                            <div class="error">Required field</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" step="0.01" name="asset[amount]" placeholder="amount" class="input"
+                                value="{{$asset->amount ?? ''}}">
                             <div class="error">Required field</div>
                         </div>
                     </div>

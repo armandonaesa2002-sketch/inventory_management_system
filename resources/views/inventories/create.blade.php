@@ -83,21 +83,29 @@
                             <div class="error">Required field</div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Brand</label>
-                            <input type="text" name="brand" class="input" required>
-                            <div class="error">Required field</div>
-                        </div>
-
                         <div class="form-row">
+
+                            <div class="form-group">
+                                <label>Brand</label>
+                                <input type="text" name="brand" class="input" required>
+                                <div class="error">Required field</div>
+                            </div>
                             <div class="form-group">
                                 <label>Model</label>
                                 <input type="text" name="model" id="model" class="input" required>
                                 <div class="error">Required field</div>
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group">
                                 <label>Serial Number</label>
                                 <input type="text" name="serial_number" id="serial_number" class="input" required>
+                                <div class="error">Required field</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" name="amount" id="amount" class="input" step="0.01" required>
                                 <div class="error">Required field</div>
                             </div>
                         </div>

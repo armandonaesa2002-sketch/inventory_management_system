@@ -27,7 +27,8 @@ class Asset extends Model
         'status',
         'remarks',
         'import_reference',
-        'import_batch_id'
+        'import_batch_id',
+        'amount'
     ];
 
     protected $casts = [

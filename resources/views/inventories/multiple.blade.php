@@ -95,6 +95,10 @@
                                     <label>Peripherals</label>
                                     <input type="text" name="peripherals" class="input" placeholder="e.g. Mouse, Keyboard">
                                 </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" step="0.01" name="amount" class="input" placeholder="amount of asset">
+                                </div>
                             </div>
                             <div id="softwareFields">
                                 <div class="form-row">

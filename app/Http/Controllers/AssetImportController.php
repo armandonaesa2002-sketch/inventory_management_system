@@ -332,10 +332,11 @@ class AssetImportController extends Controller
                             ? $getValue('vendor') : null,
 
                         'remarks' => $getValue('remarks'),
-
+                        
                         'status' => ($getValue('user') || $getValue('department')) ? 'Assigned' : 'Available',
                         'import_reference' => $importReference,
                         'import_batch_id' => $batch->id,
+                        'amount' => $getValue('amount'),
                     ]);
 
                     // Create Audit

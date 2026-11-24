@@ -57,6 +57,10 @@
                             <span class="detail-label">Serial Number</span>
                             <span class="detail-value caps">{{$asset->serial_number ?? '—'}}</span>
                         </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Amount</span>
+                            <span class="detail-value caps">₱{{number_format($asset->amount,2) ?? '—'}}</span>
+                        </div>
                         @if($device_type->has_purchase)
                         <div class="detail-row">
                             <span class="detail-label">Purchase Date</span>
