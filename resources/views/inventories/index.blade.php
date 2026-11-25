@@ -245,7 +245,7 @@
                                     <td>{{$serial}}</td>
                                     <td>{{$productKey}}</td>
                                     <td>
-                                        <span class="status-badge {{$asset->status === 'In Use' ? 'status-inuse' : ($asset->status === 'Returned' ? 'status-returned' : 'status-other')}}">
+                                        <span class="status-badge @statusColor($asset->status)">
                                             {{$asset->status}}
                                         </span>
                                     </td>
@@ -259,7 +259,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7">No record found</td>
+                                    <td colspan="10">No record found</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -382,7 +382,7 @@
                                     <td>{{$assignment->release_date ? $assignment->release_date->format('M d, Y') : null}}</td>
                                     <td>{{$assignment->updated_at->format('M d, Y h:i A')}}</td>
                                     <td>
-                                        <span class="status-badge {{$assignment->status === 'In Use' ? 'status-inuse' : ($assignment->status === 'Returned' ? 'status-returned' : 'status-other')}}">
+                                        <span class="status-badge @statusColor($assignment->status)">
                                             {{$assignment->status}}
                                         </span>
                                     </td>
@@ -562,12 +562,12 @@
                                     <td>{{$repair->user_name}}</td>
                                     <td>{{$repair->created_at->format('M d, Y h:i A')}}</td>
                                     <td>
-                                        <span class="status-badge status-other">
+                                        <span class="status-badge @statusColor($repair->type)">
                                             {{$repair->type}}
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="status-badge {{$repair->repair_status === 'In progress' ? 'status-inuse' : ($repair->repair_status === 'Completed' ? 'status-returned' : 'btn-danger')}}">
+                                        <span class="status-badge @statusColor($repair->repair_status)">
                                             {{$repair->repair_status}}
                                         </span>
                                     </td>
