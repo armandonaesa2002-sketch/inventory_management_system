@@ -47,11 +47,11 @@
                     <div class="detail-group">
                         <div class="detail-row">
                             <span class="detail-label">Brand</span>
-                            <span class="detail-value caps">{{$asset->brand}}</span>
+                            <span class="detail-value caps">{{$asset->brand ?? '—'}}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Model</span>
-                            <span class="detail-value caps">{{$asset->model}}</span>
+                            <span class="detail-value caps">{{$asset->model ?? '—'}}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Serial Number</span>
@@ -64,11 +64,11 @@
                         @if($device_type->has_purchase)
                         <div class="detail-row">
                             <span class="detail-label">Purchase Date</span>
-                            <span class="detail-value caps">{{$asset->purchase_date ?? '—'}}</span>
+                            <span class="detail-value caps">{{$asset->purchase_date ? $asset->purchase_date->format('M d, Y') : '—'}}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Warranty Expiry</span>
-                            <span class="detail-value caps">{{$asset->warranty_expiry ?? '—'}}</span>
+                            <span class="detail-value caps">{{$asset->warranty_expiry ? $asset->warranty_expiry->format('M d, Y') : '—'}}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Vendor</span>
@@ -150,11 +150,11 @@
                                 <tbody>
                                     @forelse($asset->assignment as $assignment)
                                     <tr>
-                                        <td>{{$assignment->user_name}}</td>
+                                        <td>{{$assignment->user_name ?? '—'}}</td>
                                         <td>{{$assignment->department->name}}</td>
-                                        <td>{{$assignment->location}}</td>
-                                        <td>{{$assignment->release_date}}</td>
-                                        <td>{{$assignment->updated_at}}</td>
+                                        <td>{{$assignment->location ?? '—'}}</td>
+                                        <td>{{$assignment->release_date ? $assignment->release_date->format('M d, Y') : '—'}}</td>
+                                        <td>{{$assignment->updated_at ? $assignment->updated_at->format('M d, Y h:i A') : '—'}}</td>
                                         <td>{{$assignment->status}}</td>
                                         <td>
                                             <a class="btn btn-sm btn-outline" href="{{route('inventory.liability_form', ['assignment' => $assignment])}}">Print Liability</a>
@@ -191,9 +191,9 @@
                                     <tr>
                                         <td>{{$repair_history->user_name}}</td>
                                         <td>{{$repair_history->repair_status}}</td>
-                                        <td>{{$repair_history->description}}</td>
-                                        <td>{{$repair_history->created_at}}</td>
-                                        <td>{{$repair_history->updated_at}}</td>
+                                        <td>{{$repair_history->description ?? '—'}}</td>
+                                        <td>{{$repair_history->created_at ? $repair_history->created_at->format('M d, Y h:i A') : '—'}}</td>
+                                        <td>{{$repair_history->updated_at ? $repair_history->updated_at->format('M d, Y h:i A') : '—'}}</td>
 
                                     </tr>
                                     @empty
