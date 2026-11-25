@@ -59,37 +59,39 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
 
             $active_assignment = $asset->assignment->where('status', 'In Use')->first();
             return [
-                $asset->id,
                 $asset->asset_tag,
                 $asset->device_type->name,
-                $asset->brand,
-                $asset->model,
-                $asset->serial_number,
-                $asset->purchase_date?->format('m/d/Y'),
-                $asset->warranty_expiry?->format('m/d/Y'),
-                $asset->vendor,
-
-                $asset->hardware?->processor,
-                $asset->hardware?->ram_gb,
-                $asset->hardware?->storage,
-                $asset->hardware?->monitor,
-                $asset->hardware?->gpu,
-                $asset->hardware?->power_supply,
-                $asset->hardware?->peripherals,
-
-                $asset->software?->operating_system,
-                $asset->software?->product_key_os,
-                $asset->software?->product_key_other,
-                $asset->amount,
-
-                $asset->status,
+                implode(', ', array_filter([
+                    $asset->brand,
+                    $asset->model,
+                    $asset->hardware?->processor,
+                    $asset->hardware?->ram_gb,
+                    $asset->hardware?->storage,
+                    $asset->hardware?->monitor,
+                    $asset->hardware?->gpu,
+                    $asset->hardware?->power_supply,
+                    $asset->software?->operating_system,
+                    $asset->hardware?->peripherals,
+                    $active_assignment?->inclusion,
+                ], fn($value) => !empty($value))),
                 $active_assignment?->user_name,
                 $active_assignment?->department?->name,
                 $active_assignment?->release_date?->format('m/d/Y'),
-                $active_assignment?->designation,
+                $asset->serial_number,
                 $active_assignment?->location,
-                $active_assignment?->inclusion,
+                $active_assignment?->designation,
+                $asset->amount,
+                $asset->software?->product_key_os,
+                $asset->software?->product_key_other,
+                $asset->status,
+                $asset->purchase_date?->format('m/d/Y'),
+                $asset->warranty_expiry?->format('m/d/Y'),
+                $asset->vendor,
                 $asset->remarks,
+                $asset->id,
+                
+
+
             ];
         });
     }
@@ -97,34 +99,24 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
     public function headings(): array
     {
         return [
-            'Asset Id',
             'Asset Tag',
             'Device Type',
-            'Brand',
-            'Model',
-            'Serial Number',
-            'Purchase Date',
-            'Warranty Expiry',
-            'Vendor',
-            'Processor',
-            'RAM (GB)',
-            'Storage',
-            'Monitor',
-            'GPU',
-            'Power Supply',
-            'Peripherals',
-            'Operating System',
-            'Product Key OS',
-            'Product Key Others',
-            'Amount',
-            'Status',
+            'Item Description',
             'User',
             'Department',
             'Release Date',
-            'Designation',
+            'Serial Number',
             'Location',
-            'Inclusion',
+            'Designation',
+            'Amount',
+            'Product Key OS',
+            'Product Key Other',
+            'Status',
+            'Purchase Date',
+            'Warranty Expiry',
+            'Vendor',
             'Remarks',
+            'Asset Id',
         ];
     }
 
@@ -152,6 +144,16 @@ class AssetsExport implements FromCollection, WithHeadings, WithEvents
                     $columnLetter = Coordinate::stringFromColumnIndex($col);
                     $sheet->getColumnDimension($columnLetter)->setAutoSize(true);
                 }
+
+                    // Wrap text for Item Description (example: Column B)
+                $sheet->getStyle('C2:C' . $lastRow)
+                    ->getAlignment()
+                    ->setWrapText(true);
+
+                // Set fixed width for Item Description
+                $sheet->getColumnDimension('C')->setAutoSize(false);
+                $sheet->getColumnDimension('C')->setWidth(80);
+
             },
         ];
     }

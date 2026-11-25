@@ -37,8 +37,10 @@ class FailedAssetsExport implements FromArray, WithHeadings
             'Product Key Others',
             'User',
             'Department',
+            'Release Date',
             'Designation',
             'Location',
+            'Inclusion',
             'Remarks',
             'Import Error',
         ];
@@ -70,8 +72,10 @@ class FailedAssetsExport implements FromArray, WithHeadings
                 $data['product_key_others'] ?? '',
                 $data['user'] ?? '',
                 $data['department'] ?? '',
+                $data['release_date'] ?? '',
                 $data['designation'] ?? '',
                 $data['location'] ?? '',
+                $data['inclusion'] ?? '',
                 $data['remarks'] ?? '',
                 $item['reason'],
             ];
