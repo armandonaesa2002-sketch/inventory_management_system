@@ -303,16 +303,24 @@ class AssetImportController extends Controller
                     // Generate Asset Tag
                     $prefix = $deviceType->asset_prefix;
 
-                    $lastAsset = Asset::where('asset_tag', 'like', $prefix . '-%')
-                        ->orderByDesc('id')
-                        ->first();
+                    // Get all existing asset numbers
+                    $existingNumbers = Asset::where('asset_tag', 'like', $prefix . '-%')
+                        ->pluck('asset_tag')
+                        ->map(function ($tag) use ($prefix) {
+                            return (int) substr($tag, strlen($prefix) + 1);
+                        })
+                        ->toArray();
 
-                    $lastNumber = $lastAsset
-                        ? (int) substr($lastAsset->asset_tag, strlen($prefix) + 1)
-                        : 0;
+                    // Find the lowest vacant number
+                    $nextNumber = 1;
 
+                    while (in_array($nextNumber, $existingNumbers)) {
+                        $nextNumber++;
+                    }
+
+                    // Generate Asset Tag
                     $assetTag = $prefix . '-' .
-                        str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+                        str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
                     // Create Asset
                     $asset = Asset::create([
@@ -411,7 +419,7 @@ class AssetImportController extends Controller
             } catch (Throwable $e) {
 
                 $reason = $e instanceof \Illuminate\Database\QueryException
-                    ? 'Database error while saving this row.'
+                    ? ($e->errorInfo[2] ?? $e->getMessage())
                     : $e->getMessage();
 
                 $failed[] = [
