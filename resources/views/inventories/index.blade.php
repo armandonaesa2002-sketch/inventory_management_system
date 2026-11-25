@@ -217,11 +217,13 @@
                             <thead class="caps">
                                 <tr>
                                     <th>Asset Tag</th>
+                                    <th>Current User</th>
+                                    <th>Department</th>
                                     <th>Device Type</th>
                                     <th>Brand</th>
                                     <th>Model</th>
-                                    <th>Serial/Product Key</th>
-                                    <th>Current User</th>
+                                    <th>Serial Number</th>
+                                    <th>Product Key OS</th>
                                     <th>Status</th>
                                     <th colspan="3">Action</th>
                                 </tr>
@@ -229,20 +231,19 @@
                             <tbody>
                                 @forelse($data['assets'] as $asset)
                                 @php
-                                $serial = trim($asset->serial_number ?? '');
-                                $productKey = trim($asset->software?->product_key_os ?? '');
+                                $serial = trim($asset->serial_number ?? '—');
+                                $productKey = trim($asset->software?->product_key_os ?? '—');
                                 $usesProductKey = $asset->device_type->identifier;
-                                $identifier = $usesProductKey
-                                ? ($productKey !== '' ? $productKey : ($serial !== '' && strtoupper($serial) !== 'N/A' ? $serial : '—'))
-                                : ($serial !== '' && strtoupper($serial) !== 'N/A' ? $serial : ($productKey !== '' ? $productKey : '—'));
                                 @endphp
                                 <tr>
                                     <td>{{$asset->asset_tag}}</td>
+                                    <td>{{$asset->currentAssignment?->user_name ?? '—'}}</td>
+                                    <td>{{ $asset->currentAssignment?->department?->name ?? '—' }}</td>
                                     <td>{{$asset->device_type->name}}</td>
                                     <td>{{$asset->brand}}</td>
                                     <td>{{$asset->model}}</td>
-                                    <td>{{$identifier}}</td>
-                                    <td>{{$asset->currentAssignment?->user_name ?? ''}}</td>
+                                    <td>{{$serial}}</td>
+                                    <td>{{$productKey}}</td>
                                     <td>
                                         <span class="status-badge {{$asset->status === 'In Use' ? 'status-inuse' : ($asset->status === 'Returned' ? 'status-returned' : 'status-other')}}">
                                             {{$asset->status}}

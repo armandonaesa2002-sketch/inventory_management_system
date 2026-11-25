@@ -126,7 +126,7 @@ class InventoryController extends Controller
     public function display_index(Request $request)
     {
         // $assets = Asset::with(['hardware','assignment','software','audit'])->get();
-        $asset_query = Asset::with(['hardware', 'software', 'audit','currentAssignment']);
+        $asset_query = Asset::with(['hardware', 'software', 'audit','currentAssignment.department']);
         if ($request->filled('search')) {
             $search = $request->search;
             $asset_query->where(function ($query) use ($search) {
@@ -141,6 +141,9 @@ class InventoryController extends Controller
                     
                     ->orWhereHas('currentAssignment', function ($assignmentQuery) use ($search) {
                         $assignmentQuery->where('user_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('currentAssignment.department', function ($departmentQuery) use ($search) {
+                        $departmentQuery->where('name', 'like', "%{$search}%");
                     });
             });
         }
