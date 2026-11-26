@@ -53,21 +53,42 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (isEdit) {
-                if (currentValue === originalDeviceType) {
+                // Kung ibinalik sa orihinal na device type, ibalik din ang orihinal na tag.
+                if (String(currentValue) === String(originalDeviceType)) {
                     assetTagInput.value = originalAssetTag;
                     return;
                 }
 
-                if (currentValue) {
-                    fetch(`/inventory/asset_tag/${currentValue}`)
-                        .then((res) => res.json())
-                        .then((data) => {
-                            document.getElementById("asset_tag").value =
-                                data.asset_tag;
-                        });
-                } else {
+                if (!currentValue) {
                     assetTagInput.value = "";
+                    return;
                 }
+
+                fetch(`/inventory/asset_tag/${currentValue}`)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        const newAssetTag = data.asset_tag;
+
+                        // Halimbawa: PC-0001 at PC-0004 ay parehong may prefix na PC-
+                        const getPrefix = (tag) =>
+                            tag?.match(/^(.*-)\d+$/)?.[1] ?? "";
+
+                        if (
+                            newAssetTag &&
+                            getPrefix(newAssetTag) ===
+                                getPrefix(originalAssetTag)
+                        ) {
+                            assetTagInput.value = originalAssetTag;
+                        } else {
+                            assetTagInput.value =
+                                newAssetTag ?? originalAssetTag;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Hindi makuha ang asset tag:", error);
+                        assetTagInput.value = originalAssetTag;
+                    });
+
                 return;
             }
 

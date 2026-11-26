@@ -95,7 +95,7 @@ class InventoryController extends Controller
         return redirect(route('inventory.display_index'))->with('success', 'Asset Successfully Added');
     }
 
-    //Generating Tag to Json
+    //Generating Tag to Json 
     public function generate_tag($id)
     {
         $deviceType = DeviceType::where('id', $id)
@@ -104,15 +104,17 @@ class InventoryController extends Controller
 
         $prefix = $deviceType->asset_prefix;
 
-        $last = Asset::where('asset_tag', 'like', $prefix . '-%')
-            ->orderBy('asset_tag', 'desc')
-            ->first();
+        $existingNumbers = Asset::where('asset_tag', 'like', $prefix . '-%')
+            ->pluck('asset_tag')
+            ->map(function ($tag) use ($prefix) {
+                return (int) substr($tag, strlen($prefix) + 1);
+            })
+            ->toArray();
 
         $number = 1;
 
-        if ($last) {
-            $parts = explode('-', $last->asset_tag);
-            $number = (int)$parts[1] + 1;
+        while (in_array($number, $existingNumbers)) {
+            $number++;
         }
 
         $tag = $prefix . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
@@ -121,6 +123,7 @@ class InventoryController extends Controller
             'asset_tag' => $tag
         ]);
     }
+
 
 
     public function display_index(Request $request)
@@ -369,23 +372,47 @@ class InventoryController extends Controller
         }
 
         $prefix = $deviceType->asset_prefix;
-        $lastAsset = Asset::where('asset_tag', 'like', $prefix . '-%')
-            ->latest('id')
-            ->first();
-        if ($lastAsset) {
-            $lastNumber = (int) substr($lastAsset->asset_tag, strlen($prefix) + 1);
-        } else {
-            $lastNumber = 0;
-        }
+        
 
-        DB::transaction(function () use ($request, $lastNumber, $prefix, $identifiers, $usesProductKey, $deviceType) {
+       DB::transaction(function () use (
+            $request,
+            $prefix,
+            $identifiers,
+            $usesProductKey,
+            $deviceType
+        ) {
+            // Kunin ang mga existing tag para sa prefix na ito
+            $existingTags = Asset::where('asset_tag', 'like', $prefix . '-%')
+                ->lockForUpdate()
+                ->pluck('asset_tag');
+
+            // Itala ang mga numeric suffix ng existing tags
+            $usedNumbers = [];
+
+            foreach ($existingTags as $tag) {
+                $pattern = '/^' . preg_quote($prefix, '/') . '-(\d+)$/';
+
+                if (preg_match($pattern, $tag, $matches)) {
+                    $usedNumbers[(int) $matches[1]] = true;
+                }
+            }
+
+            $nextNumber = 1;
+
             foreach ($identifiers as $identifier) {
-                $lastNumber++;
+                // Hanapin ang susunod na vacant na numero
+                while (isset($usedNumbers[$nextNumber])) {
+                    $nextNumber++;
+                }
 
-                $asset_tag = $prefix . '-' . str_pad($lastNumber, 4, '0', STR_PAD_LEFT);
-                //main asset
+                $assetTag = $prefix . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+                // Markahan agad bilang nagamit para sa susunod na record sa batch
+                $usedNumbers[$nextNumber] = true;
+                $nextNumber++;
+
                 $assetData = [
-                    'asset_tag' => $asset_tag,
+                    'asset_tag' => $assetTag,
                     'device_type_id' => $request->device_type,
                     'brand' => $request->brand,
                     'model' => $request->model,
@@ -393,22 +420,22 @@ class InventoryController extends Controller
                     'warranty_expiry' => $request->warranty_expiry,
                     'vendor' => $request->vendor,
                     'remarks' => $request->remarks,
-                    'amount' => $request->amount
+                    'amount' => $request->amount,
                 ];
 
                 if (!$usesProductKey) {
                     $assetData['serial_number'] = $identifier;
                 }
+
                 $asset = Asset::create($assetData);
 
-                $audit = Audit::create([
+                Audit::create([
                     'asset_id' => $asset->id,
-                    'audit_date' => $request->audit_date
+                    'audit_date' => $request->audit_date,
                 ]);
 
-                // Computer fields only
                 if ($deviceType->has_hardware) {
-                    $hardware_specs = HardwareSpec::create([
+                    HardwareSpec::create([
                         'asset_id' => $asset->id,
                         'processor' => $request->processor,
                         'ram_gb' => $request->ram_gb,
@@ -416,20 +443,23 @@ class InventoryController extends Controller
                         'monitor' => $request->monitor,
                         'gpu' => $request->gpu,
                         'power_supply' => $request->power_supply,
-                        'peripherals' => $request->peripherals
+                        'peripherals' => $request->peripherals,
                     ]);
 
                     $softwareData = [
                         'asset_id' => $asset->id,
                         'operating_system' => $request->operating_system,
                     ];
+
                     if ($usesProductKey) {
                         $softwareData['product_key_os'] = $identifier;
                     }
-                    $software = Software::create($softwareData);
+
+                    Software::create($softwareData);
                 }
             }
         });
+
 
         return redirect()
             ->route('inventory.display_index')

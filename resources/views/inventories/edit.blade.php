@@ -45,7 +45,7 @@
                 @method('PUT')
 
                 <input type="hidden" id="is_edit" value="1">
-                <input type="hidden" id="original_device_type" value="{{ $asset->device_type }}">
+                <input type="hidden" id="original_device_type"value="{{ $asset->device_type_id }}">
                 <input type="hidden" id="original_asset_tag" value="{{ $asset->asset_tag }}">
                 
                 @foreach(request()->query() as $key => $value)
