@@ -233,7 +233,6 @@
                                 @php
                                 $serial = trim($asset->serial_number ?? '—');
                                 $productKey = trim($asset->software?->product_key_os ?? '—');
-                                $usesProductKey = $asset->device_type->identifier;
                                 @endphp
                                 <tr>
                                     <td>{{$asset->asset_tag}}</td>
@@ -355,10 +354,7 @@
                             <tbody>
                                 @forelse($data['assignments'] as $assignment)
                                 @php
-                                $has_new_user = $assignment->asset
-                                ->assignment()
-                                ->where('id', '>', $assignment->id)
-                                ->exists();
+                                $has_new_user = ! is_null($assignment->has_new_user);
 
 
                                 $latestRepair = $data['repair_history']

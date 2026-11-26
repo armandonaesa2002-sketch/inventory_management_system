@@ -129,7 +129,7 @@ class InventoryController extends Controller
     public function display_index(Request $request)
     {
         // $assets = Asset::with(['hardware','assignment','software','audit'])->get();
-        $asset_query = Asset::with(['hardware', 'software', 'audit','currentAssignment.department']);
+        $asset_query = Asset::with(['hardware', 'software', 'audit','currentAssignment.department', 'device_type']);
         if ($request->filled('search')) {
             $search = $request->search;
             $asset_query->where(function ($query) use ($search) {
@@ -162,7 +162,19 @@ class InventoryController extends Controller
 
 
         // $assignments = Assignment::with('asset')->paginate(10, ['*'], 'assignment_page');
-        $assignment = Assignment::with('asset');
+        $assignment = Assignment::query()
+            ->select('assignments.*')
+            ->addSelect([
+                'has_new_user' => DB::table('assignments as newer')
+                    ->selectRaw('1')
+                    ->whereColumn('newer.asset_id', 'assignments.asset_id')
+                    ->whereColumn('newer.id', '>', 'assignments.id')
+                    ->limit(1)
+            ])
+            ->with([
+                'asset',
+                'department'
+            ]);
         if ($request->filled('assignment_search')) {
             $assignment_search = $request->assignment_search;
             $assignment->where(function ($assignment_query) use ($assignment_search) {
@@ -199,15 +211,23 @@ class InventoryController extends Controller
         $repair_history = $repair_history_query->paginate(10, ['*'], 'repair_page')->withQueryString()->fragment('repair_history');
 
 
-        $total_assets = Asset::count();
-        $total_available = Asset::where('status', 'Available')->count();
-        $total_assigned = Asset::where('status', 'Assigned')->count();
-        $total_repair = Asset::where('status', 'For repair')->count();
-        $total_decommissioned = Asset::where('status', 'Decommissioned')->count();
-        $total_lost = Asset::where('status', 'Lost')->count();
-        $device_type = DeviceType::where('is_active', true)->get();
+        $asset_counts = Asset::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $total_assets = (int) $asset_counts->sum();
+
+        $total_available = (int) ($asset_counts['Available'] ?? 0);
+        $total_assigned = (int) ($asset_counts['Assigned'] ?? 0);
+        $total_repair = (int) ($asset_counts['For repair'] ?? 0);
+        $total_decommissioned = (int) ($asset_counts['Decommissioned'] ?? 0);
+        $total_lost = (int) ($asset_counts['Lost'] ?? 0);
         $department = Department::where('is_active', true)->get();
         $total_per_device = DeviceType::withCount('asset')->get();
+        $device_type = $total_per_device
+            ->where('is_active', true)
+            ->values();
 
         $data = array_merge(compact(
             'assets',

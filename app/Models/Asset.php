@@ -100,12 +100,12 @@ class Asset extends Model
         }
 
         // Printer
-        if ($this->device_type === 'printer') {
+        if ($this->device_type?->code === 'printer') {
             return trim($this->brand . ' ' . $this->model);
         }
 
         // Desktop - specs only
-        if ($this->device_type === 'desktop') {
+        if ($this->device_type?->code === 'desktop') {
             return implode(', ', $specs);
         }
 
