@@ -90,7 +90,13 @@
                             @endforeach
                         </select>
                     </div>
-
+                    
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Release Date</label>
+                        <input type="date" name="assignment[release_date]" class="input" value="{{$assignment->release_date?->format('Y-m-d') ?? ''}}">
+                    </div>
                 </div>
 
                 <div class="step-actions">

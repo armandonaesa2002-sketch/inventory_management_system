@@ -193,6 +193,15 @@ class InventoryController extends Controller
         }
         $assignments = $assignment->paginate(10, ['*'], 'assignment_page')->withQueryString()->fragment('assignment');
 
+        $latest_repairs = RepairHistory::whereIn(
+            'assignment_id',
+            $assignments->getCollection()->pluck('id')
+        )
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
+        ->get()
+        ->unique('assignment_id')
+        ->keyBy('assignment_id');
 
         // $repair_history = RepairHistory::with('asset')->paginate(10, ['*'], 'repair_page');
         $repair_history_query = RepairHistory::with('asset');
@@ -241,7 +250,8 @@ class InventoryController extends Controller
             'total_lost',
             'device_type',
             'department',
-            'total_per_device'
+            'total_per_device',
+            'latest_repairs'
         ));
 
         return view('inventories.index', compact('data'));

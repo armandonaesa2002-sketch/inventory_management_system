@@ -354,21 +354,13 @@
                             <tbody>
                                 @forelse($data['assignments'] as $assignment)
                                 @php
-                                $has_new_user = ! is_null($assignment->has_new_user);
+                                    $has_new_user = ! is_null($assignment->has_new_user);
 
+                                    $latestRepair = $data['latest_repairs']->get($assignment->id);
 
-                                $latestRepair = $data['repair_history']
-                                ->where('asset_id', $assignment->asset_id)
-                                ->where('assignment_id', $assignment->id)
-                                ->sortByDesc('created_at')
-                                ->first();
-
-                                $canUndoRepair = $latestRepair &&
-                                $latestRepair->repair_status === 'Completed' &&
-                                $latestRepair->repair_status_after === 'repaired';
-
-
-
+                                    $canUndoRepair = $latestRepair &&
+                                        $latestRepair->repair_status === 'Completed' &&
+                                        $latestRepair->repair_status_after === 'repaired';
                                 @endphp
                                 <tr>
                                     <td>{{$assignment->asset->asset_tag}}</td>
