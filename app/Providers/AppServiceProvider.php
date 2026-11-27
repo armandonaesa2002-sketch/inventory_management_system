@@ -34,6 +34,12 @@ class AppServiceProvider extends ServiceProvider
                     'Cancelled' => 'stat-lost',
                     'Completed' => 'stat-available',
                     'Returned' => 'stat-available',
+                    'IN' => 'stat-available',
+                    'ADJUSTMENT' => 'stat-assigned',
+                    'OUT' => 'stat-lost',
+                    'In Stock' => 'stat-available',
+                    'Low Stock' => 'stat-repair',
+                    'Out of Stock' => 'stat-lost',
                     default => 'status-other',
                 };
             ?>";

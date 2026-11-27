@@ -85,12 +85,12 @@
                         <span class="stat-value">{{$data['total_instock'] ?? 0}}</span>
                     </div>
 
-                    <div class="stat-card stat-assigned">
+                    <div class="stat-card stat-repair">
                         <span class="stat-label">Low Stock</span>
                         <span class="stat-value">{{$data['total_lowstock'] ?? 0}}</span>
                     </div>
 
-                    <div class="stat-card stat-repair">
+                    <div class="stat-card stat-lost">
                         <span class="stat-label">Out of Stock</span>
                         <span class="stat-value">{{$data['total_outofstock'] ?? 0}}</span>
                     </div>
@@ -170,7 +170,7 @@
                                     <td>{{$ink->stock}}</td>
                                     <td>{{$ink->reorder_level}}</td>
                                     <td>
-                                        <span class="status-badge {{$ink->status === 'In Stock' ? 'status-inuse' : ($ink->status === 'Low Stock' ? 'status-other' : 'alert-danger')}}">
+                                        <span class="status-badge @statusColor($ink->status)">
                                             {{$ink->status}}
                                         </span>
                                     </td>
@@ -258,27 +258,28 @@
                                 <tr>
                                     @php
                                     $label = "";
-                                    $class = "";
+                                    $sign = "";
                                     if($ink_transaction->type == 'IN'){
                                     $label = "Received By: ". $ink_transaction->received_by;
-                                    $class = "status-inuse";
+                                    $sign = "+";
                                     }
                                     elseif($ink_transaction->type == 'OUT'){
-                                    $class = "status-other";
                                     $label = "Released To: ". $ink_transaction->released_to;
+                                    $sign = "-";
                                     }
                                     elseif($ink_transaction->type == 'ADJUSTMENT'){
                                     $label = $ink_transaction->adjustment_type ." (".$ink_transaction->remarks.")";
-                                    $class = "status-returned";
+                                    $sign = $ink_transaction->adjustment_type == 'increase' ? "+" : "-"; 
+                                    
                                     }
                                     @endphp
                                     <td>{{$ink_transaction->inkstock->brand}} {{$ink_transaction->inkstock->type}}: {{$ink_transaction->inkstock->color}}</td>
                                     <td>
-                                        <span class="status-badge {{$class}}">
+                                        <span class="status-badge @statusColor($ink_transaction->type)">
                                             {{$ink_transaction->type}}
                                         </span>
                                     </td>
-                                    <td>{{$ink_transaction->quantity}}</td>
+                                    <td>{{$sign}}{{$ink_transaction->quantity}}</td>
                                     <td>{{$label}}</td>
                                     <td>{{$ink_transaction->created_at->format('M d, Y h:i A')}}</td>
                                 </tr>

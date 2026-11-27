@@ -53,10 +53,16 @@ class InkStockController extends Controller
 
         $ink_transaction = $ink_transaction_query->paginate(10, ['*'], 'transaction_page')->withQueryString();
 
-        $total_ink = InkStock::count();
-        $total_instock = InkStock::where('status', 'In Stock')->count();
-        $total_lowstock = InkStock::where('status', 'Low Stock')->count();
-        $total_outofstock = InkStock::where('status', 'Out of Stock')->count();
+        $ink_counts = InkStock::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $total_ink = (int) $ink_counts->sum();
+
+        $total_instock = (int) ($ink_counts['In Stock'] ?? 0);
+        $total_lowstock = (int) ($ink_counts['Low Stock'] ?? 0);
+        $total_outofstock = (int) ($ink_counts['Out of Stock'] ?? 0);
 
         $data = array_merge(compact('ink_stock', 'total_ink', 'total_instock', 'total_lowstock', 'total_outofstock', 'ink_transaction'));
 
